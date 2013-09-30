@@ -1,0 +1,39 @@
+$size_measure: 26em
+$size_base: 1.15rem
+
+$size_jumbo: 2.28rem
+$size_big: 1.5rem
+$size_medium: 1.2857142857142857142857142857143rem
+$size_normal: 1rem
+$size_small: 0.7rem
+
+@mixin type
+	font-family: "Open Sans", Arial, sans-serif
+	font-weight: 400
+
+@mixin box-sizing 
+	-webkit-box-sizing: border-box
+	-moz-box-sizing: border-box
+	box-sizing: border-box
+
+@mixin respond-to($width)
+	@media only screen and (max-width: $width)
+		@content
+
+@mixin border-radius($radius)
+	-webkit-border-radius: $radius
+	-moz-border-radius: $radius
+	border-radius: $radius
+
+@mixin keyframes($name) 
+	@-webkit-keyframes #{$name} 
+		@content
+ 
+	@-moz-keyframes #{$name}
+		@content
+
+	@-o-keyframes #{$name}
+		@content
+
+	@keyframes #{$name} 
+		@content

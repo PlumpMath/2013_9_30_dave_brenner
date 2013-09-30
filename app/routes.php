@@ -1,5 +1,7 @@
 <?php
 
+View::share('assets', (new AssetCollection)->dev()->build());
+
 Route::get('/test/{test}', function ($test)
 {
 	$sass = app_path().'/assets/style/tests/'.$test;
@@ -7,5 +9,5 @@ Route::get('/test/{test}', function ($test)
 	$style = file_get_contents($sass.'.css');
 	shell_exec('rm '.$sass.'.css');
 
-	dd($style);
+	return View::make('layouts.test')->with('style', $style)->nest('content', 'tests.'.$test);
 });

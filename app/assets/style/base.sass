@@ -1,0 +1,138 @@
+*
+	border: 0
+	margin: 0
+	padding: 0
+
+	@include box-sizing
+
+body
+	@extend .fg-0
+	@include type
+
+ul
+	list-style: disc
+	padding-left: $size_base
+
+.type-0
+	font-size: $size_jumbo
+	line-height: $size_base * 3
+	@include type 
+
+.type-1
+	font-size: $size_big
+	line-height: $size_base * 2
+	@include type 
+
+.type-2
+	font-size: $size_medium
+	line-height: $size_base * 2
+	@include type 
+
+.type-3
+	font-size: $size_normal
+	line-height: $size_base
+	@include type
+
+.type-4
+	font-size: $size_small
+	line-height: $size_base
+	@include type
+
+.bg-0
+	background: #fff
+
+.bg-1
+	background: #eee
+
+.bg-2
+	background: #35535e
+
+.bg-3
+	background: #f86c59
+
+.bg-4
+	background: #73d0bb
+
+.img-0
+	background: url("/style/imgs/photo-family-tennis.jpg")
+	background-size: cover
+
+.fg-0
+	color: lighten(#383838,10%)
+
+.fg-1
+	color: darken(#eee,35%)
+
+.fg-2
+	color: #fff
+
+.fg-3
+	color: #73d0bb
+
+.fg-4
+	color: #ef3a4f
+
+.fg-5
+	color: #87ca35
+
+.center
+	text-align: center
+
+.right
+	text-align: right
+
+.italic
+	font-style: italic
+	font-weight: 300
+
+.bold
+	font-weight: bold
+
+.clear-under
+	padding-bottom: $size_base
+
+.clear-under-1
+	padding-bottom: $size_base
+
+.clear-over
+	padding-top: $size_base
+
+.clear-over-1
+	padding-top: $size_base
+	@include respond-to(50rem)
+		padding-top: 0
+
+.measure
+	max-width: $size-measure
+	margin: auto
+
+.smaller-measure
+	max-width: $size-measure / 2
+
+.border-left
+	border-left: 1px solid #eee
+	@include respond-to(50rem)
+		border-left: none
+		border-top: 1px solid #eee
+
+.border-bottom-0
+	border-bottom: 1px solid #eee
+
+.border-bottom-1
+	border-bottom: 1px solid darken(#eee, 10%)
+
+.border-0
+	border-top: 1px solid #eee
+	border-bottom: 1px solid #eee
+
+.float-left
+	float: left
+
+.float-right
+	float: right
+
+.margin-0
+	margin-right: $size_base
+
+.margin-1
+	margin-left: $size_base

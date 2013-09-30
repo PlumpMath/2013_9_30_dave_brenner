@@ -1,17 +1,57 @@
-.box-6
+.box,
+.box-2,
+.box-3,
+.box-4
 	overflow: hidden
 	zoom: 1
 	_overflow: visible
+
+.box
 	clear: left
+
+.box-2
+	width: 33.3%
 
 .box-3
 	width: 50%
-
-.box-2
-	width: 33%
+	@include respond-to(50rem)
+		width: 100%
 
 .box-4
-	width: 66%	
+	width: 66.6%
 
-[class^="box"]:last-of-type
+.box-2,
+.box-3,
+.box-4
+	float: left
+
+.box-2:last-of-type,
+.box-3:last-of-type,
+.box-4:last-of-type
 	float: right
+
+.box-banner-0
+	padding: $size_base * 6 $size_base
+
+.box-banner-1
+	padding: $size_base * 3 $size_base
+
+.box-pad-0
+	padding: $size_base
+
+.box-pad-1
+	padding: $size_small / 2
+
+.box-pad-2
+	padding: $size_base
+	padding-bottom: $size_base * 2
+
+.box-pad-3
+	padding-bottom: $size_base / 2
+
+.box-pad-4
+	padding: $size_base
+	padding-left: $size_base*3
+
+.box-pad-5
+	padding: $size_base / 2 0
