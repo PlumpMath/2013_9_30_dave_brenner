@@ -12,6 +12,27 @@ Route::get('/test/{test}', function ($test)
 	return View::make('layouts.test')->with('style', $style)->nest('content', 'tests.'.$test);
 });
 
+Route::get('/', function ()
+{
+	$data = [
+		'user_name' => 'John Smith',
+		'fields' => [
+			[
+				'name' => 'email',
+				'type' => 'text',
+				'label' => 'Email',
+			],
+			[
+				'name' => 'password',
+				'type' => 'password',
+				'label' => 'Password',
+			],
+		]
+	];
+
+	return View::make('home', $data);
+});
+
 Route::get('/register', function ()
 {
 	$data = [

@@ -18,22 +18,6 @@ return [
 		],
 
 	],
-	'style' => [
-
-		'master' => [
-
-			'inline' => false,
-			'src' => 'style/main.css',
-
-		],
-		'dev' => [
-
-			'inline' => false,
-			'src' => 'style/main.css',
-
-		],
-
-	],
 	'font-awesome' => [
 
 		'master' => [
@@ -63,6 +47,22 @@ return [
 
 		],
 
-	]
+	],
+	'style' => [
+
+		'master' => [
+
+			'inline' => false,
+			'src' => 'style/main.css',
+
+		],
+		'dev' => [
+
+			'inline' => false,
+			'src' => 'style/main.css',
+
+		],
+
+	],
 
 ];
