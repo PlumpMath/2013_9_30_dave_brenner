@@ -7,7 +7,7 @@ class AssetCollection
 
 	public function __construct()
 	{
-		$this->config = include app_path().'/config/asset.php';
+		$this->config = Config::get('asset');
 	}
 
 	public function dev()
