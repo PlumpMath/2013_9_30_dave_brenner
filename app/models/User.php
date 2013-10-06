@@ -124,7 +124,7 @@ class User extends Resource implements UserInterface, RemindableInterface {
 
     // }}}
 
-    public function order()
+    public function orders()
     {
         return $this->hasMany('Order');
     }

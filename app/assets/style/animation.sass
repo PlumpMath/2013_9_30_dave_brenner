@@ -18,3 +18,15 @@
 		-webkit-transform: scale(1.5,0.75) translate(0,0.5em)
 	80%
 		-webkit-transform: scale(1, 1) translate(0,0)
+
+@include keyframes(shrink)
+	0%
+		-webkit-transform: scale3d(1, 1, 1) translate3d(0, 0, 0) rotate3d(0,0,0,0)
+	100%
+		-webkit-transform: scale3d(0.5, 0.5, 1) translate3d(0, 0.25em, 0) rotate3d(0, 0.5, 0.5, -45deg)
+
+@include keyframes(grow)
+	0%
+		-webkit-transform: scale3d(2, 2, 1) translate3d(0, 0)
+	100%
+		-webkit-transform: scale3d(3, 3, 1) translate3d(0,-0.25em, 2em)

@@ -24,6 +24,6 @@ class Order extends Resource {
 
     public function lesson()
     {
-        return $this->belongsTo('Lesson')
+        return $this->belongsTo('Lesson');
     }
 }
