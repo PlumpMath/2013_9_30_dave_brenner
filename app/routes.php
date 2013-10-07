@@ -14,8 +14,9 @@ Route::get('/test/{test}', function ($test)
 
 Route::get('/', function ()
 {
+
 	$data = [
-		'user_name' => 'John Smith',
+		'user_name' => null,
 		'fields' => [
 			[
 				'name' => 'email',
@@ -29,6 +30,9 @@ Route::get('/', function ()
 			],
 		]
 	];
+
+	if (Auth::check())
+		$data['user_name'] = Auth::user()->first_name.' '.Auth::user()->last_name;
 
 	return View::make('home', $data);
 });
@@ -311,9 +315,9 @@ Route::get('/activate/{hash}', function ($hash)
 
 Route::get('/add_to_order', ['as' => 'add to order', function () {
 	$order = new Order;
-	$order->user_id = Auth::user()->id;
+	$order->user_id = intval(Auth::user()->id);
 	$order->child_id = 0;
-	$order->lesson_id = +Input::get('lesson_id');
+	$order->lesson_id = intval(Input::get('lesson_id'));
 
 	$order->save();
 
@@ -406,7 +410,7 @@ Route::get('/enroll', function ()
 		$orders[$order->id] = [
 			'name' => $name,
 			'values' => [
-				'price' => '$'.$lesson->price,
+				'Price' => '$'.$lesson->price,
 				'Number of Lessons' => $lesson->number(),
 				'Activity' => $activity_names[$lesson->activity_id],
 				'Location' => $names[$lesson->location_id],
@@ -418,8 +422,9 @@ Route::get('/enroll', function ()
 	}
 
 	$data = [
+		'review' => URL::to('/review'),
 		'enroll' => '/enroll',
-		'user_name' => 'John Smith',
+		'user_name' => Auth::user()->first_name.' '.Auth::user()->last_name,
 		'filters' => [
 			[
 				'label' => 'Location',
@@ -437,8 +442,162 @@ Route::get('/enroll', function ()
 		'total_price' => $total_price,
 		'orders' => $orders,
 		'classes' => $classes,
-		'links' => $lessons->appends(['location' => 'd', 'child' => 'd'])->links()
+		'links' => $lessons->links()
 	];
 
 	return View::make('class_selection', $data);
+});
+
+Route::get('/checkout', function () {
+
+	$order_models = Auth::user()->orders()->with('lesson.location', 'lesson.activity')->get();
+	$orders = [];
+	$total_price = 0;
+
+	foreach($order_models as $order) {
+		$lesson = Lesson::find($order->lesson_id);
+		if (is_null($lesson)) continue;
+		$name = $lesson->starts().' '.$lesson->day();
+		$total_price += $lesson->price;
+		$orders[$order->id] = [
+			'name' => $name,
+			'values' => [
+				'Price' => '$'.$lesson->price,
+				'Activity' => $lesson->activity->name,
+				'Location' => $lesson->location->name,
+				'For' => $order->child,
+			],
+			'remove_link' => route('remove order', ['id' => $order->id])
+		];
+	}
+
+	$data = [
+		'total_price' => $total_price,
+		'orders' => $orders,
+		'verify' => '/verify/pay',
+		'user_name' => Auth::user()->first_name.' '.Auth::user()->last_name,
+		'billing_fields' => [
+			[
+				'name' => 'first_name',
+				'type' => 'text',
+				'label' => 'First Name',
+			],
+			[
+				'name' => 'last_name',
+				'type' => 'text',
+				'label' => 'Last Name',
+			],
+			[
+				'name' => 'phone',
+				'type' => 'text',
+				'label' => 'Phone',
+			],
+			[
+				'name' => 'email',
+				'type' => 'text',
+				'label' => 'Email',
+			],
+			[
+				'name' => 'password',
+				'type' => 'password',
+				'label' => 'Password',
+			],
+			[
+				'name' => 'password_confirm',
+				'type' => 'password',
+				'label' => 'Confirm Password',
+			],
+			[
+				'name' => 'address',
+				'type' => 'text',
+				'label' => 'Address',
+			],
+			[
+				'name' => 'address_2',
+				'type' => 'text',
+				'label' => 'Address (line 2)',
+			],
+			[
+				'name' => 'city',
+				'type' => 'text',
+				'label' => 'City',
+			],
+			[
+				'name' => 'state',
+				'type' => 'text',
+				'label' => 'State',
+			],
+			[
+				'name' => 'zip_code',
+				'type' => 'text',
+				'label' => 'Zip Code',
+			],
+		],
+		'payment_fields' => [
+			[
+				'name' => 'cardholder',
+				'type' => 'text',
+				'label' => 'Cardholder\'s name',
+			],
+			[
+				'name' => 'expiration',
+				'type' => 'date',
+				'label' => 'Expiration Date',
+			],
+			[
+				'name' => 'coupon',
+				'type' => 'text',
+				'label' => 'Coupon Code',
+			],
+		],
+	];
+
+	return View::make('pay', $data);
+});
+
+Route::get('/review', function () {
+	$orders = Auth::user()->orders()->with('lesson.location', 'lesson.activity')->paginate(5);
+	$classes = [];
+	$total_price = 0;
+
+	foreach($orders as $order) {
+		$lesson = Lesson::find($order->lesson_id);
+		if (is_null($lesson)) continue;
+		$name = $lesson->starts().' '.$lesson->day();
+		$total_price += $lesson->price;
+
+		$classes[$order->id] = [
+			'name' => $name,
+			'details' => [
+				'Price' => '$'.$lesson->price,
+				'Number of Lessons' => $lesson->number(),
+				'Activity' => $lesson->activity->name,
+				'Location' => $lesson->location->name,
+				'Begins' => $lesson->firstLesson()->format('M jS, Y'),
+				'Ends' => $lesson->lastLesson()->format('M jS, Y'),				
+			],
+			'remove_link' => route('remove order', ['id' => $order->id]),
+			'children' => [
+				'label' => 'Child',
+				'name' => '',
+				'options' => [
+					'-- Select a Child --',
+					'Jane',
+					'John',
+				]
+			],
+			'selected' => ''
+		];
+	}
+
+	$data = [
+		'user_name' => Auth::user()->first_name.' '.Auth::user()->last_name,
+		'classes' => $classes,
+		'links' => $orders->links(),
+		'total_price' => $total_price,
+		'enroll' => URL::to('/enroll'),
+		'pay' => URL::to('/checkout'),
+	];
+
+	return View::make('review', $data);
 });

@@ -1,5 +1,5 @@
 @include('modules.header')
-@include('modules.hud')
+@include('modules.hud', ['title' => 'Dashboard', 'user_name' => null, 'icon' => 'search'])
 @include('modules.banner', ['title' => 'Dashboard'])
 <div class="box bg-1">
 	<div class="box-2">
