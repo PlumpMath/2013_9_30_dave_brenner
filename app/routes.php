@@ -56,6 +56,7 @@ Route::post('/log/in', function () {
             Auth::user()->save();
         }
     */
+
         return Redirect::intended('/');
     } else {
         return Redirect::to('/')->with('auth_failed', true);
@@ -226,13 +227,44 @@ Route::post('/verify/user', function ()
 
 		$data = [
 			'user_name' => 'John Smith',
-			'another_email' => '/'
+			'another_email' => URL::to('/email/verify'),
 		];
+
+		$mail_data = [];
+
+		$mail = new Email;
+		$mail->user_email = $user->email;
+		$mail->user_name = $user->first_name.' '.$user->last_name;
+		$mail->template = 'email.verify';
+		$mail->subject = 'Email Verification';
+		$mail->data = serialize($mail_data);
+		$mail->status = 0;
+
+		$mail->save();
 
         return View::make('/verify', $data);      
     }
 
     return Redirect::to('/register/user')->withErrors($validator)->withInput(Input::except(['password','password_confirm']));
+});
+
+Route::get('/email/verify', function ()
+{
+	$user = Auth::user();
+
+	$mail_data = [];
+
+	$mail = new Email;
+	$mail->user_email = $user->email;
+	$mail->user_name = $user->first_name.' '.$user->last_name;
+	$mail->template = 'email.verify';
+	$mail->subject = 'Email Verification';
+	$mail->data = serialize($mail_data);
+	$mail->status = 0;
+
+	$mail->save();
+
+	Redirect::to('/verfiy/user');
 });
 
 Route::post('/verify/child', function () {
