@@ -113,6 +113,8 @@ return array(
 		'Illuminate\Validation\ValidationServiceProvider',
 		'Illuminate\View\ViewServiceProvider',
 		'Illuminate\Workbench\WorkbenchServiceProvider',
+		'Anouar\Paypalpayment\PaypalpaymentServiceProvider',
+		'Intervention\Validation\ValidationServiceProvider'
 
 	),
 
@@ -178,6 +180,7 @@ return array(
 		'URL'             => 'Illuminate\Support\Facades\URL',
 		'Validator'       => 'Illuminate\Support\Facades\Validator',
 		'View'            => 'Illuminate\Support\Facades\View',
+		'Paypalpayment'   => 'Anouar\Paypalpayment\Facades\PaypalPayment',
 
 	),
 

@@ -28,6 +28,9 @@
 			@endforeach
 		</div>
 		@include('modules.button-0', ['text' => 'OK'])
+		{{ Form::hidden('amount', $total_price) }}
+		{{ Form::hidden('description', "Order for ".$user_name) }}
+
 		{{ Form::close() }}
 	</div>
 	<div class="box box-pad-0 bg-0"></div>

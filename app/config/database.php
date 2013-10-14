@@ -55,9 +55,9 @@ return array(
 		'mysql' => array(
 			'driver'    => 'mysql',
 			'host'      => 'localhost',
-			'database'  => 'main',
+			'database'  => '2013_9_30_dave_brenner',
 			'username'  => 'root',
-			'password'  => '',
+			'password'  => 'taklu12',
 			'charset'   => 'utf8',
 			'collation' => 'utf8_unicode_ci',
 			'prefix'    => '',

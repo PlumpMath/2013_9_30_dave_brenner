@@ -53,6 +53,7 @@
 				<label class="label fg-1" for="password">Zip</label>
 				<input class="input measure type-3" type="text" name="password"/>
 			</div>
+			
 		</div>
 		<div class="box box-pad-2 center">
 			<div class="btn-0 bg-4 fg-2">OK</div>
