@@ -27,6 +27,7 @@ class CreateUserTable extends Migration {
             $table->timestamp('last_logged_in_at')->nullable();
             $table->boolean('remember');
             $table->boolean('status');
+            $table->boolean('subscribed');
             $table->timestamp('deleted_at')->nullable();
             $table->timestamps();    
         });

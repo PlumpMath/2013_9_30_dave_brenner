@@ -3,6 +3,13 @@
 use Illuminate\Auth\UserInterface;
 use Illuminate\Auth\Reminders\RemindableInterface;
 
+    /* User status notes
+
+    2 => just made, awaiting verification
+    1 => verified
+    0 => deactivated
+    */
+
 // {{{ User
 
 class User extends Resource implements UserInterface, RemindableInterface {
