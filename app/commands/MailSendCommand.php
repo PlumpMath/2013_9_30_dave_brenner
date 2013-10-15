@@ -55,7 +55,7 @@ class MailSendCommand extends Command {
 			/**/
 			Mail::send($letter->template, unserialize($letter->data), function ($message) use ($letter)
 			{
-				$message->to('ssanja1@pride.hofstra.edu', 'Shashank Sanjay')->subject('Yo');//$letter->user_email, $letter->user_name)->subject($letter->subject);
+				$message->to($letter->user_email, $letter->user_name)->subject($letter->subject);
 			});
 			/**/
 

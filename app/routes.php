@@ -4,6 +4,8 @@ View::share('assets', (new AssetCollection)->dev()->build());
 
 Route::get('/test/{test}', function ($test)
 {
+    return App::abort(401, 'You are not authorized.');	
+
 	$sass = app_path().'/assets/style/tests/'.$test;
 	shell_exec('sass --no-cache --update '.$sass.'.sass:'.$sass.'.css');
 	$style = file_get_contents($sass.'.css');
@@ -114,6 +116,11 @@ Route::get('/register/child', function ()
 		],
 	];
 
+	if (Auth::check())
+		$data['user_name'] = Auth::user()->first_name.' '.Auth::user()->last_name;
+	else
+        return App::abort(401, 'You are not authorized.');		
+
 	return View::make('register_child', $data);
 });
 
@@ -121,6 +128,7 @@ Route::get('/register/user', function ()
 {
 	$data = [
 		'verify'	=> '/verify/user',
+		'old'		=> (Session::has('_old_input')) ? Session::get('_old_input') : [],
 		'user_name' => 'John Smith',
 		'completed' => ['Your Information'],
 		'fields' => [
@@ -177,6 +185,11 @@ Route::get('/register/user', function ()
 		]
 	];
 
+	if (Auth::check())
+		$data['user_name'] = Auth::user()->first_name.' '.Auth::user()->last_name;
+	else
+        return App::abort(401, 'You are not authorized.');	
+
 	return View::make('register', $data);
 });
 
@@ -226,11 +239,13 @@ Route::post('/verify/user', function ()
         $user->verification()->save($verification);
 
 		$data = [
-			'user_name' => 'John Smith',
+			'user_name' => Auth::user()->first_name.' '.Auth::user()->last_name,
 			'another_email' => URL::to('/email/verify'),
 		];
 
-		$mail_data = [];
+		$mail_data = [
+			'link' => url('/activate', ['hash' => $verification->hash])
+		];
 
 		$mail = new Email;
 		$mail->user_email = $user->email;
@@ -245,11 +260,16 @@ Route::post('/verify/user', function ()
         return View::make('/verify', $data);      
     }
 
-    return Redirect::to('/register/user')->withErrors($validator)->withInput(Input::except(['password','password_confirm']));
+    return Redirect::to('/register/user')->withInput(Input::except(['password','password_confirm']))->withErrors($validator);
 });
 
 Route::get('/email/verify', function ()
 {
+	$data = [];
+
+	if ( ! Auth::check())
+        return App::abort(401, 'You are not authorized.');
+
 	$user = Auth::user();
 
 	$mail_data = [];
@@ -281,6 +301,9 @@ Route::post('/verify/child', function () {
     
     $validator = Validator::make($data, Child::$rules);
 
+	if ( ! Auth::check())
+        return App::abort(401, 'You are not authorized.');	
+
     if ($validator->passes()) {
         $child = new Child;
 
@@ -310,6 +333,8 @@ Route::post('/verify/child', function () {
             'child' => $child,
         ];
 
+		$data['user_name'] = Auth::user()->first_name.' '.Auth::user()->last_name;
+
         return View::make('verify_child', $data);      
     }
 
@@ -334,7 +359,7 @@ Route::get('/activate/{hash}', function ($hash)
     if (is_null($verification)) App::abort('404');
 
 	$data = [
-		'user_name' => 'John Smith',
+		'user_name' => Auth::user()->first_name.' '.Auth::user()->last_name,
 		'home' => '/register/child'
 	];
 
@@ -342,6 +367,9 @@ Route::get('/activate/{hash}', function ($hash)
 });
 
 Route::get('/add_to_order', ['as' => 'add to order', function () {
+	if ( ! Auth::check())
+        return App::abort(401, 'You are not authorized.');	
+
 	$order = new Order;
 	$order->user_id = intval(Auth::user()->id);
 	$order->child_id = 0;
@@ -353,12 +381,18 @@ Route::get('/add_to_order', ['as' => 'add to order', function () {
 }]);
 
 Route::get('/remove_from_order', ['as' => 'remove order', function () {
+	if ( ! Auth::check())
+        return App::abort(401, 'You are not authorized.');	
+
 	$order = Order::destroy(+Input::get('id'));
 	return Redirect::to('/enroll');
 }]);
 
 Route::get('/enroll', function ()
 {
+	if ( ! Auth::check())
+        return App::abort(401, 'You are not authorized.');	
+
 	$requested['loc'] = Input::get('locations');
 	$requested['act'] = Input::get('activities');
 	$requested['chi'] = Input::get('children');
@@ -477,6 +511,8 @@ Route::get('/enroll', function ()
 });
 
 Route::get('/checkout', function () {
+	if ( ! Auth::check())
+        return App::abort(401, 'You are not authorized.');	
 
 	$order_models = Auth::user()->orders()->with('lesson.location', 'lesson.activity')->get();
 	$orders = [];
@@ -618,9 +654,10 @@ Route::get('/checkout', function () {
 	return View::make('pay', $data);
 });
 
-Route::post('verify/pay', 'PaypalPaymentsController@verify');
-
 Route::get('/review', function () {
+	if ( ! Auth::check())
+        return App::abort(401, 'You are not authorized.');	
+
 	$orders = Auth::user()->orders()->with('lesson.location', 'lesson.activity')->paginate(5);
 	$classes = [];
 	$total_price = 0;
@@ -666,7 +703,5 @@ Route::get('/review', function () {
 
 	return View::make('review', $data);
 });
-
-//Route::get('PaypalPayments', 'PaypalPaymentsController@create');
 
 Route::post('/verify/pay', 'PaypalPaymentsController@verify');

@@ -57,6 +57,11 @@ class PaypalPaymentsController extends BaseController {
     */
     public function verify()
     {
+
+        if ( ! Auth::check())
+            return App::abort(401, 'You are not authorized.');
+
+          
         $data = Input::all();
 
         /**
