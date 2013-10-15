@@ -114,7 +114,7 @@ return array(
 		'Illuminate\View\ViewServiceProvider',
 		'Illuminate\Workbench\WorkbenchServiceProvider',
 		'Anouar\Paypalpayment\PaypalpaymentServiceProvider',
-		'Intervention\Validation\ValidationServiceProvider'
+		'Intervention\Validation\ValidationServiceProvider',
 
 	),
 
@@ -181,7 +181,6 @@ return array(
 		'Validator'       => 'Illuminate\Support\Facades\Validator',
 		'View'            => 'Illuminate\Support\Facades\View',
 		'Paypalpayment'   => 'Anouar\Paypalpayment\Facades\PaypalPayment',
-
 	),
 
 );
