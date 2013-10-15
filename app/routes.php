@@ -572,9 +572,29 @@ Route::get('/checkout', function () {
 				'label' => 'Cardholder\'s name',
 			],
 			[
-				'name' => 'expiration',
-				'type' => 'date',
-				'label' => 'Expiration Date',
+				'name' => 'expire_month',
+				'type' => 'number',
+				'label' => 'Expiration Month',
+			],
+			[
+				'name' => 'expire_year',
+				'type' => 'number',
+				'label' => 'Expiration year',
+			],
+			[
+				'name' => 'card_type',
+				'type' => 'text',
+				'label' => 'Card Type',
+			],
+			[
+				'name' => 'card_number',
+				'type' => 'number',
+				'label' => 'Card Number',
+			],
+			[
+				'name' => 'cvv',
+				'type' => 'number',
+				'label' => 'CVV',
 			],
 			[
 				'name' => 'coupon',
@@ -586,6 +606,8 @@ Route::get('/checkout', function () {
 
 	return View::make('pay', $data);
 });
+
+Route::post('verify/pay', 'PaypalPaymentsController@verify');
 
 Route::get('/review', function () {
 	$orders = Auth::user()->orders()->with('lesson.location', 'lesson.activity')->paginate(5);
