@@ -22,6 +22,7 @@ class Child extends Resource {
 
     public static function getBirthday($str)
     {
+        if ( ! preg_match('/\d*\/\d*\/\d*/', $str)) return $str;
     	$birthdate = explode('/', $str);
 
     	return date('Y-m-d H:i:s', mktime(0, 0, 0, $birthdate[0], $birthdate[1], $birthdate[2]));
@@ -29,6 +30,8 @@ class Child extends Resource {
 
     public static function getAge($str)
     {
+        if ( ! preg_match('/\d*\/\d*\/\d*/', $str)) return $str;
+        
     	$birthdate = explode('/', $str);
 
     	return ((+date("Y"))-(+$birthdate[2]));

@@ -73,6 +73,7 @@ Route::get('/register/child', function ()
 {
 	$data = [
 		'verify'	=> '/verify/child',
+		'old'		=> (Session::has('_old_input')) ? Session::get('_old_input') : [],
 		'user_name' => 'John Smith',
 		'completed' => ['Your Information', 'Your Children'],
 		'fields' => [
@@ -106,15 +107,14 @@ Route::get('/register/child', function ()
 				'type' => 'text',
 				'label' => 'Grade',
 			],
-			[
-				'name' => 'returning_player',
-				'type' => 'text',
-				'label' => 'Returning Player',
-			],
-		]
+		],
+		'check' => [
+			'name' => 'returning_player',
+			'label' => 'My child has participated in one of your classes previously',
+		],
 	];
 
-	return View::make('register', $data);
+	return View::make('register_child', $data);
 });
 
 Route::get('/register/user', function ()
@@ -268,13 +268,9 @@ Route::get('/email/verify', function ()
 });
 
 Route::post('/verify/child', function () {
-    $name       = explode(' ', Input::get('name'), 2);
-    $first_name = $name[0];
-    $last_name  = (isset($name[1])) ? $name[1] : '';
-
     $data = [
-        'first_name'        => $first_name,
-        'last_name'         => $last_name,
+        'first_name'        => Input::get('first_name'),
+        'last_name'         => Input::get('last_name'),
         'school'            => Input::get('school'),
         'birthday'          => Child::getBirthday(Input::get('birthday')),
         'age'               => Child::getAge(Input::get('birthday')),
@@ -317,7 +313,7 @@ Route::post('/verify/child', function () {
         return View::make('verify_child', $data);      
     }
 
-    return Redirect::to('/register/child')->withErrors($validator)->withInput(Input::all());
+    return Redirect::to('/register/child')->withInput(Input::all())->withErrors($validator);
 });
 
 Route::get('/activate/{hash}', function ($hash)

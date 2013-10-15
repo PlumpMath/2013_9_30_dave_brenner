@@ -3,12 +3,16 @@
 @else
 <div class="box box-pad-3">
 @endif
-	<label class="label fg-1" for="{{ $name }}">{{ $label }}</label>
+	<div class="float-left margin-0">
 	@if (isset($old[$name]))
-	<input class="input input-full smaller-measure type-3" type="{{ $type }}" name="{{ $name }}" value="{{{ $old[$name] }}}"/>
+		<input class="input type-3" type="checkbox" name="{{ $name }}" checked="true"/>
 	@else
-	<input class="input input-full smaller-measure type-3" type="{{ $type }}" name="{{ $name }}"/>
+		<input class="input type-3" type="checkbox" name="{{ $name }}"/>
 	@endif
+	</div>
+	<div class="float-left">
+		{{ $label }}
+	</div>
 </div>
 @if ($errors->first($name))
 <div class="box box-pad-3 fg-4 {{ $name }}-errors visible-toggle visible">
