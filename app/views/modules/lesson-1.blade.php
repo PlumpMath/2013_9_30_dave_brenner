@@ -5,5 +5,6 @@
 		<li><span class="bold">{{ $detail_name }}:</span> {{{ $detail }}}</li>
 		@endforeach
 	</ul>
+	@include('modules.calendar', ['calendar' => $calendar])
 	@include ('modules.menu-2', $children)
 </div>

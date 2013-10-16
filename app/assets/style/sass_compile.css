@@ -664,8 +664,7 @@ button {
 /* Small Calendar */
 .calendar.small {
   width: auto;
-  border-collapse: separate;
-  margin-bottom: 1.5rem; }
+  border-collapse: separate; }
 
 .calendar.small tr.navigation th {
   padding-bottom: 5px; }
@@ -684,17 +683,13 @@ button {
   height: auto;
   padding: 4px 8px;
   text-align: center;
-  border: 1px solid #EEE;
+  border: 0;
   background: #EEE; }
 
 .calendar.small span.date {
   display: inline;
   padding: 0;
   background: none; }
-
-.calendar.small td.lesson {
-  background-color: #fff;
-  border: 1px solid #C0C0C0; }
 
 @-webkit-keyframes squish {
   0% {

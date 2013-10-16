@@ -4,7 +4,7 @@ View::share('assets', (new AssetCollection)->dev()->build());
 
 Route::get('/test/{test}', function ($test)
 {
-    return App::abort(401, 'You are not authorized.');	
+	return App::abort(401, 'You are not authorized.');	
 
 	$sass = app_path().'/assets/style/tests/'.$test;
 	shell_exec('sass --no-cache --update '.$sass.'.sass:'.$sass.'.css');
@@ -40,35 +40,35 @@ Route::get('/', function ()
 });
 
 Route::post('/log/in', function () {
-    $user = [
-        'email'     => Input::get('email'),
-        'password'  => Input::get('password'),
-    ];
+	$user = [
+		'email'     => Input::get('email'),
+		'password'  => Input::get('password'),
+	];
 
-    if (Auth::attempt($user)) {
-    /*
-        $ip = $_SERVER['REMOTE_ADDR'];
+	if (Auth::attempt($user)) {
+	/*
+		$ip = $_SERVER['REMOTE_ADDR'];
 
-        if (filter_var($ip, FILTER_VALIDATE_IP)) {
-            $geo_info = file_get_contents('http://ipinfo.io/'.$ip);
-            $location = $geo_info['hostname'];
+		if (filter_var($ip, FILTER_VALIDATE_IP)) {
+			$geo_info = file_get_contents('http://ipinfo.io/'.$ip);
+			$location = $geo_info['hostname'];
 
-            Auth::user()->last_logged_in_from = $ip;
-            Auth::user()->last_logged_in_at = $location;
-            Auth::user()->save();
-        }
-    */
+			Auth::user()->last_logged_in_from = $ip;
+			Auth::user()->last_logged_in_at = $location;
+			Auth::user()->save();
+		}
+	*/
 
-        return Redirect::intended('/');
-    } else {
-        return Redirect::to('/')->with('auth_failed', true);
-    }
+		return Redirect::intended('/');
+	} else {
+		return Redirect::to('/')->with('auth_failed', true);
+	}
 });
 
 Route::get('/log/out', function () {
-    Auth::logout();
+	Auth::logout();
 
-    return Redirect::to('/');
+	return Redirect::to('/');
 });
 
 Route::get('/legal/terms_of_agreement', function ()
@@ -137,7 +137,7 @@ Route::get('/register/child', function ()
 	if (Auth::check())
 		$data['user_name'] = Auth::user()->first_name.' '.Auth::user()->last_name;
 	else
-        return App::abort(401, 'You are not authorized.');		
+		return App::abort(401, 'You are not authorized.');		
 
 	return View::make('register_child', $data);
 });
@@ -211,48 +211,48 @@ Route::get('/register/user', function ()
 
 Route::post('/verify/user', function ()
 {
-    $data = [
-        'first_name'        => Input::get('first_name'),
-        'last_name'         => Input::get('last_name'),
-        'email'             => Input::get('email'),
-        'phone'             => Input::get('phone'),
-        'password'          => Input::get('password'),
-        'password_confirm'  => Input::get('password_confirm'),
-        'address'           => Input::get('address'),
-        'city'              => Input::get('city'),
-        'state'             => Input::get('state'),
-        'zip_code'          => Input::get('zip_code'),
-        'status'            => 2,
-        'remember'          => 0,
-    ];
-    
-    $validator = Validator::make($data, User::$rules);
+	$data = [
+		'first_name'        => Input::get('first_name'),
+		'last_name'         => Input::get('last_name'),
+		'email'             => Input::get('email'),
+		'phone'             => Input::get('phone'),
+		'password'          => Input::get('password'),
+		'password_confirm'  => Input::get('password_confirm'),
+		'address'           => Input::get('address'),
+		'city'              => Input::get('city'),
+		'state'             => Input::get('state'),
+		'zip_code'          => Input::get('zip_code'),
+		'status'            => 2,
+		'remember'          => 0,
+	];
+	
+	$validator = Validator::make($data, User::$rules);
 
-    if ($validator->passes()) {
-        $user = new User;
+	if ($validator->passes()) {
+		$user = new User;
 
-        $user->first_name   = $data['first_name'];
-        $user->last_name    = $data['last_name'];
-        $user->email        = $data['email'];
-        $user->phone        = $data['phone'];
-        $user->password     = Hash::make($data['password']);
-        $user->address      = $data['address'];
-        $user->city         = $data['city'];
-        $user->state        = $data['state'];
-        $user->zip_code     = $data['zip_code'];
-        $user->status       = $data['status'];
-        $user->remember     = $data['remember'];
+		$user->first_name   = $data['first_name'];
+		$user->last_name    = $data['last_name'];
+		$user->email        = $data['email'];
+		$user->phone        = $data['phone'];
+		$user->password     = Hash::make($data['password']);
+		$user->address      = $data['address'];
+		$user->city         = $data['city'];
+		$user->state        = $data['state'];
+		$user->zip_code     = $data['zip_code'];
+		$user->status       = $data['status'];
+		$user->remember     = $data['remember'];
 
-        $user->save(); 
+		$user->save(); 
 
-        $verification = new Verification;
+		$verification = new Verification;
 
-        $verification->hash = md5(mt_rand(0, 65535));
-        $verification->verified_on = null;
+		$verification->hash = md5(mt_rand(0, 65535));
+		$verification->verified_on = null;
 
-        $verification->save();
+		$verification->save();
 
-        $user->verification()->save($verification);
+		$user->verification()->save($verification);
 
 		$data = [
 			'user_name' => null,
@@ -273,10 +273,10 @@ Route::post('/verify/user', function ()
 
 		$mail->save();
 
-        return View::make('/verify', $data);      
-    }
+		return View::make('/verify', $data);      
+	}
 
-    return Redirect::to('/register/user')->withInput(Input::except(['password','password_confirm']))->withErrors($validator);
+	return Redirect::to('/register/user')->withInput(Input::except(['password','password_confirm']))->withErrors($validator);
 });
 
 Route::get('/email/verify', function ()
@@ -284,7 +284,7 @@ Route::get('/email/verify', function ()
 	$data = [];
 
 	if ( ! Auth::check())
-        return App::abort(401, 'You are not authorized.');
+		return App::abort(401, 'You are not authorized.');
 
 	$user = Auth::user();
 
@@ -304,82 +304,82 @@ Route::get('/email/verify', function ()
 });
 
 Route::post('/verify/child', function () {
-    $data = [
-        'first_name'        => Input::get('first_name'),
-        'last_name'         => Input::get('last_name'),
-        'school'            => Input::get('school'),
-        'birthday'          => Child::getBirthday(Input::get('birthday')),
-        'age'               => Child::getAge(Input::get('birthday')),
-        'grade'             => Input::get('grade'),
-        'gender'            => Input::get('gender'),
-        'returning_player'  => (Input::has('returning_player')) ? 1 : 0,
-    ];
-    
-    $validator = Validator::make($data, Child::$rules);
+	$data = [
+		'first_name'        => Input::get('first_name'),
+		'last_name'         => Input::get('last_name'),
+		'school'            => Input::get('school'),
+		'birthday'          => Child::getBirthday(Input::get('birthday')),
+		'age'               => Child::getAge(Input::get('birthday')),
+		'grade'             => Input::get('grade'),
+		'gender'            => Input::get('gender'),
+		'returning_player'  => (Input::has('returning_player')) ? 1 : 0,
+	];
+	
+	$validator = Validator::make($data, Child::$rules);
 
 	if ( ! Auth::check())
-        return App::abort(401, 'You are not authorized.');	
+		return App::abort(401, 'You are not authorized.');	
 
-    if ($validator->passes()) {
-        $child = new Child;
+	if ($validator->passes()) {
+		$child = new Child;
 
-        $child->first_name          = $data['first_name'];
-        $child->last_name           = $data['last_name'];
-        $child->school              = $data['school'];
-        $child->birthday            = $data['birthday'];
-        $child->age                 = $data['age'];
-        $child->grade               = $data['grade'];
-        $child->gender              = $data['gender'];
-        $child->returning_player    = $data['returning_player'];
+		$child->first_name          = $data['first_name'];
+		$child->last_name           = $data['last_name'];
+		$child->school              = $data['school'];
+		$child->birthday            = $data['birthday'];
+		$child->age                 = $data['age'];
+		$child->grade               = $data['grade'];
+		$child->gender              = $data['gender'];
+		$child->returning_player    = $data['returning_player'];
 
-        $child->save(); 
+		$child->save(); 
 
-        $user = Auth::user();
+		$user = Auth::user();
 
-        $user->children()->save($child);
+		$user->children()->save($child);
 
-        $data = [
-            'child' => $child,
-            'enroll'       => URL::to('/enroll'),
-            'register_child'       => URL::to('/register/child'),
-        ];
+		$data = [
+			'child' => $child,
+			'enroll'       => URL::to('/enroll'),
+			'register_child'       => URL::to('/register/child'),
+		];
 
 		$data['user_name'] = Auth::user()->first_name.' '.Auth::user()->last_name;
 
-        return View::make('verify_child', $data);      
-    }
+		return View::make('verify_child', $data);      
+	}
 
-    return Redirect::to('/register/child')->withInput(Input::all())->withErrors($validator);
+	return Redirect::to('/register/child')->withInput(Input::all())->withErrors($validator);
 });
 
 Route::get('/activate/{hash}', function ($hash)
 {
-    $verification = Verification::where('hash', '=', $hash)->first();
+	$verification = Verification::where('hash', '=', $hash)->first();
 
-    Auth::loginUsingId($verification->user_id);
+	Auth::loginUsingId($verification->user_id);
 
-    $user = Auth::user();
+	$user = Auth::user();
 
-    if ($user->status === 2) {
-        $user->status = 1;
-        $user->save();
-    } else {
-        App::abort('404');
-    }
+	if ($user->status === 2) {
+		$user->status = 1;
+		$user->save();
+	} else {
+		App::abort('404');
+	}
 
-    if (is_null($verification)) App::abort('404');
+	if (is_null($verification)) App::abort('404');
 
 	$data = [
 		'user_name' => Auth::user()->first_name.' '.Auth::user()->last_name,
 		'home' => '/register/child'
 	];
 
-    return View::make('/activate', $data);
+	return View::make('/activate', $data);
 });
 
 Route::get('/add_to_order', ['as' => 'add to order', function () {
 	if ( ! Auth::check())
-        return App::abort(401, 'You are not authorized.');	
+		return App::abort(401, 'You are not authorized.');	
 
 	$order = new Order;
 	$order->user_id = intval(Auth::user()->id);
@@ -397,7 +397,7 @@ Route::get('/add_to_wait', ['as' => 'add to wait list', function () {
 
 Route::get('/remove_from_order', ['as' => 'remove order', function () {
 	if ( ! Auth::check())
-        return App::abort(401, 'You are not authorized.');	
+		return App::abort(401, 'You are not authorized.');	
 
 	$order = Order::destroy(+Input::get('id'));
 	return Redirect::to('/enroll');
@@ -406,21 +406,21 @@ Route::get('/remove_from_order', ['as' => 'remove order', function () {
 Route::get('/enroll', function ()
 {
 	if ( ! Auth::check())
-        return App::abort(401, 'You are not authorized.');
+		return App::abort(401, 'You are not authorized.');
 
 	$requested['loc'] = Input::get('locations');
 	$requested['act'] = Input::get('activities');
 	$requested['chi'] = Input::get('children');
-    
-    foreach ($requested as $key => $request) {
-	    $vloc = Validator::make(
-	    	[ $key => $request],
-	    	[ $key => 'integer']
-	    );
+	
+	foreach ($requested as $key => $request) {
+		$vloc = Validator::make(
+			[ $key => $request],
+			[ $key => 'integer']
+		);
 
-	    if ($vloc->fails()) {
-	    	$requested[$key] = null;
-	    }
+		if ($vloc->fails()) {
+			$requested[$key] = null;
+		}
 	}
 
 	$locations = Location::all();
@@ -552,7 +552,7 @@ Route::get('/enroll', function ()
 
 Route::get('/checkout', function () {
 	if ( ! Auth::check())
-        return App::abort(401, 'You are not authorized.');	
+		return App::abort(401, 'You are not authorized.');	
 
 	$order_models = Auth::user()->orders()->with('lesson.location', 'lesson.activity')->get();
 	$orders = [];
@@ -696,7 +696,7 @@ Route::get('/checkout', function () {
 
 Route::get('/review', function () {
 	if ( ! Auth::check())
-        return App::abort(401, 'You are not authorized.');	
+		return App::abort(401, 'You are not authorized.');
 
 	$orders = Auth::user()->orders()->with('lesson.location', 'lesson.activity')->paginate(5);
 	$classes = [];
@@ -710,9 +710,38 @@ Route::get('/review', function () {
 
 	foreach($orders as $order) {
 		$lesson = Lesson::find($order->lesson_id);
+		$lesson->load('dates');
+
+		$dates = $lesson->dates()->get();
+		$templates = LessonDateTemplate::all();
+
 		if (is_null($lesson)) continue;
+
 		$name = $lesson->starts().' '.$lesson->day();
 		$total_price += $lesson->price;
+
+		$month = isset($_GET['m'.$order->id]) ? $_GET['m'.$order->id] : $lesson->firstLesson()->format('m');
+		$year  = isset($_GET['y'.$order->id]) ? $_GET['y'.$order->id] : $lesson->firstLesson()->format('y');
+
+		$calendar = Calendar::factory($month, $year, [
+
+			'id' => $order->id,
+
+		]);
+
+		$calendar->standard('today')->standard('prev-next');
+
+		foreach ($dates as $date) {
+			$class = strtolower(preg_replace('/[-\s]/', '_', $templates[$date->lesson_date_template_id-1]->name));
+
+			$event = $calendar->event()
+				->condition('timestamp', strtotime($date->starts_on))
+				->title($templates[$date->lesson_date_template_id-1]->name)
+				->output($templates[$date->lesson_date_template_id-1]->description)
+				->add_class($class);
+
+			$calendar->attach($event);
+		}
 
 		$classes[$order->id] = [
 			'name' => $name,
@@ -730,7 +759,8 @@ Route::get('/review', function () {
 				'name' => '',
 				'options' => $options,
 			],
-			'selected' => ''
+			'selected' => '',
+			'calendar' => $calendar,
 		];
 	}
 
