@@ -23,9 +23,15 @@
 	</div>
 	<div class="box-4 bg-0 border-left">
 		@include('modules.section_divide', ['name' => 'Classes'])
+		@if ($classes === [])
+		<div class="box box-pad-0 border-bottom-0 bg-1 center">
+		<span class="type-1">Sorry! :(</span><br/>There aren't any classes with the filters you selected. Try something else?
+		</div>
+		@else
 		@foreach ($classes as $class)
 		@include('modules.lesson-0', $class)
 		@endforeach
+		@endif
 	</div>
 	<div class="box box-pad-0 bg-0">{{ $links }}</div>
 </div>

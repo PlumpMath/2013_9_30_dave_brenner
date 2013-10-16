@@ -85,7 +85,7 @@ class Lesson extends Resource {
 
     public function children()
     {
-        return $this->belongsToMany('Children');
+        return $this->belongsToMany('Child');
     }
 
     public function restrictions()

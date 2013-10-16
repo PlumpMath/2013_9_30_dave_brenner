@@ -94,7 +94,7 @@ class LessonsTableSeeder extends Seeder
         $restriction = LessonRestriction::create($data);
 
         $now = date('Y-m-d H:i:s');
-        for ($i=0; $i < 5; $i++) { 
+        for ($i=0; $i < 20; $i++) { 
             $data = [
                 'section_id'    => mt_rand(5,10),
                 'spots'         => mt_rand(15,30),

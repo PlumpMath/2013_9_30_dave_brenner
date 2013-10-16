@@ -71,6 +71,24 @@ Route::get('/log/out', function () {
     return Redirect::to('/');
 });
 
+Route::get('/legal/terms_of_agreement', function ()
+{
+	$data = [
+		'user_name' => (Auth::check()) ? Auth::user()->first_name.' '.Auth::user()->last_name : null,
+	];
+
+	return View::make('terms',$data);
+});
+
+Route::get('/legal/privacy_policy', function ()
+{
+	$data = [
+		'user_name' => (Auth::check()) ? Auth::user()->first_name.' '.Auth::user()->last_name : null,
+	];
+
+	return View::make('privacy',$data);
+});
+
 Route::get('/register/child', function ()
 {
 	$data = [
@@ -129,7 +147,7 @@ Route::get('/register/user', function ()
 	$data = [
 		'verify'	=> '/verify/user',
 		'old'		=> (Session::has('_old_input')) ? Session::get('_old_input') : [],
-		'user_name' => 'John Smith',
+		'user_name' => null,
 		'completed' => ['Your Information'],
 		'fields' => [
 			[
@@ -187,8 +205,6 @@ Route::get('/register/user', function ()
 
 	if (Auth::check())
 		$data['user_name'] = Auth::user()->first_name.' '.Auth::user()->last_name;
-	else
-        return App::abort(401, 'You are not authorized.');	
 
 	return View::make('register', $data);
 });
@@ -239,7 +255,7 @@ Route::post('/verify/user', function ()
         $user->verification()->save($verification);
 
 		$data = [
-			'user_name' => Auth::user()->first_name.' '.Auth::user()->last_name,
+			'user_name' => null,
 			'another_email' => URL::to('/email/verify'),
 		];
 
@@ -322,15 +338,10 @@ Route::post('/verify/child', function () {
 
         $user->children()->save($child);
 
-        $url = [
-            'home'          => URL::to('/'),
-            'register'      => URL::to('/register/child'),
-            'sign_up'       => URL::to('/signup'),
-        ]; 
         $data = [
-            'title' => 'Adding your child -- myafterschoolprograms.com',
-            'url'   => $url,
             'child' => $child,
+            'enroll'       => URL::to('/enroll'),
+            'register_child'       => URL::to('/register/child'),
         ];
 
 		$data['user_name'] = Auth::user()->first_name.' '.Auth::user()->last_name;
@@ -380,6 +391,10 @@ Route::get('/add_to_order', ['as' => 'add to order', function () {
 	return Redirect::to('/enroll');
 }]);
 
+Route::get('/add_to_wait', ['as' => 'add to wait list', function () {
+	return Redirect::to('/enroll');
+}]);
+
 Route::get('/remove_from_order', ['as' => 'remove order', function () {
 	if ( ! Auth::check())
         return App::abort(401, 'You are not authorized.');	
@@ -391,7 +406,7 @@ Route::get('/remove_from_order', ['as' => 'remove order', function () {
 Route::get('/enroll', function ()
 {
 	if ( ! Auth::check())
-        return App::abort(401, 'You are not authorized.');	
+        return App::abort(401, 'You are not authorized.');
 
 	$requested['loc'] = Input::get('locations');
 	$requested['act'] = Input::get('activities');
@@ -444,6 +459,27 @@ Route::get('/enroll', function ()
 		$number = $lesson->number();
 		$name = $lesson->starts().' '.$lesson->day();
 		$price = round($lesson->price / $number, 0);
+		$restrict_models = $lesson->restrictions()->get();
+		$grades = '';
+		$gender = '';
+
+		foreach ($restrict_models as $restriction) {
+			if ($restriction->property === 'grade') {
+				$grades .= $restriction->value.', ';
+			} else if ($restriction->property === 'gender') {
+				$gender = ucfirst($restriction->value);
+			}
+		}
+		$spots = max($lesson->spots-count($lesson->children), 0);
+		$grades = trim($grades, ', ');
+
+		if ($spots > 0) {
+			$actionable = 'Add to Order';
+			$link = route('add to order', ['lesson_id' => $lesson->id]);
+		} else {
+			$actionable = 'Join Wait List';
+			$link = route('add to wait list', ['lesson_id' => $lesson->id]);
+		}
 
 		$classes[] = [
 				'id' => $lesson->id,
@@ -455,8 +491,12 @@ Route::get('/enroll', function ()
 					'Location' => $names[$lesson->location_id],
 					'Begins' => $lesson->firstLesson()->format('M jS, Y'),
 					'Ends' => $lesson->lastLesson()->format('M jS, Y'),
+					'Spots' => $spots.' available',
+					'Grades' => $grades,
+					'Gender' => $gender
 				],
-				'link' => route('add to order', ['lesson_id' => $lesson->id]),
+				'link' => $link,
+				'actionable' => $actionable,
 			];
 	}
 
@@ -661,6 +701,12 @@ Route::get('/review', function () {
 	$orders = Auth::user()->orders()->with('lesson.location', 'lesson.activity')->paginate(5);
 	$classes = [];
 	$total_price = 0;
+	$children = Auth::user()->children()->get();
+
+	$options = ['-- Select a Child --'];
+	foreach ($children as $child) {
+		$options[] = $child->first_name.' '.$child->last_name;
+	}
 
 	foreach($orders as $order) {
 		$lesson = Lesson::find($order->lesson_id);
@@ -682,11 +728,7 @@ Route::get('/review', function () {
 			'children' => [
 				'label' => 'Child',
 				'name' => '',
-				'options' => [
-					'-- Select a Child --',
-					'Jane',
-					'John',
-				]
+				'options' => $options,
 			],
 			'selected' => ''
 		];
@@ -699,6 +741,7 @@ Route::get('/review', function () {
 		'total_price' => $total_price,
 		'enroll' => URL::to('/enroll'),
 		'pay' => URL::to('/checkout'),
+		'terms_of_service' => URL::to('/legal/terms_of_agreement'),
 	];
 
 	return View::make('review', $data);
