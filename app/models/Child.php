@@ -55,7 +55,7 @@ class Child extends Resource {
         return $this->belongsToMany('Lesson');
     }
 
-    public function order()
+    public function orders()
     {
         return $this->hasMany('Order');
     }

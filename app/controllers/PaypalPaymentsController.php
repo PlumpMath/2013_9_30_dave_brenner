@@ -254,13 +254,7 @@ class PaypalPaymentsController extends BaseController {
         
         $response=$payment->toArray();
 
-        //echo"<pre>";
-        //print_r($response);
-        dd($response);
-        //var_dump($payment->getId());
-
-        //print_r($payment->toArray());//$payment->toJson();
-        
+        return Redirect::to('/confirmation');
 	}
 
 	/**

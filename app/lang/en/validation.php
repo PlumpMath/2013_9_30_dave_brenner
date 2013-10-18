@@ -69,6 +69,10 @@ return array(
 	"unique"           => "The :attribute has already been taken.",
 	"url"              => "The :attribute format is invalid.",
 
+
+	"belongs_to_user"  => "The child selected must be yours.",
+	"is_eligible"  => "The child selected is not eligible for the class.",
+
 	/*
 	|--------------------------------------------------------------------------
 	| Custom Validation Language Lines
