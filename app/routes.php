@@ -851,7 +851,30 @@ Route::post('/verify/review', function () {
 });
 
 Route::get('/confirmation', function () {
+	//attach children to lessons in orders
+	$orders = Auth::user()->orders()->get();
 
+	foreach ($orders as $order) {
+		$lesson = $orders->lesson;
+		$child 	= $orders->child;
+
+		$lesson->children()->attach($child);
+
+		//create "receipt" & attach orders to it
+
+		//remove "checked out" spots
+		$order->delete();
+	}
+
+	$data = [];
+
+	return View::make('confirmation', $data);
+});
+
+Route::get('/dashboard', function () {
+	$data = [];
+
+	return View::make('dashboard', $data);
 });
 
 Route::post('/verify/pay', 'PaypalPaymentsController@verify');

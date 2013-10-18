@@ -12,3 +12,5 @@
 */
 Artisan::add(new MailSendCommand);
 Artisan::add(new MailCleanCommand);
+
+Artisan::add(new CleanCommand);

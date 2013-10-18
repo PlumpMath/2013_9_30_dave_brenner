@@ -13,6 +13,7 @@ class Waitlist extends Resource {
     protected $relations_to = [
         'User',
         'Child',
+        'Lesson',
     ];
 
     // }}}
