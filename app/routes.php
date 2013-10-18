@@ -186,6 +186,11 @@ Route::get('/register/user', function ()
 				'label' => 'Address',
 			],
 			[
+				'name' => 'address_2',
+				'type' => 'text',
+				'label' => 'Address',
+			],
+			[
 				'name' => 'city',
 				'type' => 'text',
 				'label' => 'City',
@@ -576,8 +581,11 @@ Route::get('/enroll', function ()
 Route::get('/checkout', function () {
 	if ( ! Auth::check())
 		return App::abort(401, 'You are not authorized.');	
-
+	
 	$order_models = Auth::user()->orders()->with('lesson.location', 'lesson.activity')->get();
+
+	if (count($order_models) === 0) return Redirect::to('/review');
+
 	$orders = [];
 	$total_price = 0;
 
@@ -613,26 +621,6 @@ Route::get('/checkout', function () {
 				'name' => 'last_name',
 				'type' => 'text',
 				'label' => 'Last Name',
-			],
-			[
-				'name' => 'phone',
-				'type' => 'text',
-				'label' => 'Phone',
-			],
-			[
-				'name' => 'email',
-				'type' => 'text',
-				'label' => 'Email',
-			],
-			[
-				'name' => 'password',
-				'type' => 'password',
-				'label' => 'Password',
-			],
-			[
-				'name' => 'password_confirm',
-				'type' => 'password',
-				'label' => 'Confirm Password',
 			],
 			[
 				'name' => 'address',

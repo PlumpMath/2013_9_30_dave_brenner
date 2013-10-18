@@ -12,6 +12,11 @@
 	</div>
 	<div class="box-4 bg-0 border-left">
 		@include('modules.section_divide', ['name' => 'Orders'])
+		@if (empty($classes))
+		<div class="box box-pad-0 border-bottom-0 bg-1 center">
+		<span class="type-1">Sorry! :(</span><br/>You either haven't added anything to your cart, or the orders you had expired.
+		</div>
+		@else
 		{{ Form::open(['url' => $pay]) }}
 		@foreach ($classes as $class)
 		@include('modules.lesson-1', $class)
@@ -26,6 +31,7 @@
 		</div>
 		<div class="box box-pad-0 bg-1"><div class="box-pad-5 float-left"><span class="bold">Total:</span> ${{ $total_price }}</div><div class="float-right"><button type="submit" class="btn-0 bg-4 fg-2">Finish &amp; Pay</button></div></div>
 		{{ Form::close() }}
+		@endif
 	</div>
 	<div class="box box-pad-0 bg-0">{{ $links }}</div>
 </div>

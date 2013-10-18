@@ -67,7 +67,7 @@ class Lesson extends Resource {
 
     public function spots()
     {
-        $orders = count(Order::where('lesson_id', '=', $lesson->id)->get());
+        $orders = count(Order::where('lesson_id', '=', $this->id)->get());
 
         return max($this->spots - (count($this->children) + $orders), 0);
     }

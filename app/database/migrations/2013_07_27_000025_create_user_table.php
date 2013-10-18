@@ -20,6 +20,7 @@ class CreateUserTable extends Migration {
             $table->string('first_name');
             $table->string('last_name');
             $table->string('address', 40);
+            $table->string('address_2', 40);
             $table->string('city', 45);
             $table->string('state', 2);
             $table->string('zip_code', 6);

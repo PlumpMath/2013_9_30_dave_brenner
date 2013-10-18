@@ -14,8 +14,8 @@
 	</div>
 	<div class="box-4 bg-0 border-left border-bottom-0">
 		@include('modules.section_divide', ['name' => 'Billing Info'])
-		<div class="box box-pad-0 bg-1"><div class="float-left margin-0"><input class="input type-3" type="checkbox" name="terms_of_agreement"/></div><div class="float-left">My billing information is the same as from my account</div></div>
 		{{ Form::open(['url' => $verify]) }}
+		<div class="box box-pad-0 bg-1"><div class="float-left margin-0"><input class="input type-3" type="checkbox" name="same_as_billing"/></div><div class="float-left">My billing information is the same as from my account</div></div>
 		<div class="box box-pad-0">
 			@foreach($billing_fields as $field)
 				@include('modules.input-0', $field)

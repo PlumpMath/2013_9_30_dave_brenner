@@ -43,6 +43,7 @@ class User extends Resource implements UserInterface, RemindableInterface {
         'phone'         => 'required',
         'password'      => 'required|min:6|same:password_confirm',
         'address'       => 'required',
+        'address_2'     => '',
         'city'          => 'required',
         'state'         => 'required',
         'zip_code'      => 'required',

@@ -64,12 +64,24 @@ class PaypalPaymentsController extends BaseController {
           
         $data = Input::all();
 
+        if (Input::has('same_as_billing')) {
+            $user = Auth::user();
+
+            $data['first_name'] = $user->first_name;
+            $data['last_name'] = $user->last_name;
+            $data['address'] = $user->address;
+            $data['address_2'] = $user->address_2;
+            $data['city'] = $user->city;
+            $data['state'] = $user->state;
+            $data['zip_code'] = $user->zip_code;
+        }
+
         /**
         *   Standardize input, change to lowercase 
         */
-       foreach ($data as $key => $value) {
+        foreach ($data as $key => $value) {
            $data[$key] = strtolower($value);
-       }
+        }
 
         /**
         *   Change settings for CVV auth, place first digit of cardnumber
@@ -78,8 +90,15 @@ class PaypalPaymentsController extends BaseController {
         $firstnumber = (int) substr($data['card_number'], 0, 1);
         $cvv = $data['cvv'];
         $data['cvv'] += ($firstnumber == 3 ? "30000":"1000");
-        $userrules = User::$rules;
-        unset($userrules['email']);
+        $userrules = [
+            'first_name'    => 'required',
+            'last_name'     => 'required',
+            'address'       => 'required',
+            'address_2'     => '',
+            'city'          => 'required',
+            'state'         => 'required',
+            'zip_code'      => 'required',
+        ];
         $cardrules = array (
             'card_number' => 'required|creditcard',
             'cvv' => 'required|cvv',
