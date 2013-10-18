@@ -14,7 +14,8 @@ class CreateCouponsTable extends Migration {
 	{
 		Schema::create('coupons', function(Blueprint $table) {
 			$table->increments('id');
-			$table->integer('user_id')->nullable();
+			$table->string('code');
+			$table->integer('user_id');
 			$table->decimal('price', 5, 2);
 			$table->timestamp('expires_on');
 			$table->timestamps();

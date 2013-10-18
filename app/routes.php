@@ -300,7 +300,12 @@ Route::get('/email/verify', function ()
 
 	$mail->save();
 
-	Redirect::to('/verfiy/user');
+	$data = [
+		'user_name' => null,
+		'another_email' => URL::to('/email/verify'),
+	];
+
+	return View::make('/verify', $data);   
 });
 
 Route::post('/verify/child', function () {
@@ -392,6 +397,16 @@ Route::get('/add_to_order', ['as' => 'add to order', function () {
 }]);
 
 Route::get('/add_to_wait', ['as' => 'add to wait list', function () {
+	if ( ! Auth::check())
+		return App::abort(401, 'You are not authorized.');	
+
+	$waitlist = new Waitlist;
+	$waitlist->user_id = intval(Auth::user()->id);
+	$waitlist->child_id = 0;
+	$waitlist->lesson_id = intval(Input::get('lesson_id'));
+
+	$waitlist->save();
+
 	return Redirect::to('/enroll');
 }]);
 
@@ -456,6 +471,9 @@ Route::get('/enroll', function ()
 	}
 
 	foreach ($lessons as $lesson) {
+		$order = Order::whereRaw('lesson_id = ? and user_id = ?', [$lesson->id, Auth::user()->id])->first();
+		$waitlist = count(Waitlist::where('lesson_id', $lesson->id)->get());
+
 		$number = $lesson->number();
 		$name = $lesson->starts().' '.$lesson->day();
 		$price = round($lesson->price / $number, 0);
@@ -470,15 +488,20 @@ Route::get('/enroll', function ()
 				$gender = ucfirst($restriction->value);
 			}
 		}
-		$spots = max($lesson->spots-count($lesson->children), 0);
-		$grades = trim($grades, ', ');
 
-		if ($spots > 0) {
-			$actionable = 'Add to Order';
-			$link = route('add to order', ['lesson_id' => $lesson->id]);
+		$spots = max($lesson->spots() - $waitlist, 0);
+		$grades = trim($grades, ', ');
+		if ($order) {
+			$actionable = 'In Cart';
+			$link = '';
 		} else {
-			$actionable = 'Join Wait List';
-			$link = route('add to wait list', ['lesson_id' => $lesson->id]);
+			if ($spots > 0) {
+				$actionable = 'Add to Order';
+				$link = route('add to order', ['lesson_id' => $lesson->id]);
+			} else {
+				$actionable = 'Join Wait List';
+				$link = route('add to wait list', ['lesson_id' => $lesson->id]);
+			}
 		}
 
 		$classes[] = [

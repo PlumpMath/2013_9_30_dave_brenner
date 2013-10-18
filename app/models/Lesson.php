@@ -13,6 +13,8 @@ class Lesson extends Resource {
         'LateSignUp',
         'Activity',
         'LessonRestriction',
+        'Order',
+        'Waitlist',
     ];
 
     public function day()
@@ -63,6 +65,18 @@ class Lesson extends Resource {
 
     }
 
+    public function spots()
+    {
+        $orders = count(Order::where('lesson_id', '=', $lesson->id)->get());
+
+        return max($this->spots - (count($this->children) + $orders), 0);
+    }
+
+    public function firstInLine()
+    {
+        return $this->waiting()->first();
+    }
+
     public function activity()
     {
         return $this->belongsTo('Activity');
@@ -96,5 +110,10 @@ class Lesson extends Resource {
     public function order()
     {
         return $this->hasMany('Order');
+    }
+
+    public function waiting()
+    {
+        return $this->hasMany('Waitlist');
     }
 }

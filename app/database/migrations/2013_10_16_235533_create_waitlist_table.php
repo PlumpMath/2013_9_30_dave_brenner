@@ -15,6 +15,8 @@ class CreateWaitlistTable extends Migration {
 		Schema::create('waitlists', function(Blueprint $table) {
 			$table->increments('id');
 			$table->integer('lesson_id');
+			$table->integer('user_id');
+			$table->integer('child_id');
 			$table->timestamps();
 		});
 	}
