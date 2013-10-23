@@ -70,6 +70,7 @@ return array(
 	"url"              => "The :attribute format is invalid.",
 
 
+	"coupon"  => "Sorry, we don't recognize that coupon.",
 	"belongs_to_user"  => "The child selected must be yours.",
 	"is_eligible"  => "The child selected is not eligible for the class.",
 

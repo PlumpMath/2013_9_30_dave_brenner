@@ -17,6 +17,7 @@ Route::get('/test/{test}', function ($test)
 Route::get('/', function ()
 {
 
+
 	$data = [
 		'user_name' => null,
 		'fields' => [
@@ -35,6 +36,10 @@ Route::get('/', function ()
 
 	if (Auth::check())
 		$data['user_name'] = Auth::user()->first_name.' '.Auth::user()->last_name;
+
+
+	$hash = Hash::make(View::make('home', $data)->render());
+	dd(Hash::make('red'));
 
 	return View::make('home', $data);
 });
@@ -365,6 +370,8 @@ Route::post('/verify/child', function () {
 Route::get('/activate/{hash}', function ($hash)
 {
 	$verification = Verification::where('hash', '=', $hash)->first();
+
+	dd($verification);
 
 	Auth::loginUsingId($verification->user_id);
 
@@ -786,6 +793,21 @@ Route::get('/review', function () {
 	];
 
 	return View::make('review', $data);
+});
+
+Validator::extend('coupon', function($attribute, $value, $parameters)
+{
+	$user = Auth::user();
+	if ($user === null) return false;
+
+	$coupons = $user->coupons()->get();
+	if ($coupon === null) return false;
+
+	foreach ($coupons as $coupon) {
+		if ($coupon->code === $attribute) return true;
+	}
+
+    return false;
 });
 
 Validator::extend('belongs_to_user', function($attribute, $value, $parameters)

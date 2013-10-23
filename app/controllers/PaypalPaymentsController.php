@@ -99,13 +99,16 @@ class PaypalPaymentsController extends BaseController {
             'state'         => 'required',
             'zip_code'      => 'required',
         ];
+        
         $cardrules = array (
             'card_number' => 'required|creditcard',
             'cvv' => 'required|cvv',
             'email' => 'required|email',
             'expire_month' => 'required|size:2',
             'expire_year' => 'required|size:4',
+            'coupon' => 'coupon'
             );
+
         $rules = $userrules + $cardrules;
         
         $verify = Validator::make($data, $rules);
