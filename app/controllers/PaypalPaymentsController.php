@@ -98,12 +98,12 @@ class PaypalPaymentsController extends BaseController {
             'city'          => 'required',
             'state'         => 'required',
             'zip_code'      => 'required',
+            'phone'         => 'required',
         ];
         
         $cardrules = array (
             'card_number' => 'required|creditcard',
             'cvv' => 'required|cvv',
-            'email' => 'required|email',
             'expire_month' => 'required|size:2',
             'expire_year' => 'required|size:4',
             'coupon' => 'coupon'
@@ -191,8 +191,14 @@ class PaypalPaymentsController extends BaseController {
                 $data['card'][$key] = strval($val);
             }
         }
-        echo "<pre>";
-        print_r($data);
+        
+        // Account for coupons
+        if (isset($in['coupon'])) {
+            //  lookup coupon value
+            $value = 100.00;
+            $data['amount'] -= $value;
+            $data['description'] .= " with coupon: " . $in['coupon'];
+        }
         
         // ### Address
         // Base Address object used as shipping or billing
@@ -275,8 +281,10 @@ class PaypalPaymentsController extends BaseController {
         }
         
         $response=$payment->toArray();
+        $response['coupon'] = $in['coupon'];
 
         return Redirect::to('/confirmation');
+
 	}
 
 	/**
