@@ -371,13 +371,11 @@ Route::get('/activate/{hash}', function ($hash)
 {
 	$verification = Verification::where('hash', '=', $hash)->first();
 
-	dd($verification);
-
 	Auth::loginUsingId($verification->user_id);
 
 	$user = Auth::user();
 
-	if ($user->status === 2) {
+	if ($user->status == 2) {
 		$user->status = 1;
 		$user->save();
 	} else {
