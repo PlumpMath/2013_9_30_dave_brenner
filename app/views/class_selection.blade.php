@@ -25,7 +25,7 @@
 		@include('modules.section_divide', ['name' => 'Classes'])
 		@if ($classes === [])
 		<div class="box box-pad-0 border-bottom-0 bg-1 center">
-		<span class="type-1">Sorry! :(</span><br/>There aren't any classes with the filters you selected. Try something else?
+		<span class="type-1">Sorry! :(</span><br/>There aren't any classes right now.
 		</div>
 		@else
 		@foreach ($classes as $class)

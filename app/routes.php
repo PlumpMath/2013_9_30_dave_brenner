@@ -16,8 +16,6 @@ Route::get('/test/{test}', function ($test)
 
 Route::get('/', function ()
 {
-
-
 	$data = [
 		'user_name' => null,
 		'fields' => [
@@ -36,10 +34,6 @@ Route::get('/', function ()
 
 	if (Auth::check())
 		$data['user_name'] = Auth::user()->first_name.' '.Auth::user()->last_name;
-
-
-	$hash = Hash::make(View::make('home', $data)->render());
-	dd(Hash::make('red'));
 
 	return View::make('home', $data);
 });
@@ -481,6 +475,19 @@ Route::get('/enroll', function ()
 	}
 
 	foreach ($lessons as $lesson) {
+		$opensignup = $lesson->dates()->where('lesson_date_template_id', '=', '2')->first();
+		$latesignup = $lesson->dates()->where('lesson_date_template_id', '=', '3')->first();
+		$courtesysignup = $lesson->dates()->where('lesson_date_template_id', '=', '1')->first();
+
+		if ( ! $opensignup && ! $latesignup && ( ! $courtesysignup || ! $lesson->isUser(Auth::user()->id))) continue;
+		else {
+			$now = new DateTime;
+			$signup_starts = $opensignup->starts_on;
+			$signup_ends = $opensignup->ends_on;
+
+			if ($now < $signup_starts || $now > $signup_ends) continue;
+		}
+
 		$order = Order::whereRaw('lesson_id = ? and user_id = ?', [$lesson->id, Auth::user()->id])->first();
 		$waitlist = count(Waitlist::where('lesson_id', $lesson->id)->get());
 
@@ -515,22 +522,22 @@ Route::get('/enroll', function ()
 		}
 
 		$classes[] = [
-				'id' => $lesson->id,
-				'name' => $name,
-				'price' => $price,
-				'details' => [
-					'Number of Lessons' => $number,
-					'Activity' => $activity_names[$lesson->activity_id],
-					'Location' => $names[$lesson->location_id],
-					'Begins' => $lesson->firstLesson()->format('M jS, Y'),
-					'Ends' => $lesson->lastLesson()->format('M jS, Y'),
-					'Spots' => $spots.' available',
-					'Grades' => $grades,
-					'Gender' => $gender
-				],
-				'link' => $link,
-				'actionable' => $actionable,
-			];
+			'id' => $lesson->id,
+			'name' => $name,
+			'price' => $price,
+			'details' => [
+				'Number of Lessons' => $number,
+				'Activity' => $activity_names[$lesson->activity_id],
+				'Location' => $names[$lesson->location_id],
+				'Begins' => $lesson->firstLesson()->format('M jS, Y'),
+				'Ends' => $lesson->lastLesson()->format('M jS, Y'),
+				'Spots' => $spots.' available',
+				'Grades' => $grades,
+				'Gender' => $gender
+			],
+			'link' => $link,
+			'actionable' => $actionable,
+		];
 	}
 
 	$order_models = Auth::user()->orders()->get();
@@ -558,7 +565,7 @@ Route::get('/enroll', function ()
 
 	$data = [
 		'review' => URL::to('/review'),
-		'enroll' => '/enroll',
+		'enroll' => URL::to('/enroll'),
 		'user_name' => Auth::user()->first_name.' '.Auth::user()->last_name,
 		'filters' => [
 			[
@@ -577,7 +584,7 @@ Route::get('/enroll', function ()
 		'total_price' => $total_price,
 		'orders' => $orders,
 		'classes' => $classes,
-		'links' => $lessons->links()
+		'links' => $lessons->appends(['locations' => $requested['loc'], 'activities' => $requested['act']])->links()
 	];
 
 	return View::make('class_selection', $data);
@@ -882,28 +889,186 @@ Route::post('/verify/review', function () {
 });
 
 Route::get('/confirmation', function () {
+	if ( ! Auth::check())
+		return App::abort(401, 'You are not authorized.');
+
+	$user = Auth::user();
+
+	//receipts
+	$receipts = [];
+	$confirmation_id = substr('O'.'-'
+		.substr(md5((new DateTime)->format('Y-m-d H:i:s')), 0, 8).'-'
+		.substr(md5($user->id), 0, 4).'-'
+		.md5(mt_rand(0,65535)),
+	0, 32);
+
+	while (Receipt::where('confirmation_id', $confirmation_id)->first()) {
+		$confirmation_id = substr('O'.'-'
+			.substr(md5((new DateTime)->format('Y-m-d H:i:s')), 0, 8).'-'
+			.substr(md5($user->id), 0, 4).'-'
+			.md5(mt_rand(0,65535)),
+		0, 32);
+	}
+
+	//get used coupons for transaction
+	$coupons = [];
+
+	foreach ($coupons as $coupon) {
+		//create "receipt" & attach coupons to it
+		$receipt = new Receipt;
+
+		$receipt->confirmation_id = $confirmation_id;
+		$reciept->user->associate($user);
+		$receipt->lesson->associate($coupon);
+
+		$receipt->save();
+
+		$name = 'Coupon used!';
+		$price = $coupon->price;
+		$link = '';
+		$actionable = '';
+
+		$receipts[] = [
+			'name' => $name,
+			'price' => $price,
+			'details' => [
+
+			],
+			'link' => $link,
+			'actionable' => $actionable,
+		];
+	}
+
 	//attach children to lessons in orders
-	$orders = Auth::user()->orders()->get();
+	$orders = $user->orders()->get();
 
 	foreach ($orders as $order) {
-		$lesson = $orders->lesson;
-		$child 	= $orders->child;
+		$lesson = $order->lesson;
+		$child 	= $order->child;
 
 		$lesson->children()->attach($child);
 
 		//create "receipt" & attach orders to it
+		$receipt = new Receipt;
+
+		$receipt->confirmation_id = $confirmation_id;
+		$receipt->user()->associate($user);
+		$receipt->lesson()->associate($lesson);
+		$receipt->child()->associate($child);
+
+		$receipt->save();
+
+		$name = 'Class for '.$child->first_name.' '.$child->last_name;
+		$price = $lesson->price;
+		$link = '';
+		$actionable = '';
+
+		$receipts[] = [
+			'name' => $name,
+			'price' => $price,
+			'details' => [
+
+			],
+			'link' => $link,
+			'actionable' => $actionable,
+		];
 
 		//remove "checked out" spots
 		$order->delete();
 	}
 
-	$data = [];
+	$data = [
+		'receipts' => $receipts,
+		'confirmation_id' => $confirmation_id,
+		'user_name' => Auth::user()->first_name.' '.Auth::user()->last_name,
+		'print' => ''
+	];
 
 	return View::make('confirmation', $data);
 });
 
-Route::get('/dashboard', function () {
-	$data = [];
+Route::get('/lesson/{id}', function ($id)
+{
+	if ( ! Auth::check())
+		return App::abort(401, 'You are not authorized.');
+
+	$lesson = Lesson::find($id);
+
+	if ( ! $lesson)
+		return App::abort(404);
+
+	$dates = $lesson->dates();
+	$templates = LessonDateTemplate::all();
+
+	$month = Input::has('m') ? Input::get('m') : $lesson->firstLesson()->format('m');
+	$year  = Input::has('y') ? Input::get('y') : $lesson->firstLesson()->format('y');
+
+	$calendar = Calendar::factory($month, $year);
+
+	$calendar->standard('today')->standard('prev-next');
+
+	foreach ($dates as $date) {
+		$class = strtolower(preg_replace('/[-\s]/', '_', $templates[$date->lesson_date_template_id-1]->name));
+
+		$event = $calendar->event()
+			->condition('timestamp', strtotime($date->starts_on))
+			->title($templates[$date->lesson_date_template_id-1]->name)
+			->output($templates[$date->lesson_date_template_id-1]->description)
+			->add_class($class);
+
+		$calendar->attach($event);
+	}
+
+	$data = [
+		'calendar' => $calendar,
+		'user_name' => Auth::user()->first_name.' '.Auth::user()->last_name,
+	];
+
+	return View::make('lesson', $data);
+});
+
+Route::get('/dashboard', function ()
+{
+	if ( ! Auth::check())
+		return App::abort(401, 'You are not authorized.');
+
+	$children = Auth::user()->children()->get();
+	$lessons = [];
+	$classes = [];
+
+	foreach ($children as $child) {
+		$child->link = '';
+		$lessons = $child->lessons()->get();
+
+		foreach ($lessons as $lesson) {
+			$name = 'Class for '.$child->first_name.' '.$child->last_name;
+			$location = $lesson->location;
+			$price = 'Price';
+			$link = '';
+			$actionable = 'Yo';
+
+			$classes[] = [
+				'name' => $name,
+				'price' => $price,
+				'details' => [
+					'Location' => $location->name,
+					'Address' => $location->address.', '.$location->city,
+					'Next Class' => '',
+					'See Calendar' => '<a href="'.'">View</a>',
+				],
+				'link' => $link,
+				'actionable' => $actionable,
+			];		
+		}
+	}
+
+	$data = [
+		'user_name' => Auth::user()->first_name.' '.Auth::user()->last_name,
+		'your_info' => '',
+		'children' => $children,
+		'notifications' => Auth::user()->notifications()->get(),
+		'classes' => $classes,
+	];
 
 	return View::make('dashboard', $data);
 });

@@ -65,6 +65,34 @@ class Lesson extends Resource {
 
     }
 
+    public function prorate()
+    {
+        $price = $this->price;
+        $ax = $price;
+        $lessons = $this->dates()->where('lesson_date_template_id', '=', '8')->get();
+        $number = count($lessons);
+        $now = new DateTime;
+
+        foreach ($lessons as $lesson) {
+            $lesson_start = new DateTime($lesson->starts_on);
+
+            if ($now > $lesson_start) {
+                $ax -= $price/$number;
+            }
+        }
+
+        return $ax;
+    }
+
+    public function isUser($user_id)
+    {
+        foreach ($this->user()->get() as $user) {
+            if ($user->id == $user_id) return true;
+        }
+
+        return false;
+    }
+
     public function spots()
     {
         $orders = count(Order::where('lesson_id', '=', $this->id)->get());

@@ -34,6 +34,10 @@ class User extends Resource implements UserInterface, RemindableInterface {
         'LateSignUp',
         'Verification',
         'Child',
+        'Notifications',
+        'Orders',
+        'Receipts',
+        'Waitlists',
     ];
 
     public static $rules = [
@@ -132,9 +136,33 @@ class User extends Resource implements UserInterface, RemindableInterface {
 
     // }}}
 
+    public function lessons()
+    {
+        $lessons = [];
+        $children = $this->children()->get();
+
+        foreach ($children as $child) {
+            $ls = $child->lessons()->get();
+
+            foreach ($ls as $l) $lessons[] = $l;
+        }
+
+        return $lessons;
+    }
+
     public function orders()
     {
         return $this->hasMany('Order');
+    }
+
+    public function notifications()
+    {
+        return $this->hasMany('Notification');
+    }
+
+    public function waitlists()
+    {
+        return $this->hasMany('Waitlist');
     }
 }
 
