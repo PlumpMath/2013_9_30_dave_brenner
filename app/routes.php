@@ -109,7 +109,7 @@ Route::get('/register/child', function ()
 			[
 				'name' => 'school',
 				'type' => 'text',
-				'label' => 'School',
+				'label' => 'School District',
 			],
 			[
 				'name' => 'birthday',
@@ -479,6 +479,7 @@ Route::get('/enroll', function ()
 		$latesignup = $lesson->dates()->where('lesson_date_template_id', '=', '3')->first();
 		$courtesysignup = $lesson->dates()->where('lesson_date_template_id', '=', '1')->first();
 
+		/** /
 		if ( ! $opensignup && ! $latesignup && ( ! $courtesysignup || ! $lesson->isUser(Auth::user()->id))) continue;
 		else {
 			$now = new DateTime;
@@ -487,6 +488,7 @@ Route::get('/enroll', function ()
 
 			if ($now < $signup_starts || $now > $signup_ends) continue;
 		}
+		/**/
 
 		$order = Order::whereRaw('lesson_id = ? and user_id = ?', [$lesson->id, Auth::user()->id])->first();
 		$waitlist = count(Waitlist::where('lesson_id', $lesson->id)->get());
