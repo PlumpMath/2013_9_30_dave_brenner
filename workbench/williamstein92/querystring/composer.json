@@ -1,0 +1,20 @@
+{
+    "name": "williamstein92/querystring",
+    "description": "",
+    "authors": [
+        {
+            "name": "William Stein",
+            "email": "williamstein92@gmail.com"
+        }
+    ],
+    "require": {
+        "php": ">=5.3.0",
+        "illuminate/support": "4.0.x"
+    },
+    "autoload": {
+        "psr-0": {
+            "Williamstein92\\QueryString": "src/"
+        }
+    },
+    "minimum-stability": "dev"
+}
