@@ -16,7 +16,6 @@ Route::get('/test/{test}', function ($test)
 
 Route::get('/', function ()
 {
-	dd(QueryString::get());
 
 	$data = [
 		'user_name' => null,
@@ -59,13 +58,14 @@ Route::get('/PAL', function ()
 		'DATE' => '55/55/5555',
 	];
 
-	$view = View::make('PAL', $data);
-
+	return View::make('PAL', $data);
+/*
 	$pdf = PDF::make();
 	$pdf->addPage($view->render());
 	$pdf->send();
 
 	dd($pdf->getError());
+*/
 });
 
 Route::post('/log/in', function ()
@@ -171,9 +171,8 @@ Route::get('/email/confirm', function () {
 	return View::make('email.confirmation', $data);
 });
 
-Route::get('/email/verify', function () {
-	QueryString::get();
 
+Route::get('/email/verify/test', function () {
 	$data = [
 		'user_name' => Auth::user()->first_name.' '.Auth::user()->last_name,
 		'email' => 'steinbilly@gmail.com',
@@ -389,6 +388,7 @@ Route::post('/verify/user', function ()
 		$data = [
 			'user_name' => null,
 			'another_email' => URL::to('/email/verify'),
+			'email' => 'm7@example.com',
 		];
 
 		$mail_data = [
@@ -410,7 +410,7 @@ Route::post('/verify/user', function ()
 
 	return Redirect::to('/register/user')->withInput(Input::except(['password','password_confirm']))->withErrors($validator);
 });
-/*
+
 Route::get('/email/verify', function ()
 {
 	$data = [];
@@ -435,11 +435,12 @@ Route::get('/email/verify', function ()
 	$data = [
 		'user_name' => null,
 		'another_email' => URL::to('/email/verify'),
+		'email' => 'm5@example.com',
 	];
 
 	return View::make('/verify', $data);   
 });
-*/
+
 Route::post('/verify/child', function () {
 	$data = [
 		'first_name'        => Input::get('first_name'),
