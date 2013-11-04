@@ -6,7 +6,10 @@
 	"require": {
 		"laravel/framework": "4.0.*",
 		"anouar/paypalpayment": "dev-master",
-		"intervention/validation": "dev-master"
+		"intervention/validation": "dev-master",
+        "ignited/laravel-pdf": "1.*",
+        "h4cc/wkhtmltopdf-i386": "*",
+        "h4cc/wkhtmltopdf-amd64": "*"
 	},
 	"autoload": {
 		"classmap": [

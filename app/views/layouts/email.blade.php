@@ -1,7 +1,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"><head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>*|MC:SUBJECT|*</title>
+        <title>{{ $subject }}</title>
         <style type="text/css">
 			/* /\/\/\/\/\/\/\/\/ MOBILE STYLES /\/\/\/\/\/\/\/\/ */
 
@@ -133,11 +133,11 @@
                                     <table border="0" cellpadding="0" cellspacing="0" width="100%" id="templatePreheader" style="border-collapse: collapse; background-color: rgb(238, 238, 238);">
                                         <tbody><tr>
                                             <td valign="top" class="preheaderContent" style="padding: 10px 20px; color: rgb(149, 149, 149); font-family: 'Open Sans'; font-size: 10px; line-height: 125%; text-align: left;" mc:edit="preheader_content00">
-                                                Use this area to offer a short teaser of your email's content. Text here will show in the preview area of some email clients.
+                                                {{ $summary }}
                                             </td>
                                             <!-- *|IFNOT:ARCHIVE_PAGE|* -->
                                             <td valign="top" width="180" class="preheaderContent" style="padding: 10px 20px 10px 0px; color: rgb(149, 149, 149); font-family: 'Open Sans'; font-size: 10px; line-height: 125%; text-align: left;" mc:edit="preheader_content01">
-                                                Email not displaying correctly?<br><a href="*|ARCHIVE|*" target="_blank" style="color: rgb(96, 96, 96); font-weight: normal; text-decoration: underline;">View it in your browser</a>.
+                                                Email not displaying correctly?<br><a href="{{ $in_browser_link }}" target="_blank" style="color: rgb(96, 96, 96); font-weight: normal; text-decoration: underline;">View it in your browser</a>.
                                             </td>
                                             <!-- *|END:IF|* -->
                                         </tr>
@@ -176,26 +176,22 @@
                             	<td align="center" valign="top">
                                 	<!-- BEGIN FOOTER // -->
                                     <table border="0" cellpadding="0" cellspacing="0" width="100%" id="templateFooter" style="border-collapse: collapse; background-color: rgb(238, 238, 238);">
-                                        <tbody><tr>
-                                            <td valign="top" class="footerContent" mc:edit="footer_content00" style="color: rgb(149, 149, 149); font-family: 'Open Sans'; font-size: 10px; line-height: 150%; padding: 20px; text-align: left;">
-                                                <a href="*|TWITTER:PROFILEURL|*" style="color: rgb(96, 96, 96); font-weight: normal; text-decoration: underline;">Follow on Twitter</a>&nbsp;&nbsp;&nbsp;<a href="*|FACEBOOK:PROFILEURL|*" style="color: rgb(96, 96, 96); font-weight: normal; text-decoration: underline;">Friend on Facebook</a>&nbsp;&nbsp;&nbsp;<a href="*|FORWARD|*" style="color: rgb(96, 96, 96); font-weight: normal; text-decoration: underline;">Forward to Friend</a>&nbsp;
-                                            </td>
-                                        </tr>
+                                        <tbody>
                                         <tr>
                                             <td valign="top" class="footerContent" style="padding: 20px; color: rgb(149, 149, 149); font-family: 'Open Sans'; font-size: 10px; line-height: 150%; text-align: left;" mc:edit="footer_content01">
-                                                <em>Copyright © *|CURRENT_YEAR|* *|LIST:COMPANY|*, All rights reserved.</em>
+                                                <em>Copyright © {{ $year }} myafterschoolprograms, inc., All rights reserved.</em>
                                                 <br>
-                                                *|IFNOT:ARCHIVE_PAGE|* *|LIST:DESCRIPTION|*
+                                                {{ $description }}
                                                 <br>
                                                 <br>
                                                 <strong>Our mailing address is:</strong>
                                                 <br>
-                                                *|HTML:LIST_ADDRESS_HTML|* *|END:IF|* 
+                                                {{ $return_email }}
                                             </td>
                                         </tr>
                                         <tr>
                                             <td valign="top" class="footerContent" style="padding: 20px; color: rgb(149, 149, 149); font-family: 'Open Sans'; font-size: 10px; line-height: 150%; text-align: left;" mc:edit="footer_content02">
-                                            	<a href="*|UNSUB|*" style="color: rgb(96, 96, 96); font-weight: normal; text-decoration: underline;">unsubscribe from this list</a>&nbsp;&nbsp;&nbsp;<a href="*|UPDATE_PROFILE|*" style="color: rgb(96, 96, 96); font-weight: normal; text-decoration: underline;">update subscription preferences</a>&nbsp;
+                                            	<a href="{{ $unsubscribe_link }}" style="color: rgb(96, 96, 96); font-weight: normal; text-decoration: underline;">unsubscribe from this list</a>&nbsp;&nbsp;&nbsp;<a href="{{ $profile_preferences_link }}" style="color: rgb(96, 96, 96); font-weight: normal; text-decoration: underline;">update subscription preferences</a>&nbsp;
                                             </td>
                                         </tr>
                                     </tbody></table>

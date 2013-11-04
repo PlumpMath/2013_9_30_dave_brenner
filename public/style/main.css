@@ -696,6 +696,96 @@ button {
   background-color: #fff;
   border: 1px solid #C0C0C0; }
 
+.PAL {
+  background: url("./imgs/PAL.png");
+  width: 789px;
+  height: 483px;
+  border: 5px solid black;
+  font-family: sans-serif;
+  text-transform: uppercase;
+  color: black;
+  font-weight: bold; }
+
+.PAL-PROGRAM {
+  position: absolute;
+  top: 26px;
+  left: 91px; }
+
+.PAL-YEAR {
+  position: absolute;
+  top: 27px;
+  left: 363px; }
+
+.PAL-NAME {
+  position: absolute;
+  top: 54px;
+  left: 223px; }
+
+.PAL-ADDRESS {
+  position: absolute;
+  top: 75px;
+  left: 251px; }
+
+.PAL-TOWN {
+  position: absolute;
+  top: 96px;
+  left: 227px; }
+
+.PAL-ZIP {
+  position: absolute;
+  top: 96px;
+  left: 651px; }
+
+.PAL-PHONE {
+  position: absolute;
+  top: 118px;
+  left: 231px; }
+
+.PAL-DOB {
+  position: absolute;
+  top: 118px;
+  left: 443px; }
+
+.PAL-AGE {
+  position: absolute;
+  top: 118px;
+  left: 624px; }
+
+.PAL-MALE {
+  position: absolute;
+  top: 118px;
+  left: 697px; }
+
+.PAL-FEMALE {
+  position: absolute;
+  top: 118px;
+  left: 717px; }
+
+.PAL-NEWPLAYER {
+  position: absolute;
+  top: 138px;
+  left: 264px; }
+
+.PAL-RETURNINGPLAYER {
+  position: absolute;
+  top: 138px;
+  left: 515px; }
+
+.PAL-GRADE {
+  position: absolute;
+  top: 138px;
+  left: 666px; }
+
+.PAL-SIGNATURE {
+  position: absolute;
+  top: 441px;
+  left: 205px; }
+
+.PAL-DATE {
+  position: absolute;
+  top: 441px;
+  left: 573px; }
+
 @-webkit-keyframes squish {
   0% {
     -webkit-transform: scale(0.9, 1.25) translate(0, -4em); }

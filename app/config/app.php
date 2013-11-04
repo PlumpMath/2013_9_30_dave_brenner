@@ -115,6 +115,8 @@ return array(
 		'Illuminate\Workbench\WorkbenchServiceProvider',
 		'Anouar\Paypalpayment\PaypalpaymentServiceProvider',
 		'Intervention\Validation\ValidationServiceProvider',
+		'Williamstein92\QueryString\QueryStringServiceProvider',
+		'Ignited\Pdf\PdfServiceProvider',
 
 	),
 
@@ -181,6 +183,8 @@ return array(
 		'Validator'       => 'Illuminate\Support\Facades\Validator',
 		'View'            => 'Illuminate\Support\Facades\View',
 		'Paypalpayment'   => 'Anouar\Paypalpayment\Facades\PaypalPayment',
+		'QueryString'     => 'Williamstein92\QueryString\Facades\QueryString',
+		'PDF' 			  => 'Ignited\Pdf\Facades\Pdf',
 	),
 
 );

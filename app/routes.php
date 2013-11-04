@@ -16,6 +16,8 @@ Route::get('/test/{test}', function ($test)
 
 Route::get('/', function ()
 {
+	dd(QueryString::get());
+
 	$data = [
 		'user_name' => null,
 		'fields' => [
@@ -38,7 +40,36 @@ Route::get('/', function ()
 	return View::make('home', $data);
 });
 
-Route::post('/log/in', function () {
+Route::get('/PAL', function ()
+{
+	$data = [
+		'PROGRAM' => 'Tennis',
+		'YEAR' => '2013',
+		'NAME' => 'Betty Botter',
+		'ADDRESS' => '55 Example Road',
+		'TOWN' => 'Example Town',
+		'ZIP' => '55555',
+		'PHONE' => '5555555555',
+		'DOB' => '55/55/5555',
+		'AGE' => '5',
+		'NEWPLAYER' => false,
+		'MALE' => true,
+		'GRADE' => '5',
+		'SIGNATURE' => 'Mary Botter',
+		'DATE' => '55/55/5555',
+	];
+
+	$view = View::make('PAL', $data);
+
+	$pdf = PDF::make();
+	$pdf->addPage($view->render());
+	$pdf->send();
+
+	dd($pdf->getError());
+});
+
+Route::post('/log/in', function ()
+{
 	$user = [
 		'email'     => Input::get('email'),
 		'password'  => Input::get('password'),
@@ -58,10 +89,107 @@ Route::post('/log/in', function () {
 		}
 	*/
 
-		return Redirect::intended('/');
+		return Redirect::intended('/dashboard');
 	} else {
 		return Redirect::to('/')->with('auth_failed', true);
 	}
+});
+
+Route::get('/email/waiting', function () {
+	$student = 'BETTY BOTTER';
+	$day = 'MONDAYS';
+	$time = '5-6 PM';
+
+	$data = [
+		'student' => 'BETTY BOTTER',
+		'location' => 'WESTHAMPTON BEACH TENNIS AND SPORT',
+		'address' => '86 DEPOT RD, WESTHAMPTON BEACH, NY, 11978',
+		'phone' => '555.555.5555',
+		'activity' => 'TENNIS',
+		'session' => 'DEC/JAN 2013',
+		'day' => 'MONDAYS',
+		'time' => '5-6PM',
+		'class' => '3RD-4TH GRADE',
+		'dates' => '11/4,  11/11,  11/18,  11/25,  12/2,  12/9, 11/16, (Not 12/23) (Not 12/30) 1/6, (Make up for class cancelation - 1/13)',
+		'user_name' => Auth::user()->first_name.' '.Auth::user()->last_name,
+		'email' => 'steinbilly@gmail.com',
+		'link' => '',
+
+		'subject' => 'Order Confirmation',
+		'summary' => 'Signed up for classes with myafterschoolprograms',
+		'in_browser_link' => '',
+		'year' => (new DateTime)->format('Y'),
+		'description' => 'You\'ve signed '.$student.' up for classes on '.$day.' at '.$time.'.',
+		'return_email' => 'someprefix@mysafterschoolprograms.com',
+		'unsubscribe_link' => '',
+		'profile_preferences_link' => '',
+	];
+
+	return View::make('email.waiting', $data);
+});
+
+Route::get('/email/confirm', function () {
+	$child = Child::find(1);
+	$lesson = Lesson::find(1);
+	$location = $lesson->location;
+
+	$student = strtoupper($child->first_name.' '.$child->last_name);
+	$activity = strtoupper($lesson->activity->name);
+	$day = 'MONDAYS';
+	$time = '5-6PM';
+	$dates = '11/4,  11/11,  11/18,  11/25,  12/2,  12/9, 11/16, (Not 12/23) (Not 12/30) 1/6, (Make up for class cancelation - 1/13)';
+
+	$unsub = '';
+	$our_email = 'someprefix@mysafterschoolprograms.com';
+
+	//send mail
+	$data = [
+		'student' => $student,
+		'location' => strtoupper($location->name),
+		'address' => strtoupper($location->address.', '.$location->city.', '.$location->state.', '.$location->zip_code),
+		'phone' => strtoupper($location->phone),
+		'activity' => $activity,
+		'session' => 'DEC/JAN 2013',
+		'day' => $day,
+		'time' => $time,
+		'class' => '3RD-4TH GRADE',
+		'dates' => $dates,
+		'user_name' => Auth::user()->first_name.' '.Auth::user()->last_name,
+		'email' => 'steinbilly@gmail.com',
+		'link' => '',
+
+		'subject' => 'Order Confirmation',
+		'summary' => 'We\'ve received your order, and have signed '.$student.' up for '.$activity.' lessons. Thank you!',
+		'in_browser_link' => '',
+		'year' => (new DateTime)->format('Y'),
+		'description' => 'We\'ve received your order, and have signed '.$student.' up for '.$activity.' lessons. The lesson will be from '.$time.' on '.$day.' for these dates: '.$dates.'. If this information is incorrect, you did not place this order, email us at: '.$our_email.'. On the other hand, if this email address is incorrect and you think you\'ve received this notification in error, please click our unsubscribe link: '.$unsub.'.Thank you!',
+		'return_email' => $our_email,
+		'unsubscribe_link' => $unsub,
+		'profile_preferences_link' => '',
+	];
+
+	return View::make('email.confirmation', $data);
+});
+
+Route::get('/email/verify', function () {
+	QueryString::get();
+
+	$data = [
+		'user_name' => Auth::user()->first_name.' '.Auth::user()->last_name,
+		'email' => 'steinbilly@gmail.com',
+		'link' => '',
+
+		'subject' => '',
+		'summary' => '',
+		'in_browser_link' => '',
+		'year' => '',
+		'description' => '',
+		'return_email' => '',
+		'unsubscribe_link' => '',
+		'profile_preferences_link' => '',
+	];
+
+	return View::make('email.verify', $data);
 });
 
 Route::get('/log/out', function () {
@@ -282,7 +410,7 @@ Route::post('/verify/user', function ()
 
 	return Redirect::to('/register/user')->withInput(Input::except(['password','password_confirm']))->withErrors($validator);
 });
-
+/*
 Route::get('/email/verify', function ()
 {
 	$data = [];
@@ -311,7 +439,7 @@ Route::get('/email/verify', function ()
 
 	return View::make('/verify', $data);   
 });
-
+*/
 Route::post('/verify/child', function () {
 	$data = [
 		'first_name'        => Input::get('first_name'),
@@ -364,6 +492,7 @@ Route::post('/verify/child', function () {
 Route::get('/activate/{hash}', function ($hash)
 {
 	$verification = Verification::where('hash', '=', $hash)->first();
+	if (is_null($verification)) App::abort('404');
 
 	Auth::loginUsingId($verification->user_id);
 
@@ -376,7 +505,8 @@ Route::get('/activate/{hash}', function ($hash)
 		App::abort('404');
 	}
 
-	if (is_null($verification)) App::abort('404');
+	$verification->verified_on = (new DateTime)->format('Y-m-d H:i:s');
+	$verification->save();
 
 	$data = [
 		'user_name' => Auth::user()->first_name.' '.Auth::user()->last_name,
@@ -947,8 +1077,54 @@ Route::get('/confirmation', function () {
 	foreach ($orders as $order) {
 		$lesson = $order->lesson;
 		$child 	= $order->child;
+		$location = $lesson->location;
 
 		$lesson->children()->attach($child);
+
+		$student = strtoupper($child->first_name.' '.$child->last_name);
+		$activity = strtoupper($lesson->activity->name);
+		$day = 'MONDAYS';
+		$time = '5-6PM';
+		$dates = '11/4,  11/11,  11/18,  11/25,  12/2,  12/9, 11/16, (Not 12/23) (Not 12/30) 1/6, (Make up for class cancelation - 1/13)';
+
+		$unsub = '';
+		$our_email = 'someprefix@mysafterschoolprograms.com';
+
+		//send mail
+		$mail_data = [
+			'student' => $student,
+			'location' => strtoupper($location->name),
+			'address' => strtoupper($location->address.', '.$location->city.', '.$location->state.', '.$location->zip_code),
+			'phone' => strtoupper($location->phone),
+			'activity' => $activity,
+			'session' => 'DEC/JAN 2013',
+			'day' => $day,
+			'time' => $time,
+			'class' => '3RD-4TH GRADE',
+			'dates' => $dates,
+			'user_name' => Auth::user()->first_name.' '.Auth::user()->last_name,
+			'email' => 'steinbilly@gmail.com',
+			'link' => '',
+
+			'subject' => 'Order Confirmation',
+			'summary' => 'We\'ve received your order, and have signed '.$student.' up for '.$activity.' lessons. Thank you!',
+			'in_browser_link' => '',
+			'year' => (new DateTime)->format('Y'),
+			'description' => 'We\'ve received your order, and have signed '.$student.' up for '.$activity.' lessons. The lesson will be from '.$time.' on '.$day.' for these dates: '.$dates.'. If this information is incorrect, or you did not place this order, email us at: '.$our_email.'. On the other hand, if this email address is incorrect and you think you\'ve received this notification in error, please click our unsubscribe link: '.$unsub.'.Thank you!',
+			'return_email' => $our_email,
+			'unsubscribe_link' => $unsub,
+			'profile_preferences_link' => '',
+		];
+
+		$mail = new Email;
+		$mail->user_email = $user->email;
+		$mail->user_name = $user->first_name.' '.$user->last_name;
+		$mail->template = 'email.confirmation';
+		$mail->subject = 'Order Confirmed';
+		$mail->data = serialize($mail_data);
+		$mail->status = 0;
+
+		$mail->save();
 
 		//create "receipt" & attach orders to it
 		$receipt = new Receipt;
