@@ -1257,11 +1257,6 @@ Route::get('/account', function ()
 {
 	$data = [];
 
-	if ( ! Auth::check())
-		return App::abort(401, 'You are not authorized.');
-
-	$user = Auth::user();
-
 	$data = [
 		'user_name' => null,
 	];
@@ -1273,11 +1268,6 @@ Route::get('/account/password', function ()
 {
 	$data = [];
 
-	if ( ! Auth::check())
-		return App::abort(401, 'You are not authorized.');
-
-	$user = Auth::user();
-
 	$data = [
 		'user_name' => null,
 	];
@@ -1288,11 +1278,6 @@ Route::get('/account/password', function ()
 Route::get('/account/user', function ()
 {
 	$data = [];
-
-	if ( ! Auth::check())
-		return App::abort(401, 'You are not authorized.');
-
-	$user = Auth::user();
 
 	$data = [
 		'user_name' => null,
