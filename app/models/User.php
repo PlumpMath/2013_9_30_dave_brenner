@@ -53,6 +53,10 @@ class User extends Resource implements UserInterface, RemindableInterface {
         'zip_code'      => 'required',
     ];
 
+    public static $admins = [
+        11,
+    ];
+
     // }}}
     // {{{ getAuthIdentifier
 

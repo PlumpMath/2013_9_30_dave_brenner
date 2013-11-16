@@ -99,6 +99,6 @@ class LateSignUpController extends ResourceController
             ],
         ]);
 
-        return View::make('resource.create', $data);  
+        return View::make('create.latesignup', $data);
     }
 }

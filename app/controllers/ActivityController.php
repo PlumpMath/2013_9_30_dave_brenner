@@ -22,24 +22,12 @@ class ActivityController extends ResourceController
                 $__output[] = [
                     'name'  => $resource['name'],
                     'id'    => $resource['id'],
-                    'info'  => $resource['address'],
+                    'info'  => '',
                 ];
             }
         } else {
             //bin holds one location
             foreach ($this->bin['resource'] as $key => $value) {
-                switch ($key) {
-                    case 'phone':
-                        $value = '('.substr($value, 0, 3).') '.substr($value, 3, 3).'-'.substr($value, 6, 4);
-                        break;
-                    case 'status':
-                        $value = ($value === 1) ? 'Active' : 'Inactive';
-                        break;
-                    case 'notes':
-                        $value = (is_null($value)) ? 'No Notes' : $value;
-                        break;
-                }
-
                 $__output[$this->format($key)->asKey()] = $value;
             }            
         }
@@ -72,7 +60,7 @@ class ActivityController extends ResourceController
 
     public function info($resource)
     {
-        return $resource['address'];
+        return '';
     }
 
     // }}}

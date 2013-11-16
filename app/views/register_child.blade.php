@@ -16,6 +16,7 @@
 			@foreach($fields as $field)
 				@include('modules.input-0', $field)
 			@endforeach
+			@include('modules.menu-2', $gender_field)
 			@include('modules.input-1', $check)
 		</div>
 		@include('modules.button-0', ['text' => 'OK'])

@@ -19,27 +19,16 @@ class CouponController extends ResourceController
         if (isset($this->bin['resource'][0])) {
             //bin holds a list of all locations
             foreach ($this->bin['resource'] as $resource) {
+                $user = User::find($resource['user_id']);
                 $__output[] = [
-                    'name'  => $resource['name'],
+                    'name'  => 'Coupon for '.$user->first_name.' '.$user->last_name,
                     'id'    => $resource['id'],
-                    'info'  => $resource['address'],
+                    'info'  => $resource['price'],
                 ];
             }
         } else {
             //bin holds one location
             foreach ($this->bin['resource'] as $key => $value) {
-                switch ($key) {
-                    case 'phone':
-                        $value = '('.substr($value, 0, 3).') '.substr($value, 3, 3).'-'.substr($value, 6, 4);
-                        break;
-                    case 'status':
-                        $value = ($value === 1) ? 'Active' : 'Inactive';
-                        break;
-                    case 'notes':
-                        $value = (is_null($value)) ? 'No Notes' : $value;
-                        break;
-                }
-
                 $__output[$this->format($key)->asKey()] = $value;
             }            
         }
@@ -58,7 +47,8 @@ class CouponController extends ResourceController
 
     public function name($resource)
     {
-        return $resource['name'];
+        $user = User::find($resource['user_id']);
+        return 'Coupon for '.$user->first_name.' '.$user->last_name;
     }
 
     // }}}
@@ -72,7 +62,7 @@ class CouponController extends ResourceController
 
     public function info($resource)
     {
-        return $resource['address'];
+        return $resource['price'];
     }
 
     // }}}

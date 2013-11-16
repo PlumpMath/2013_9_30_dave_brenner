@@ -1,5 +1,4 @@
 <?php
-
 View::share('assets', (new AssetCollection)->dev()->build());
 
 Route::get('/test/{test}', function ($test)
@@ -244,11 +243,6 @@ Route::get('/register/child', function ()
 				'label' => 'Birthday',
 			],
 			[
-				'name' => 'gender',
-				'type' => 'text',
-				'label' => 'Gender',
-			],
-			[
 				'name' => 'grade',
 				'type' => 'text',
 				'label' => 'Grade',
@@ -257,6 +251,15 @@ Route::get('/register/child', function ()
 		'check' => [
 			'name' => 'returning_player',
 			'label' => 'My child has participated in one of your classes previously',
+		],
+		'gender_field' => [
+			'label' => 'Gender',
+			'name' => 'gender',
+			'selected' => Input::old('gender'),
+			'options' => [
+				'male' => 'Male',
+				'female' => 'Female',
+			],
 		],
 	];
 
@@ -1241,6 +1244,40 @@ Route::get('/dashboard', function ()
 		}
 	}
 
+	if (in_array(Auth::user()->id, User::$admins)) {
+		$resources = [
+			'activities' => [
+				'link' => URL::to('/activities'),
+			],
+			'children' => [
+				'link' => URL::to('/children'),
+			],
+			'coupons' => [
+				'link' => URL::to('/coupons'),
+			],
+			'latesignups' => [
+				'link' => URL::to('/latesignups'),
+			],
+			'lessons' => [
+				'link' => URL::to('/lessons'),
+			],
+			'locations' => [
+				'link' => URL::to('/locations'),
+			],
+			'receipts' => [
+				'link' => URL::to('/receipts'),
+			],
+			'users' => [
+				'link' => URL::to('/users'),
+			],
+			'waitlists' => [
+				'link' => URL::to('/waitlists'),
+			],
+		];
+	} else {
+		$resources = null;
+	}
+
 	$data = [
 		'register_child' => URL::to('/register/child'),
 		'user_name' => Auth::user()->first_name.' '.Auth::user()->last_name,
@@ -1248,6 +1285,7 @@ Route::get('/dashboard', function ()
 		'children' => $children,
 		'notifications' => Auth::user()->notifications()->get(),
 		'classes' => $classes,
+		'rsrcs' => $resources,
 	];
 
 	return View::make('dashboard', $data);
@@ -1255,8 +1293,6 @@ Route::get('/dashboard', function ()
 
 Route::get('/account', function ()
 {
-	$data = [];
-
 	$data = [
 		'user_name' => null,
 	];
@@ -1266,7 +1302,19 @@ Route::get('/account', function ()
 
 Route::get('/account/password', function ()
 {
-	$data = [];
+	$mail_data = [
+		'link' => url('/activate', ['hash' => $verification->hash])
+	];
+
+	$mail = new Email;
+	$mail->user_email = $user->email;
+	$mail->user_name = $user->first_name.' '.$user->last_name;
+	$mail->template = 'email.verify';
+	$mail->subject = 'Password Reset';
+	$mail->data = serialize($mail_data);
+	$mail->status = 0;
+
+	$mail->save();
 
 	$data = [
 		'user_name' => null,

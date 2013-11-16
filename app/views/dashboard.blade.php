@@ -41,6 +41,14 @@
 		@include('modules.lesson-2', $class)
 		@endforeach
 		@endif
+
+		@if ( ! is_null($rsrcs))
+		@foreach ($rsrcs as $name => $quals)
+			<div class="box box-pad-0 border-bottom-0 center">
+				<a href="{{ $quals['link'] }}">{{ $name }}</a>
+			</div>
+		@endforeach
+		@endif
 	</div>
 	<div class="box box-pad-0 bg-0"></div>
 </div>
