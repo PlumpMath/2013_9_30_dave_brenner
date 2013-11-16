@@ -788,7 +788,9 @@ button {
 
 /*=== resource block ===*/
 .rsrc {
-  width: 46.978rem;
+  width: 100%;
+  list-style: none;
+  padding-left: 0;
   /* CHILDREN */
   /* .rsrc-header */
   /* .rsrc-elem */ }
@@ -811,14 +813,6 @@ button {
 
 .rsrc .rsrc-elem:nth-child(2n+1) {
   background: #d3e2fa; }
-
-.rsrc .rsrc-elem:first-child {
-  border-top-left-radius: 8px;
-  border-top-right-radius: 8px; }
-
-.rsrc .rsrc-elem:last-child {
-  border-bottom-left-radius: 8px;
-  border-bottom-right-radius: 8px; }
 
 .rsrc .rsrc-elem:only-child {
   border: 8px; }

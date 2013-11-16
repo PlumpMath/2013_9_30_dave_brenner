@@ -49,7 +49,9 @@ class ResourceController extends BaseController
         $this->data = [
             'title'         => 'myafterschoolprograms.com',
             'url'           => $this->url,
+            'user_name'     => Auth::user()->first_name.' '.Auth::user()->last_name,
             'Resources'     => $this->Resources,
+            'Resource'     => $this->Resource,
         ];
     }
 

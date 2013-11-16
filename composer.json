@@ -9,7 +9,8 @@
 		"intervention/validation": "dev-master",
         "ignited/laravel-pdf": "1.*",
         "h4cc/wkhtmltopdf-i386": "*",
-        "h4cc/wkhtmltopdf-amd64": "*"
+        "h4cc/wkhtmltopdf-amd64": "*",
+        "sendgrid/sendgrid": "*",
 	},
 	"autoload": {
 		"classmap": [

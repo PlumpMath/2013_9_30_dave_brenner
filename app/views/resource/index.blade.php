@@ -1,26 +1,23 @@
 @extends('layouts.master')
 
 @section('content')
-    <div class="index wrap">
-        <!-- header block -->
-        <div class="header">
-            <!-- header elem -->
-            <div class="header-title">
-                <p class="header-title-text">{{ $Resources }}</p>
-            </div>
-            <!-- header elem -->
-            <div class="header-sub">
-                <p class="header-sub-text"></p>
-            </div>
+@include('modules.header')
+@include('modules.hud', ['title' => $Resources, 'icon' => 'home', 'user_name' => $user_name])
+@include('modules.banner', ['title' => $Resources])
+<div class="index box bg-1">
+    <div class="box-2">
+        @include('modules.section_divide', ['name' => 'Tasks'])
+        <div class="box box-pad-0">
+            <ul>
+                <li>Create a {{ $Resource }}</li>
+                <li>Delete a {{ $Resource }}</li>
+                <li>Copy a {{ $Resource }}</li>
+            </ul>
         </div>
-        <!-- nav block -->
-        <div class="nav">
-            <div class="nav-return">
-                <p class="nav-return-text">Return to <a href="{{ $url['home'] }}">Home</a></p>
-            </div>
-        </div>
-        <!-- resource block -->
-        <ul class="rsrc">
+    </div>
+    <div class="box-4 bg-0 border-left">
+        @include('modules.section_divide', ['name' => $Resources])
+        <ul class="box rsrc">
             @if (empty($resources))
             <!-- resource elem -->
             <li class="rsrc-elem rsrc-inst">
@@ -48,4 +45,6 @@
             @endif
         </ul>
     </div>
+    <div class="box box-pad-0 bg-0"></div>
+</div>
 @stop

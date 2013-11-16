@@ -1233,7 +1233,7 @@ Route::get('/dashboard', function ()
 					'Location' => $location->name,
 					'Address' => $location->address.', '.$location->city,
 					'Next Class' => '',
-					'See Calendar' => '<a href="'.'">View</a>',
+					'See Calendar' => '<a href="'.URL::to('/lesson', ['id' => $lesson->id]).'">View</a>',
 				],
 				'link' => $link,
 				'actionable' => $actionable,
@@ -1251,6 +1251,54 @@ Route::get('/dashboard', function ()
 	];
 
 	return View::make('dashboard', $data);
+});
+
+Route::get('/account', function ()
+{
+	$data = [];
+
+	if ( ! Auth::check())
+		return App::abort(401, 'You are not authorized.');
+
+	$user = Auth::user();
+
+	$data = [
+		'user_name' => null,
+	];
+
+	return View::make('reset', $data);   
+});
+
+Route::get('/account/password', function ()
+{
+	$data = [];
+
+	if ( ! Auth::check())
+		return App::abort(401, 'You are not authorized.');
+
+	$user = Auth::user();
+
+	$data = [
+		'user_name' => null,
+	];
+
+	return View::make('reset_password', $data);   
+});
+
+Route::get('/account/user', function ()
+{
+	$data = [];
+
+	if ( ! Auth::check())
+		return App::abort(401, 'You are not authorized.');
+
+	$user = Auth::user();
+
+	$data = [
+		'user_name' => null,
+	];
+
+	return View::make('reset_user', $data);   
 });
 
 Route::post('/verify/pay', 'PaypalPaymentsController@verify');

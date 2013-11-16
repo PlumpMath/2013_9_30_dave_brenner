@@ -29,6 +29,9 @@
 		@endforeach
 		@include('modules.button-0', ['text' => 'Sign in'])
 		{{ Form::close() }}
+		<div class="box box-pad-0">
+			<a href="{{ URL::to('/account') }}">Need help signing in?</a>
+		</div>
 	</div>
 </div>
 @stop
