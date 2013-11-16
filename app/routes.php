@@ -681,11 +681,11 @@ Route::get('/enroll', function ()
 		$lesson = Lesson::find($order->lesson_id);
 		if (is_null($lesson)) continue;
 		$name = $lesson->starts().' '.$lesson->day();
-		$total_price += $lesson->price;
+		$total_price += $lesson->prorate();
 		$orders[$order->id] = [
 			'name' => $name,
 			'values' => [
-				'Price' => '$'.$lesson->price,
+				'Price' => '$'.$lesson->prorate(),
 				'Number of Lessons' => $lesson->number(),
 				'Activity' => $activity_names[$lesson->activity_id],
 				'Location' => $names[$lesson->location_id],
@@ -738,11 +738,11 @@ Route::get('/checkout', function () {
 		$lesson = Lesson::find($order->lesson_id);
 		if (is_null($lesson)) continue;
 		$name = $lesson->starts().' '.$lesson->day();
-		$total_price += $lesson->price;
+		$total_price += $lesson->prorate();
 		$orders[$order->id] = [
 			'name' => $name,
 			'values' => [
-				'Price' => '$'.$lesson->price,
+				'Price' => '$'.$lesson->prorate(),
 				'Activity' => $lesson->activity->name,
 				'Location' => $lesson->location->name,
 				'For' => $order->child->first_name.' '.$order->child->last_name,
@@ -874,7 +874,7 @@ Route::get('/review', function () {
 		if (is_null($lesson)) continue;
 
 		$name = $lesson->starts().' '.$lesson->day();
-		$total_price += $lesson->price;
+		$total_price += $lesson->prorate();
 
 		$month = isset($_GET['m'.$order->id]) ? $_GET['m'.$order->id] : $lesson->firstLesson()->format('m');
 		$year  = isset($_GET['y'.$order->id]) ? $_GET['y'.$order->id] : $lesson->firstLesson()->format('y');
@@ -902,7 +902,7 @@ Route::get('/review', function () {
 		$classes[$order->id] = [
 			'name' => $name,
 			'details' => [
-				'Price' => '$'.$lesson->price,
+				'Price' => '$'.$lesson->prorate(),
 				'Number of Lessons' => $lesson->number(),
 				'Activity' => $lesson->activity->name,
 				'Location' => $lesson->location->name,
@@ -1138,7 +1138,7 @@ Route::get('/confirmation', function () {
 		$receipt->save();
 
 		$name = 'Class for '.$child->first_name.' '.$child->last_name;
-		$price = $lesson->price;
+		$price = $lesson->prorate();
 		$link = '';
 		$actionable = '';
 

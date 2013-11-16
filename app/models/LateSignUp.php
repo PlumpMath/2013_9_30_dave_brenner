@@ -6,7 +6,13 @@ class LateSignUp extends Resource {
     	'class_session_id'
     ];
 
-    public static $rules = [];
+    public static $rules = [
+        'lesson_id'     => 'required',
+        'email'         => 'required_without:user_id|email',
+        'user_id'       => 'required_without:email|integer',
+        'child_name'    => 'required_without:child_id',
+        'child_id'      => 'required_without:child_name|integer',
+    ];
 
     protected $table = 'latesignups';
 

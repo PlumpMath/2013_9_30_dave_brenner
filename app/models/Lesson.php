@@ -81,7 +81,7 @@ class Lesson extends Resource {
             }
         }
 
-        return $ax;
+        return round($ax, 2);
     }
 
     public function isUser($user_id)
