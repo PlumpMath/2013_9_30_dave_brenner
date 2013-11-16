@@ -8,16 +8,18 @@
 	<div class="type-3 fg-2 measure">Our programs <span class="fg-3">bring children together</span> to play and learn about the value of <span class="fg-3">staying&nbsp;active</span> and <span class="fg-3">living&nbsp;healthy</span></div>
 </div>
 <div class="box box-pad-0">
-	<div class="box-3">
+	<div class="box border-bottom-0">
 		<div class="box box-pad-0">
 			<div class="type-1 center">New here?</div>
 		</div>
 		<div class="box box-pad-0">
 			<div class="type-3 fg-1 measure">Our programs are offered in over 6 locations across Long Island, and are taught by skilled professionals.</div>
 		</div>
+		<div class="box">
 		@include('modules.button-1', ['text' => 'Sign up'])
+		</div>
 	</div>
-	<div class="box-3 center border-left">
+	<div class="box center">
 		<div class="box box-pad-0">
 			<div class="type-1">Sign in</div>
 		</div>

@@ -1242,6 +1242,7 @@ Route::get('/dashboard', function ()
 	}
 
 	$data = [
+		'register_child' => URL::to('/register/child'),
 		'user_name' => Auth::user()->first_name.' '.Auth::user()->last_name,
 		'your_info' => '',
 		'children' => $children,
@@ -1253,3 +1254,75 @@ Route::get('/dashboard', function ()
 });
 
 Route::post('/verify/pay', 'PaypalPaymentsController@verify');
+
+// ACTIVITIES
+
+Route::post('/activities/search', 'ActivityController@search');
+Route::post('/activities/affect', 'ActivityController@affect');
+Route::get('/activities/{id}/copy', 'ActivityController@copy');
+
+Route::resource('activities', 'ActivityController');
+
+// CHILDREN
+
+Route::post('/children/search', 'ChildController@search');
+Route::post('/children/affect', 'ChildController@affect');
+Route::get('/children/{id}/copy', 'ChildController@copy');
+
+Route::resource('children', 'ChildController');
+
+// COUPONS
+
+Route::post('/coupons/search', 'CouponController@search');
+Route::post('/coupons/affect', 'CouponController@affect');
+Route::get('/coupons/{id}/copy', 'CouponController@copy');
+
+Route::resource('coupons', 'CouponController');
+
+// LATESIGNUPS
+
+Route::post('/latesignups/search', 'LateSignUpController@search');
+Route::post('/latesignups/affect', 'LateSignUpController@affect');
+Route::get('/latesignups/{id}/copy', 'LateSignUpController@copy');
+
+Route::resource('latesignups', 'LateSignUpController');
+
+// LESSONS
+
+Route::post('/lessons/search', 'LessonController@search');
+Route::post('/lessons/affect', 'LessonController@affect');
+Route::get('/lessons/{id}/copy', 'LessonController@copy');
+
+Route::resource('lessons', 'LessonController');
+
+// LOCATIONS
+
+Route::post('/locations/search', 'LocationController@search');
+Route::post('/locations/affect', 'LocationController@affect');
+Route::get('/locations/{id}/copy', 'LocationController@copy');
+
+Route::resource('locations', 'LocationController');
+
+// RECEIPTS
+
+Route::post('/receipts/search', 'ReceiptController@search');
+Route::post('/receipts/affect', 'ReceiptController@affect');
+Route::get('/receipts/{id}/copy', 'ReceiptController@copy');
+
+Route::resource('receipts', 'ReceiptController');
+
+// USERS
+
+Route::post('/users/search', 'UserController@search');
+Route::post('/users/affect', 'UserController@affect');
+Route::get('/users/{id}/copy', 'UserController@copy');
+
+Route::resource('users', 'UserController');
+
+// WAITLISTS
+
+Route::post('/waitlists/search', 'WaitlistController@search');
+Route::post('/waitlists/affect', 'WaitlistController@affect');
+Route::get('/waitlists/{id}/copy', 'WaitlistController@copy');
+
+Route::resource('waitlists', 'WaitlistController');

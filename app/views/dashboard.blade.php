@@ -16,6 +16,7 @@
 				@foreach ($children as $child)
 				<li class="box box-pad-0"><a href="{{ $child->link }}">{{{ $child->first_name.' '.$child->last_name }}}</a></li>
 				@endforeach
+				<li class="box box-pad-0"><a href="{{ $register_child }}">Register another child</a></li>
 			</ul>
 		</div>
 	</div>

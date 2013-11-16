@@ -545,7 +545,7 @@ button {
   border-radius: 2.4rem; }
 
 .hud-icon {
-  display: block;
+  display: block !important;
   width: 1rem !important;
   height: 1rem !important;
   color: white; }
@@ -785,6 +785,108 @@ button {
   position: absolute;
   top: 441px;
   left: 573px; }
+
+/*=== resource block ===*/
+.rsrc {
+  width: 46.978rem;
+  /* CHILDREN */
+  /* .rsrc-header */
+  /* .rsrc-elem */ }
+
+.rsrc .rsrc-header {
+  margin-bottom: 4.236rem; }
+
+.rsrc .rsrc-elem {
+  /* CHILDREN */
+  /* .rsrc-type-name */
+  /* .rsrc-type-cmds */
+  /* .rsrc-inst-empty */
+  /* .rsrc-elem-checkbox, .rsrc-inst-info, .rsrc-inst-name */
+  /* .rsrc-elem-checkbox */
+  /* .rsrc-inst-name */
+  /* .rsrc-inst-name */ }
+
+.rsrc .rsrc-elem:nth-child(2n) {
+  background: #dce8fc; }
+
+.rsrc .rsrc-elem:nth-child(2n+1) {
+  background: #d3e2fa; }
+
+.rsrc .rsrc-elem:first-child {
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px; }
+
+.rsrc .rsrc-elem:last-child {
+  border-bottom-left-radius: 8px;
+  border-bottom-right-radius: 8px; }
+
+.rsrc .rsrc-elem:only-child {
+  border: 8px; }
+
+.rsrc .rsrc-elem .rsrc-type-name {
+  display: inline-block;
+  padding: 1.618rem;
+  padding-left: 1rem;
+  vertical-align: middle;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  /* CHILDREN */
+  /* .rsrc-type-name-text */ }
+
+.rsrc .rsrc-elem .rsrc-type-name .rsrc-type-name-text {
+  font-size: 1.618rem; }
+
+.rsrc .rsrc-elem .rsrc-type-cmds {
+  display: inline-block;
+  padding-left: 1rem;
+  /* CHILDREN */
+  /* .rsrc-type-cmds-btn */ }
+
+.rsrc .rsrc-elem .rsrc-type-cmds .rsrc-type-cmds-btn {
+  height: 2.618rem;
+  margin-right: .5rem;
+  vertical-align: middle;
+  width: 2.618rem;
+  /* .rsrc-type-cmds-btn-link-text */ }
+
+.rsrc .rsrc-elem .rsrc-type-cmds .rsrc-type-cmds-btn .rsrc-type-cmds-btn-link-text {
+  color: white;
+  height: 100%;
+  width: 100%; }
+
+.rsrc .rsrc-elem .rsrc-inst-empty {
+  padding: 1rem;
+  text-align: center; }
+
+.rsrc .rsrc-elem .rsrc-elem-checkbox, .rsrc .rsrc-elem .rsrc-inst-info, .rsrc .rsrc-elem .rsrc-inst-name {
+  display: inline-block;
+  padding: 1rem; }
+
+.rsrc .rsrc-elem .rsrc-elem-checkbox {
+  color: white;
+  cursor: pointer;
+  width: 1rem;
+  /* CHILDREN */
+  /* .icon */
+  /* .icon-ok */ }
+
+.rsrc .rsrc-elem .rsrc-elem-checkbox .icon {
+  -o-transition: 0.1s all;
+  -ms-transition: 0.1s all;
+  -moz-transition: 0.1s all;
+  -webkit-transition: 0.1s all;
+  transition: 0.1s all; }
+
+.rsrc .rsrc-elem .rsrc-elem-checkbox .icon-ok {
+  color: #2dcb70; }
+
+.rsrc .rsrc-elem .rsrc-inst-name {
+  color: #2f3854;
+  width: 35%; }
+
+.rsrc .rsrc-elem .rsrc-inst-info {
+  color: #9397a8; }
 
 @-webkit-keyframes squish {
   0% {
