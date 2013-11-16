@@ -3,6 +3,10 @@
   width: 100%;
   list-style: none;
   padding-left: 0;
+
+  &.box-pad-0 {
+    padding: $size_base
+  }
   /* CHILDREN */
   /* .rsrc-header */
   /* .rsrc-elem */ }

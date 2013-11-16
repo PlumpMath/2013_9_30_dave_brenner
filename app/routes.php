@@ -1232,7 +1232,7 @@ Route::get('/dashboard', function ()
 				'details' => [
 					'Location' => $location->name,
 					'Address' => $location->address.', '.$location->city,
-					'Next Class' => '',
+					'Next Class' => $lesson->nextClass()->format('F jS, Y'),
 					'See Calendar' => '<a href="'.URL::to('/lesson', ['id' => $lesson->id]).'">View</a>',
 				],
 				'link' => $link,

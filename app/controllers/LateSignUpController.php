@@ -76,4 +76,29 @@ class LateSignUpController extends ResourceController
     }
 
     // }}}
+
+    public function create()
+    {
+        $data = array_merge($this->data, [
+            'fields' => [
+                [
+                    'name' => 'email',
+                    'type' => 'text',
+                    'label' => 'User Email',
+                ],
+                [
+                    'name' => 'child_name',
+                    'type' => 'text',
+                    'label' => 'Child\'s Name',
+                ],
+                [
+                    'name' => 'lesson_id',
+                    'type' => 'text',
+                    'label' => 'Lesson ID',
+                ],
+            ],
+        ]);
+
+        return View::make('resource.create', $data);  
+    }
 }

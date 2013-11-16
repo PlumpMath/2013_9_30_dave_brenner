@@ -34,6 +34,10 @@ class ResourceController extends BaseController
         $this->resource = strtolower($this->Resource);
         $this->resources = strtolower($this->Resources);
 
+        $ModelName = $this->Resource;
+
+        $this->validation_rules = $ModelName::$rules;
+
         //fields that are needed for create $filleable
 
         //urls to be made available to Views

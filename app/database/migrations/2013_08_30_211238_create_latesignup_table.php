@@ -14,10 +14,10 @@ class CreateLatesignupTable extends Migration {
 	{
 		Schema::create('latesignups', function(Blueprint $table) {
 			$table->increments('id');
-			$table->string('email');
-			$table->string('child_name');
-			$table->integer('session_id');
+			$table->integer('lesson_id');
+			$table->string('email')->nullable();
 			$table->integer('user_id')->nullable();
+			$table->string('child_name')->nullable();
 			$table->integer('child_id')->nullable();
 			$table->timestamps();
 		});

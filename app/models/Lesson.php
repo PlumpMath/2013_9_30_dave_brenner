@@ -93,6 +93,29 @@ class Lesson extends Resource {
         return false;
     }
 
+    public function nextClass()
+    {
+        $lessons = $this->dates()->where('lesson_date_template_id', '=', '8')->get();
+        $now = new DateTime;
+        $previous_lesson = null;
+        $previous_lesson_start = new DateTime;
+
+        foreach ($lessons as $lesson) {
+            $lesson_start = new DateTime($lesson->starts_on);
+
+            //if the lesson hasn't started yet
+            if ($now < $lesson_start) {
+                //if this lesson is before the previously capture lesson
+                if ($lesson_start < $previous_lesson_start) {
+                    $previous_lesson = $lesson;
+                    $previous_lesson_start = $lesson_start;
+                }
+            }
+        }
+
+        return $previous_lesson_start;
+    }
+
     public function spots()
     {
         $orders = count(Order::where('lesson_id', '=', $this->id)->get());

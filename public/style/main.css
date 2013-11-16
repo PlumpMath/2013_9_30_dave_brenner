@@ -794,6 +794,8 @@ button {
   /* CHILDREN */
   /* .rsrc-header */
   /* .rsrc-elem */ }
+  .rsrc.box-pad-0 {
+    padding: 1.7rem; }
 
 .rsrc .rsrc-header {
   margin-bottom: 4.236rem; }
