@@ -73,21 +73,42 @@ class LessonController extends ResourceController
 
         // show all lessons dates after regular properties
         $ModelName = $this->Resource;
-        $resource_to_show = $ModelName::find($id)->toArray();
+        $resource_to_show = $ModelName::find($id);
+        $resource_as_array = $resource_to_show->toArray();
 
         $d = $resource_to_show->dates()->get();
         $dates = [];
 
         foreach ($d as $dd) {
+            $template = LessonDateTemplate::find($dd->lesson_date_template_id);
+
+            if ($dd->name) {
+                $name = $dd->name;
+            } else {
+                $name = $template->name;
+            }
+
+            if ($dd->description) {
+                $desc = $dd->description;
+            } else {
+                $desc = $template->description;
+            }
+
+            $starts = $dd->starts_on;
+            $ends = $dd->ends_on;
+
             $dates[] = [
-                ''
+                'name'          => $name,
+                'description'   => $desc,
+                'starts'        => $starts,
+                'ends'          => $ends,
             ];
         }
 
         $data = array_merge($this->data, [
-            'name'      => $this->name($resource_to_show),
-            'info'      => $this->info($resource_to_show),
-            'resource'  => $this->format($resource_to_show)->forDisplay(),
+            'name'      => $this->name($resource_as_array),
+            'info'      => $this->info($resource_as_array),
+            'resource'  => $this->format($resource_as_array)->forDisplay(),
             'dates'     => $dates,
         ]);
         

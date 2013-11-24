@@ -14,7 +14,7 @@
         </div>
     </div>
     <div class="box-4 bg-0 border-left">
-        @include('modules.section_divide', ['name' => $Resources])
+        @include('modules.section_divide', ['name' => $Resource])
         <!-- resource block -->
         <ul class="rsrc">
             @foreach ($resource as $key => $value)
@@ -25,6 +25,18 @@
                 </div>
                 <div class="rsrc-inst-info">
                     <p class="rsrc-inst-info-text">{{ $value }}</p>
+                </div>
+            </li>
+            @endforeach
+        @include('modules.section_divide', ['name' => 'Dates'])
+            @foreach ($dates as $date)
+            <!-- resource elem -->
+            <li class="rsrc-elem rsrc-inst">
+                <div class="rsrc-inst-name">
+                    <p class="rsrc-inst-name-text">{{ $date['name'] }}</p>
+                </div>
+                <div class="rsrc-inst-info">
+                    <p class="rsrc-inst-info-text">{{ $date['description'].'<br/>Starts: '.$date['starts'].'<br/>Ends: '.$date['ends'] }}</p>
                 </div>
             </li>
             @endforeach
