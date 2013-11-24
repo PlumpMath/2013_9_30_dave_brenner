@@ -66,4 +66,31 @@ class LessonController extends ResourceController
     }
 
     // }}}
+
+    public function show($id)
+    {
+        // special show for lessons
+
+        // show all lessons dates after regular properties
+        $ModelName = $this->Resource;
+        $resource_to_show = $ModelName::find($id)->toArray();
+
+        $d = $resource_to_show->dates()->get();
+        $dates = [];
+
+        foreach ($d as $dd) {
+            $dates[] = [
+                ''
+            ];
+        }
+
+        $data = array_merge($this->data, [
+            'name'      => $this->name($resource_to_show),
+            'info'      => $this->info($resource_to_show),
+            'resource'  => $this->format($resource_to_show)->forDisplay(),
+            'dates'     => $dates,
+        ]);
+        
+        return View::make('show.lessons', $data);
+    }
 }

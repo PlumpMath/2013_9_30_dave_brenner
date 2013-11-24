@@ -58,7 +58,7 @@ class UserController extends ResourceController
 
     public function name($resource)
     {
-        return $resource['name'];
+        return $resource['email'];
     }
 
     // }}}
