@@ -1356,13 +1356,20 @@ Route::get('/account/password', function ()
 
 Route::get('/account/user', function ()
 {
-	$data = [];
-
 	$data = [
 		'user_name' => null,
 	];
 
 	return View::make('reset_user', $data);   
+});
+
+Route::get('/about_us', function ()
+{
+	$data = [
+		'user_name' => null,
+	];
+
+	return View::make('about_us', $data);
 });
 
 Route::post('/verify/pay', 'PaypalPaymentsController@verify');

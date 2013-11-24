@@ -14,6 +14,9 @@
 		</div>
 		<div class="box box-pad-0">
 			<div class="type-3 fg-1 measure">Our programs are offered in over 6 locations across Long Island, and are taught by skilled professionals.</div>
+			<div class="box center box-pad-0">
+				<a href="{{ URL::to('/about_us') }}">Read about our programs, here!</a>
+			</div>
 		</div>
 		<div class="box">
 		@include('modules.button-1', ['text' => 'Sign up'])
