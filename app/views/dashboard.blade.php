@@ -7,18 +7,26 @@
 <div class="box bg-1">
 	<div class="box-2">
 		@include('modules.section_divide', ['name' => 'Your Account'])
-		<div class="box box-pad-0">
+		<div class="box box-pad-0 border-bottom-0">
 			<a href="{{ $your_info }}">Your info</a>
 		</div>
-		<div class="box box-pad-0">
-			Your children's info:
+		@include('modules.section_divide', ['name' => 'Your Children\'s Info'])
+		<div class="box border-bottom-1">
 			<ul>
 				@foreach ($children as $child)
-				<li class="box box-pad-0"><a href="{{ $child->link }}">{{{ $child->first_name.' '.$child->last_name }}}</a></li>
+				<li class="box box-pad-1"><a href="{{ $child->link }}">{{{ $child->first_name.' '.$child->last_name }}}</a></li>
 				@endforeach
-				<li class="box box-pad-0"><a href="{{ $register_child }}">Register another child</a></li>
+				<li class="box box-pad-1"><a href="{{ $register_child }}">Register another child</a></li>
 			</ul>
 		</div>
+		<div class="box box-pad-0">
+			<a href="{{ $enroll }}">Register for classes</a>
+		</div>
+		@include('modules.section_divide', ['name' => 'Account Settings'])
+		<div class="box box-pad-0">
+			<a href="{{ $signout }}">Sign out</a>
+		</div>
+
 	</div>
 	<div class="box-4 bg-0 border-left">
 		@include('modules.section_divide', ['name' => 'Notifications'])

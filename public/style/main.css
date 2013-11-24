@@ -10,7 +10,7 @@ a {
   text-decoration: none; }
 
 html {
-  font-size: 1em; }
+  font-size: 1.1em; }
 
 body {
   font-family: "Open Sans", Arial, sans-serif;
@@ -85,7 +85,8 @@ button {
 .fg-3 {
   color: #73d0bb; }
 
-.fg-4 {
+.fg-4, .detail_name_1,
+.detail_name_2 {
   color: #ef3a4f; }
 
 .fg-5 {
@@ -120,11 +121,11 @@ button {
       padding-top: 0; } }
 
 .measure {
-  max-width: 26em;
+  max-width: 32em;
   margin: auto; }
 
 .smaller-measure {
-  max-width: 13em; }
+  max-width: 16em; }
 
 .border-left {
   border-left: 1px solid #eeeeee; }
@@ -154,6 +155,10 @@ button {
 
 .margin-1 {
   margin-left: 1.7rem; }
+
+.detail_name_1,
+.detail_name_2 {
+  font-size: 1.25em; }
 
 /*! Hint.css - v1.3.0 - 2013-08-05
 * http://kushagragour.in/lab/hint/

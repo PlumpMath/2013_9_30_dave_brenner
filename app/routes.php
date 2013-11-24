@@ -74,7 +74,7 @@ Route::post('/log/in', function ()
 		'password'  => Input::get('password'),
 	];
 
-	if (Auth::attempt($user)) {
+	if (Auth::attempt($user) && Auth::user()->status === 1) {
 	/*
 		$ip = $_SERVER['REMOTE_ADDR'];
 
@@ -92,6 +92,30 @@ Route::post('/log/in', function ()
 	} else {
 		return Redirect::to('/')->with('auth_failed', true);
 	}
+});
+
+Route::get('/email/latesignup', function () {
+	$student = 'BETTY BOTTER';
+	$time = new DateTime;
+
+	$data = [
+		'activity' => 'TENNIS',
+		'user_name' => Auth::user()->first_name.' '.Auth::user()->last_name,
+		'child' => $student,
+		'time' => $time->format('g:i A l, F jS'),
+		'link' => '',
+
+		'subject' => 'Tennis Registration:  The 24 HOUR clock is ticking...',
+		'summary' => 'Sign up for classes with myafterschoolprograms. You have 24 hours to complete your registration.',
+		'in_browser_link' => '',
+		'year' => (new DateTime)->format('Y'),
+		'description' => 'You may sign '.$student.' up for the class you\'ve discussed with us over the phone. Complete the registration at myafterschoolprograms\' website.',
+		'return_email' => 'someprefix@mysafterschoolprograms.com',
+		'unsubscribe_link' => '',
+		'profile_preferences_link' => '',
+	];
+
+	return View::make('email.latesignup', $data);
 });
 
 Route::get('/email/waiting', function () {
@@ -564,6 +588,8 @@ Route::get('/enroll', function ()
 	$requested['loc'] = Input::get('locations');
 	$requested['act'] = Input::get('activities');
 	$requested['chi'] = Input::get('children');
+
+	$ordinals = ['st', 'nd', 'rd', 'th'];
 	
 	foreach ($requested as $key => $request) {
 		$vloc = Validator::make(
@@ -598,10 +624,12 @@ Route::get('/enroll', function ()
 	$classes = [];
 
 	$names['null'] = 'Any';
+	$city = [];
 	$activity_names['null'] = 'Any';
 
 	foreach ($locations as $location) {
 		$names[$location->id] = $location->name;
+		$city[$location->id] = $location->city;
 	}
 
 	foreach ($activities as $activity) {
@@ -636,14 +664,15 @@ Route::get('/enroll', function ()
 
 		foreach ($restrict_models as $restriction) {
 			if ($restriction->property === 'grade') {
-				$grades .= $restriction->value.', ';
+				$o = ($restriction->value > 4) ? 4 : $restriction->value;
+				$grades .= $restriction->value.$ordinals[$o-1].'/';
 			} else if ($restriction->property === 'gender') {
 				$gender = ucfirst($restriction->value);
 			}
 		}
 
 		$spots = max($lesson->spots() - $waitlist, 0);
-		$grades = trim($grades, ', ');
+		$grades = trim($grades, '/');
 		if ($order) {
 			$actionable = 'In Cart';
 			$link = '';
@@ -662,14 +691,14 @@ Route::get('/enroll', function ()
 			'name' => $name,
 			'price' => $price,
 			'details' => [
-				'Number of Lessons' => $number,
-				'Activity' => $activity_names[$lesson->activity_id],
-				'Location' => $names[$lesson->location_id],
-				'Begins' => $lesson->firstLesson()->format('M jS, Y'),
-				'Ends' => $lesson->lastLesson()->format('M jS, Y'),
-				'Spots' => $spots.' available',
+				$activity_names[$lesson->activity_id] => $names[$lesson->location_id].', '.$city[$lesson->location_id],
+				$lesson->firstLesson()->format('l') => $lesson->firstLesson()->format('g:i A'),
+				'Begins' => $lesson->firstLesson()->format('M jS'),
+				'Ends' => $lesson->lastLesson()->format('M jS'),
+				'Gender' => $gender,
 				'Grades' => $grades,
-				'Gender' => $gender
+				'Number of Lessons' => $number,
+				'Spots' => $spots.' left',
 			],
 			'link' => $link,
 			'actionable' => $actionable,
@@ -1286,6 +1315,8 @@ Route::get('/dashboard', function ()
 		'notifications' => Auth::user()->notifications()->get(),
 		'classes' => $classes,
 		'rsrcs' => $resources,
+		'enroll' => URL::to('/enroll'),
+		'signout' => URL::to('/log/out'),
 	];
 
 	return View::make('dashboard', $data);
