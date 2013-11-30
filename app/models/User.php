@@ -168,6 +168,11 @@ class User extends Resource implements UserInterface, RemindableInterface {
     {
         return $this->hasMany('Waitlist');
     }
+
+    public function receipts()
+    {
+        return $this->hasMany('Receipt');
+    }
 }
 
 // }}}

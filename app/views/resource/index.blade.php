@@ -10,8 +10,6 @@
         <div class="box box-pad-0">
             <ul>
                 <li>Create a {{ $Resource }}</li>
-                <li>Delete a {{ $Resource }}</li>
-                <li>Copy a {{ $Resource }}</li>
             </ul>
         </div>
     </div>

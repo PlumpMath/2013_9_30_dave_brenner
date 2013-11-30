@@ -13,6 +13,7 @@ class Location extends Resource {
     protected $relations_to = [
     	'Activity',
         'Lesson',
+        'Receipt',
     ];
 
     // }}}
@@ -25,6 +26,19 @@ class Location extends Resource {
     public function lessons()
     {
         return $this->hasMany('Lesson');
+    }
+
+    public function receipts()
+    {
+        $lessons = $this->lessons()->get();
+
+        $receipts = [];
+
+        foreach($lessons as $lesson) {
+            $receipts = array_merge($receipts, $lesson->receipts()->get());
+        }
+
+        return $receipts;
     }
 }
 

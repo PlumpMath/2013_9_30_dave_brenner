@@ -3,7 +3,7 @@
 @section('content')
 @include('modules.header')
 @include('modules.hud', ['title' => 'Dashboard', 'icon' => 'dashboard', 'user_name' => $user_name])
-@include('modules.banner', ['title' => 'Dashboard'])
+@include('modules.banner', ['title' => 'Hello, '.$user_name])
 <div class="box bg-1">
 	<div class="box-2">
 		@include('modules.section_divide', ['name' => 'Your Account'])
@@ -16,7 +16,7 @@
 				@foreach ($children as $child)
 				<li class="box box-pad-1"><a href="{{ $child->link }}">{{{ $child->first_name.' '.$child->last_name }}}</a></li>
 				@endforeach
-				<li class="box box-pad-1"><a href="{{ $register_child }}">Register another child</a></li>
+				<li class="box box-pad-1"><a href="{{ $register_child }}">Register child</a></li>
 			</ul>
 		</div>
 		<div class="box box-pad-0">

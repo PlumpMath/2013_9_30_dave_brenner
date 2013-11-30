@@ -233,10 +233,20 @@ class ResourceController extends BaseController
         $ModelName = $this->Resource;
         $resource_to_show = $ModelName::find($id)->toArray();
 
+        $url = array_merge($this->url, [
+            'copy'   => action($this->ResourceController.'@copy', $id),
+            'delete' => action($this->ResourceController.'@destroy', $id),
+            'edit'   => action($this->ResourceController.'@edit', $id),
+            'receipts' => action('ReceiptController@index'),
+        ]);
+
         $data = array_merge($this->data, [
-            'name'      => $this->name($resource_to_show),
-            'info'      => $this->info($resource_to_show),
-            'resource'  => $this->format($resource_to_show)->forDisplay(),
+            'name'          => $this->name($resource_to_show),
+            'info'          => $this->info($resource_to_show),
+            'resource'      => $this->format($resource_to_show)->forDisplay(),
+            'resource_id'   => $id,
+            'input_name'    => $this->resource,
+            'url'           => $url,
         ]);
         
         return View::make('resource.show', $data);
@@ -283,7 +293,8 @@ class ResourceController extends BaseController
             $resource_to_create->save();
             return Redirect::action($this->ResourceController.'@show', $resource_to_create->id);
         } else {
-            return 'Did not pass validation.';
+            echo "Did not pass validation. One or more of your inputs has incorrect values.\n";
+            dd($validator->errors());
         }
     }
 
@@ -339,7 +350,8 @@ class ResourceController extends BaseController
 
             return Redirect::action($this->ResourceController.'@show', $id);
         } else {
-            return 'Did not pass validation.';
+            echo "Did not pass validation. One or more of your inputs has incorrect values.\n";
+            dd($validator->errors());
         }
     }
 
@@ -347,7 +359,7 @@ class ResourceController extends BaseController
     // {{{ destroy
 
     /**
-     * ResourceController@edit  
+     * ResourceController@destroy  
      *
      * Deletes a specific resource
      * Available at url: /resource/$id, with method DELETE
@@ -363,6 +375,17 @@ class ResourceController extends BaseController
         $ModelName::destroy($id);
         
         return Redirect::action($this->ResourceController.'@index');
+    }
+    
+    public function copy($id)
+    {
+        $ModelName = $this->Resource;
+        $resource_to_copy = $ModelName::find($id);
+        $array_from_resource = $resource_to_copy->toArray();
+        unset($array_from_resource['id']);
+        $resource_copied = $ModelName::create($array_from_resource);
+
+        return Redirect::action($this->ResourceController.'@show', $resource_copied->id);
     }
 
     // }}}

@@ -9,7 +9,7 @@ class Activity extends Resource {
 
     protected $relations_to = [
     	'Location',
-    	'Lesson'
+    	'Lesson',
     ];
 
     public function locations()

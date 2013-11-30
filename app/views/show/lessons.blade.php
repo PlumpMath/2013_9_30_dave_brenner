@@ -9,7 +9,15 @@
         @include('modules.section_divide', ['name' => 'Tasks'])
         <div class="box box-pad-0">
             <ul>
-                <li>Retrieve attached Receipts</li>
+                <li><a href="{{ $url['copy'] }}">Copy this {{ $Resource }}</a></li>
+                {{ Form::open(['url' => $url['delete'], 'method' => 'DELETE']) }}
+                <li><button type="submit">Delete this {{ $Resource }}</button></li>
+                {{ Form::close() }}
+                <li><a href="{{ $url['edit'] }}">Edit this {{ $Resource }}</a></li>
+                {{ Form::open(['url' => $url['receipts'], 'method' => 'GET']) }}
+                <input name="{{ $input_name }}" type="hidden" value="{{ $resource_id }}">
+                <li><button type="submit">Retrieve attached Receipts</button></li>
+                {{ Form::close() }}
             </ul>
         </div>
     </div>

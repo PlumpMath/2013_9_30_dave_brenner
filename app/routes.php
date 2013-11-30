@@ -538,7 +538,7 @@ Route::get('/activate/{hash}', function ($hash)
 
 	$data = [
 		'user_name' => Auth::user()->first_name.' '.Auth::user()->last_name,
-		'home' => '/register/child'
+		'home' => URL::to('/register/child'),
 	];
 
 	return View::make('/activate', $data);
@@ -1411,6 +1411,8 @@ Route::resource('latesignups', 'LateSignUpController');
 Route::post('/lessons/search', 'LessonController@search');
 Route::post('/lessons/affect', 'LessonController@affect');
 Route::get('/lessons/{id}/copy', 'LessonController@copy');
+Route::get('/lessons/precreate', 'LessonController@precreate');
+Route::post('/lessons/create', 'LessonController@create');
 
 Route::resource('lessons', 'LessonController');
 

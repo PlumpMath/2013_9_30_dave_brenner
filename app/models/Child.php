@@ -17,7 +17,8 @@ class Child extends Resource {
     protected $relations_to = [
         'User',
         'Lesson',
-        'Order'
+        'Order',
+        'Receipt',
     ];
 
     public static function getBirthday($str)
@@ -58,5 +59,10 @@ class Child extends Resource {
     public function orders()
     {
         return $this->hasMany('Order');
+    }
+
+    public function receipts()
+    {
+        return $this->hasMany('Receipt');
     }
 }

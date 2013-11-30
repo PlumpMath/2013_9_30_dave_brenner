@@ -15,6 +15,7 @@ class Lesson extends Resource {
         'LessonRestriction',
         'Order',
         'Waitlist',
+        'Receipt',
     ];
 
     public function day()
@@ -166,5 +167,10 @@ class Lesson extends Resource {
     public function waiting()
     {
         return $this->hasMany('Waitlist');
+    }
+
+    public function receipts()
+    {
+        return $this->hasMany('Receipt');
     }
 }
