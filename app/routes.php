@@ -15,7 +15,6 @@ Route::get('/test/{test}', function ($test)
 
 Route::get('/', function ()
 {
-
 	$data = [
 		'user_name' => null,
 		'fields' => [
@@ -29,7 +28,8 @@ Route::get('/', function ()
 				'type' => 'password',
 				'label' => 'Password',
 			],
-		]
+		],
+		'error_msg' => (Session::has('error_msg')) ? Session::get('error_msg') : null,
 	];
 
 	if (Auth::check())
@@ -88,9 +88,19 @@ Route::post('/log/in', function ()
 		}
 	*/
 
-		return Redirect::intended('/dashboard');
+		return Redirect::to('/dashboard');
 	} else {
-		return Redirect::to('/')->with('auth_failed', true);
+		if ($user['email'] == null) {
+			$error_msg = 'Email cannot be blank.';
+		} else if ($user['password'] == null){
+			$error_msg = 'Password cannot be blank.';
+		} else if (Auth::user() && Auth::user()->status === 2) {
+			$error_msg = 'The email for this account has not yet been verified.';
+		} else {
+			$error_msg = 'Incorrect email or password.';
+		}
+
+		return Redirect::to('/')->with('error_msg', $error_msg);
 	}
 });
 

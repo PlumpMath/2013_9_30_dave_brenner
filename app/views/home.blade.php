@@ -30,6 +30,11 @@
 		@foreach ($fields as $field)
 		@include('modules.input-0', $field)
 		@endforeach
+		@if (isset($error_msg) && $error_msg !== null)
+		<div class="box box-pad-0 fg-4 sign-in-errors visible-toggle visible">
+			<p>{{{ $error_msg }}}</p>
+		</div>
+		@endif
 		@include('modules.button-0', ['text' => 'Sign in'])
 		{{ Form::close() }}
 		<div class="box box-pad-0">
