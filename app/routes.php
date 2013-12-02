@@ -694,17 +694,24 @@ Route::get('/enroll', function ()
 			}
 		}
 
+		if (isset($names[$lesson->location_id])) {
+			$activity_name_city = $names[$lesson->location_id].', '.$city[$lesson->location_id];
+		} else {
+			$activity_name_city = 'Sorry, this location is out of service.';
+		}
+
 		$classes[] = [
 			'id' => $lesson->id,
-			'name' => $name,
+			'name' => $activity_name_city,
 			'price' => $price,
 			'details' => [
-				$activity_names[$lesson->activity_id] => $names[$lesson->location_id].', '.$city[$lesson->location_id],
 				$lesson->firstLesson()->format('l') => $lesson->firstLesson()->format('g:i A'),
+				$activity_names[$lesson->activity_id] => 'Grades '.$grades,
+				'break_0' => 'break',
 				'Begins' => $lesson->firstLesson()->format('M jS'),
 				'Ends' => $lesson->lastLesson()->format('M jS'),
+				'break_1' => 'break',
 				'Gender' => $gender,
-				'Grades' => $grades,
 				'Number of Lessons' => $number,
 				'Spots' => $spots.' left',
 			],

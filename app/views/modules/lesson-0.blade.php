@@ -6,7 +6,11 @@
 	<ul class="box fg-1 clear-over">
 		{{ ''; $i = 0 }}
 		@foreach ($details as $detail_name => $detail)
+		@if ($detail_name === 'break_0' || $detail_name === 'break_1')
+		<br/>
+		@else
 		<li class="detail_name_{{ ++$i }}"><span class="bold">{{ $detail_name }}:</span> {{ $detail }}</li>
+		@endif
 		@endforeach
 	</ul>
 </div>
