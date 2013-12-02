@@ -12,7 +12,7 @@
     </div>
     <div class="box-4 bg-0 border-left">
         @include('modules.section_divide', ['name' => $Resources])
-        {{ Form::open(['url' => $url['store'], 'method' => 'POST']) }}
+        {{ Form::open(['url' => $url['update'], 'method' => 'PUT']) }}
         <input type="hidden" name="lesson_date_number" value="{{ $lesson_dates }}">
         <input type="hidden" name="lesson_restriction_number" value="{{ $lesson_restrictions }}">
         <ul class="box pl box-pad-0 rsrc">
@@ -41,7 +41,7 @@
             <li>
             @include('modules.input-0', $field)
             </li>
-            @endforeach    
+            @endforeach  
         </ul>
         @include('modules.button-0', ['text' => 'Make'])
         {{ Form::close() }}

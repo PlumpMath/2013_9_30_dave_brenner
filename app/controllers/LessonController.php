@@ -2,6 +2,21 @@
 
 class LessonController extends ResourceController
 {
+    public function __construct()
+    {
+        parent::__construct();
+
+        $this->url = [
+            'log_out'   => URL::to('/log/out'),
+            'home'      => URL::to('/'),
+            'index'     => action($this->ResourceController.'@index'),
+            'create'    => action($this->ResourceController.'@precreate'),
+            'store'     => action($this->ResourceController.'@store'),
+        ];
+
+        $this->data['url'] = $this->url;
+    }
+
     // {{{ forDisplay
 
     /**
@@ -113,7 +128,7 @@ class LessonController extends ResourceController
         $url = array_merge($this->url, [
             'copy'   => action($this->ResourceController.'@copy', $id),
             'delete' => action($this->ResourceController.'@destroy', $id),
-            'edit'   => action($this->ResourceController.'@edit', $id),
+            'edit'   => action($this->ResourceController.'@preedit', $id),
             'receipts' => action('ReceiptController@index'),
         ]);
 
@@ -150,9 +165,298 @@ class LessonController extends ResourceController
         return View::make('create.prelesson', $data);
     }
 
+    public function preedit($id)
+    {
+        $data = array_merge($this->data, [
+            'fields' => [
+                [
+                    'name' => 'dates',
+                    'type' => 'text',
+                    'label' => 'Number of Dates',
+                ],
+                [
+                    'name' => 'grades',
+                    'type' => 'text',
+                    'label' => 'Number of Grades',
+                ],
+            ],
+            'url' => [
+                'edit' => URL::action('LessonController@edit', $id)
+            ],
+        ]);
+
+        return View::make('edit.prelesson', $data);
+    }
+
+    public function edit($id)
+    {
+        $lesson = Lesson::find($id);
+        $l_dates = $lesson->dates()->get();
+        $l_restrictions = $lesson->restrictions()->get();
+
+        $dates = [];
+        $old = [
+            'location_id' => $lesson->location_id,
+            'activity_id' => $lesson->activity_id,
+            'section_id' => $lesson->section_id,
+            'previous_id' => $lesson->previous_id,
+            'spots' => $lesson->spots,
+            'price' => $lesson->price,
+        ];
+        $restrictions = [];
+
+        for ($i = 0; $i < count($l_dates); $i++) {
+            $dates = array_merge([
+                'break_'.$i => 'break',
+                [
+                    'name' => 'lesson_date_'.$i.'_lesson_date_template_id',
+                    'type' => 'text',
+                    'label' => 'Template ID',
+                ],
+                [
+                    'name' => 'lesson_date_'.$i.'_name',
+                    'type' => 'text',
+                    'label' => 'Name',
+                ],
+                [
+                    'name' => 'lesson_date_'.$i.'_description',
+                    'type' => 'text',
+                    'label' => 'Description',
+                ],
+                [
+                    'name' => 'lesson_date_'.$i.'_starts_on',
+                    'type' => 'text',
+                    'label' => 'Starts',
+                ],
+                [
+                    'name' => 'lesson_date_'.$i.'_ends_on',
+                    'type' => 'text',
+                    'label' => 'Ends',
+                ],
+                [
+                    'name' => 'lesson_date_'.$i.'_id',
+                    'type' => 'hidden',
+                    'label' => '',
+                ],            
+            ], $dates);
+
+            $old = array_merge([
+                'lesson_date_'.$i.'_lesson_date_template_id' => $l_dates[$i]->lesson_date_template_id,
+                'lesson_date_'.$i.'_name' => $l_dates[$i]->name,
+                'lesson_date_'.$i.'_description' => $l_dates[$i]->description,
+                'lesson_date_'.$i.'_starts_on' => $l_dates[$i]->starts_on,
+                'lesson_date_'.$i.'_ends_on' => $l_dates[$i]->ends_on,
+                'lesson_date_'.$i.'_id' => $l_dates[$i]->id,           
+            ], $old);
+        }
+
+        for ($i = count($l_dates); $i < count($l_dates)+Input::get('dates'); $i++) {
+            $dates = array_merge([
+                'break_'.$i => 'break',
+                [
+                    'name' => 'lesson_date_'.$i.'_lesson_date_template_id',
+                    'type' => 'text',
+                    'label' => 'Template ID',
+                ],
+                [
+                    'name' => 'lesson_date_'.$i.'_name',
+                    'type' => 'text',
+                    'label' => 'Name',
+                ],
+                [
+                    'name' => 'lesson_date_'.$i.'_description',
+                    'type' => 'text',
+                    'label' => 'Description',
+                ],
+                [
+                    'name' => 'lesson_date_'.$i.'_starts_on',
+                    'type' => 'text',
+                    'label' => 'Starts',
+                ],
+                [
+                    'name' => 'lesson_date_'.$i.'_ends_on',
+                    'type' => 'text',
+                    'label' => 'Ends',
+                ],           
+            ], $dates);
+        }
+/**/
+        for ($i = 0; $i < count($l_restrictions); $i++) {
+            $restrictions = array_merge([
+                [
+                    'name' => 'lesson_restriction_'.$i.'_value',
+                    'type' => 'text',
+                    'label' => 'Grade',
+                ],
+                [
+                    'name' => 'lesson_restriction_'.$i.'_id',
+                    'type' => 'hidden',
+                    'label' => '',
+                ],
+            ], $restrictions);
+
+            $old = array_merge([
+                'lesson_restriction_'.$i.'_value' => $l_restrictions[$i]->value,
+                'lesson_restriction_'.$i.'_id' => $l_restrictions[$i]->id,  
+            ], $old);
+        }
+
+        for ($i = count($l_restrictions); $i < count($l_restrictions)+Input::get('restrictions'); $i++) {
+            $restrictions = array_merge([
+                [
+                    'name' => 'lesson_restriction_'.$i.'_value',
+                    'type' => 'text',
+                    'label' => 'Grade',
+                ]
+            ], $restrictions);
+        }
+/**/
+        $data = array_merge($this->data, [
+            'fields' => [
+                [
+                    'name' => 'location_id',
+                    'type' => 'text',
+                    'label' => 'Location ID',
+                ],
+                [
+                    'name' => 'activity_id',
+                    'type' => 'text',
+                    'label' => 'Activity ID',
+                ],
+                [
+                    'name' => 'section_id',
+                    'type' => 'text',
+                    'label' => 'Section',
+                ],
+                [
+                    'name' => 'previous_id',
+                    'type' => 'text',
+                    'label' => 'ID of Lesson preceding this one',
+                ],
+                [
+                    'name' => 'spots',
+                    'type' => 'text',
+                    'label' => 'Number of Spots',
+                ],
+                [
+                    'name' => 'price',
+                    'type' => 'text',
+                    'label' => 'Price',
+                ],
+            ],
+            'dates' => $dates,
+            'lesson_dates' => count($l_dates)+Input::get('dates'),
+            'restrictions' => $restrictions,
+            'lesson_restrictions' => count($l_restrictions)+Input::get('grades'),
+            'old' => $old,
+            'url' => [
+                'update' => URL::action('LessonController@update', $id)
+            ],
+        ]);
+
+        return View::make('edit.lesson', $data);
+    }
+
+    public function update($id)
+    {
+        $lesson_dates_number = Input::get('lesson_date_number');
+        $lesson_restrictions_number = Input::get('lesson_restriction_number');
+
+        $lesson = Lesson::find($id);
+        $location = Location::find(Input::get('location_id'));
+        $activity = Activity::find(Input::get('activity_id'));
+
+        $location->lessons()->save($lesson);
+        $activity->lessons()->save($lesson);
+
+        $lesson->section_id = Input::get('section_id');
+        //$lesson->previous_id = Input::get('previous_id');
+        $lesson->spots = Input::get('spots');
+        $lesson->price = Input::get('price');
+
+        for ($i = 0; $i < $lesson_dates_number; $i++) {
+            if (Input::has('lesson_date_'.$i.'_id')) {
+                $lesson_date = LessonDate::find(Input::get('lesson_date_'.$i.'_id'));
+            } else {
+                $lesson_date = new LessonDate;
+            }
+
+            $lesson_date->lesson_date_template_id = Input::get('lesson_date_'.$i.'_lesson_date_template_id');
+            $lesson_date->name = Input::get('lesson_date_'.$i.'_name');
+            $lesson_date->description = Input::get('lesson_date_'.$i.'_description');
+            $lesson_date->starts_on = (new DateTime(Input::get('lesson_date_'.$i.'_starts_on')))->format('Y-m-d H:i:s');
+            $lesson_date->ends_on = (new DateTime(Input::get('lesson_date_'.$i.'_ends_on')))->format('Y-m-d H:i:s');
+            $lesson_date->lesson_id = $lesson->id;
+
+            $lesson_date->save();
+        }
+
+        for ($i = 0; $i < $lesson_restrictions_number; $i++) {
+            if (Input::has('lesson_restriction_'.$i.'_id')) {
+                $lesson_restriction = LessonRestriction::find(Input::get('lesson_restriction_'.$i.'_id'));
+            } else {
+                $lesson_restriction = new LessonRestriction;
+            }
+
+            $lesson_restriction->property = 'grade';
+            $lesson_restriction->comparison = '=';
+            $lesson_restriction->value = Input::get('lesson_restriction_'.$i.'_value');
+
+            $lesson_restriction->save();
+
+            $lesson_restriction->lessons()->attach($lesson->id);
+        }
+
+        $lesson->save();
+
+        return Redirect::action('LessonController@show', $lesson->id);
+    }
+
     public function store()
     {
-        return;
+        $lesson_dates_number = Input::get('lesson_date_number');
+        $lesson_restrictions_number = Input::get('lesson_restriction_number');
+
+        $lesson = new Lesson;
+        $location = Location::find(Input::get('location_id'));
+        $activity = Activity::find(Input::get('activity_id'));
+
+        $location->lessons()->save($lesson);
+        $activity->lessons()->save($lesson);
+
+        $lesson->section_id = Input::get('section_id');
+        //$lesson->previous_id = Input::get('previous_id');
+        $lesson->spots = Input::get('spots');
+        $lesson->price = Input::get('price');
+
+        for ($i = 0; $i < $lesson_dates_number; $i++) {
+            $lesson_date = new LessonDate;
+
+            $lesson_date->lesson_date_template_id = Input::get('lesson_date_'.$i.'_lesson_date_template_id');
+            $lesson_date->name = Input::get('lesson_date_'.$i.'_name');
+            $lesson_date->description = Input::get('lesson_date_'.$i.'_description');
+            $lesson_date->starts_on = (new DateTime(Input::get('lesson_date_'.$i.'_starts_on')))->format('Y-m-d H:i:s');
+            $lesson_date->ends_on = (new DateTime(Input::get('lesson_date_'.$i.'_ends_on')))->format('Y-m-d H:i:s');
+            $lesson_date->lesson_id = $lesson->id;
+
+            $lesson_date->save();
+        }
+
+        for ($i = 0; $i < $lesson_restrictions_number; $i++) {
+            $lesson_restriction = new LessonRestriction;
+
+            $lesson_restriction->property = 'grade';
+            $lesson_restriction->comparison = '=';
+            $lesson_restriction->value = Input::get('lesson_restriction_'.$i.'_value');
+
+            $lesson_restriction->save();
+
+            $lesson_restriction->lessons()->attach($lesson->id);
+        }
+
+        $lesson->save();
+
+        return Redirect::action('LessonController@show', $lesson->id);
     }
 
     public function create()
@@ -162,29 +466,29 @@ class LessonController extends ResourceController
 
         for ($i = 0; $i < +Input::get('dates'); $i++) {
             $dates = array_merge([
-                'break_'.$i => 'break',  
+                'break_'.$i => 'break',
                 [
                     'name' => 'lesson_date_'.$i.'_lesson_date_template_id',
                     'type' => 'text',
                     'label' => 'Template ID',
                 ],
                 [
-                    'name' => 'lesson_date_'.$i.'name',
+                    'name' => 'lesson_date_'.$i.'_name',
                     'type' => 'text',
                     'label' => 'Name',
                 ],
                 [
-                    'name' => 'lesson_date_'.$i.'description',
+                    'name' => 'lesson_date_'.$i.'_description',
                     'type' => 'text',
                     'label' => 'Description',
                 ],
                 [
-                    'name' => 'lesson_date_'.$i.'starts_on',
+                    'name' => 'lesson_date_'.$i.'_starts_on',
                     'type' => 'text',
                     'label' => 'Starts',
                 ],
                 [
-                    'name' => 'lesson_date_'.$i.'ends_on',
+                    'name' => 'lesson_date_'.$i.'_ends_on',
                     'type' => 'text',
                     'label' => 'Ends',
                 ],           
@@ -235,7 +539,9 @@ class LessonController extends ResourceController
                 ],
             ],
             'dates' => $dates,
+            'lesson_dates' => +Input::get('dates'),
             'restrictions' => $restrictions,
+            'lesson_restrictions' => +Input::get('grades'),
         ]);
 
         return View::make('create.lesson', $data);

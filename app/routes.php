@@ -276,11 +276,6 @@ Route::get('/register/child', function ()
 				'type' => 'text',
 				'label' => 'Birthday',
 			],
-			[
-				'name' => 'grade',
-				'type' => 'text',
-				'label' => 'Grade',
-			],
 		],
 		'check' => [
 			'name' => 'returning_player',
@@ -479,13 +474,16 @@ Route::get('/email/verify', function ()
 });
 
 Route::post('/verify/child', function () {
+	$birthday = Child::getBirthday(Input::get('birthday'));
+	$age = Child::getAge(Input::get('birthday'));
+
 	$data = [
 		'first_name'        => Input::get('first_name'),
 		'last_name'         => Input::get('last_name'),
 		'school'            => Input::get('school'),
-		'birthday'          => Child::getBirthday(Input::get('birthday')),
-		'age'               => Child::getAge(Input::get('birthday')),
-		'grade'             => Input::get('grade'),
+		'birthday'          => $birthday,
+		'age'               => $age,
+		'grade'             => Child::getGrade($birthday, $age),
 		'gender'            => Input::get('gender'),
 		'returning_player'  => (Input::has('returning_player')) ? 1 : 0,
 	];
@@ -1397,6 +1395,31 @@ Route::resource('activities', 'ActivityController');
 Route::post('/children/search', 'ChildController@search');
 Route::post('/children/affect', 'ChildController@affect');
 Route::get('/children/{id}/copy', 'ChildController@copy');
+Route::get('/children/{id}/PAL', function ($id) {
+	$child = Child::find($id);
+	$user = $child->user()->first();
+	$lesson = $child->lessons()->first();
+	$activity = $lesson->activity()->first();
+
+	$data = [
+		'PROGRAM' => $activity->name,
+		'YEAR' => (new DateTime)->format('Y'),
+		'NAME' => $child->first_name.' '.$child->last_name,
+		'ADDRESS' => $user->address,
+		'TOWN' => $user->city,
+		'ZIP' => $user->zipcode,
+		'PHONE' => $user->phone,
+		'DOB' => (new DateTime($child->birthday))->format('m/d/Y'),
+		'AGE' => $child->age,
+		'NEWPLAYER' => $child->returning_player,
+		'MALE' => (strtoupper($child->gender) === 'MALE'),
+		'GRADE' => $child->grade,
+		'SIGNATURE' => $user->first_name.' '.$user->last_name,
+		'DATE' => (new DateTime)->format('m/d/Y'),
+	];
+
+	return View::make('PAL', $data);
+});
 
 Route::resource('children', 'ChildController');
 
@@ -1422,7 +1445,9 @@ Route::post('/lessons/search', 'LessonController@search');
 Route::post('/lessons/affect', 'LessonController@affect');
 Route::get('/lessons/{id}/copy', 'LessonController@copy');
 Route::get('/lessons/precreate', 'LessonController@precreate');
+Route::get('/lessons/{id}/preedit', 'LessonController@preedit');
 Route::post('/lessons/create', 'LessonController@create');
+Route::post('/lessons/{id}/edit', 'LessonController@edit');
 
 Route::resource('lessons', 'LessonController');
 

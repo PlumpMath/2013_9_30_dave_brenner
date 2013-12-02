@@ -14,6 +14,6 @@ class LessonRestriction extends Resource {
 
     public function lessons()
     {
-        return $this->belongsToMany('lessons');
+        return $this->belongsToMany('Lesson');
     }
 }

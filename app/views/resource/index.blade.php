@@ -9,7 +9,7 @@
         @include('modules.section_divide', ['name' => 'Tasks'])
         <div class="box box-pad-0">
             <ul>
-                <li>Create a {{ $Resource }}</li>
+                <li><a href="{{ $url['create'] }}">Create a {{ $Resource }}</a></li>
             </ul>
         </div>
     </div>

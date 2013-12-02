@@ -38,6 +38,17 @@ class Child extends Resource {
     	return ((+date("Y"))-(+$birthdate[2]));
     }
 
+    public static function getGrade($birthdate, $age)
+    {
+        if ((new DateTime($birthdate))->format(m) === '12') {
+            $grade = $age-5;
+        } else {
+            $grade = $age-4;
+        }
+
+        return min(max($grade, 1), 12);
+    }
+
     public static function young() {
     	return date('Y-m-d H:i:s', mktime(0, 0, 0, 0, 0, (+date('Y'))-4));
     }

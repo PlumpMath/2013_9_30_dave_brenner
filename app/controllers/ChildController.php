@@ -20,11 +20,21 @@ class ChildController extends ResourceController
             //bin holds a list of all locations
             foreach ($this->bin['resource'] as $resource) {
                 $parent = User::find($resource['user_id']);
-                $__output[] = [
-                    'name'  => $resource['first_name'].' '.$resource['last_name'],
-                    'id'    => $resource['id'],
-                    'info'  => 'Child of '.$parent->first_name.' '.$parent->last_name,
-                ];
+
+                if ($parent) {
+                    $__output[] = [
+                        'name'  => $resource['first_name'].' '.$resource['last_name'],
+                        'id'    => $resource['id'],
+                        'info'  => 'Child of '.$parent->first_name.' '.$parent->last_name,
+                    ];
+                }   
+                else {
+                    $__output[] = [
+                        'name'  => $resource['first_name'].' '.$resource['last_name'],
+                        'id'    => $resource['id'],
+                        'info'  => 'Parent-less',
+                    ];
+                }
             }
         } else {
             //bin holds one location
@@ -62,7 +72,11 @@ class ChildController extends ResourceController
     public function info($resource)
     {
         $parent = User::find($resource['user_id']);
-        return 'Child of '.$parent->first_name.' '.$parent->last_name;
+        if ($parent) {
+            return 'Child of '.$parent->first_name.' '.$parent->last_name;
+        } else {
+            return 'Parent-less';
+        }
     }
 
     // }}}
