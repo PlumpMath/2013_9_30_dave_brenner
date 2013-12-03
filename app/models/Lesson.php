@@ -87,7 +87,7 @@ class Lesson extends Resource {
 
     public function isUser($user_id)
     {
-        foreach ($this->user()->get() as $user) {
+        foreach ($this->users()->get() as $user) {
             if ($user->id == $user_id) return true;
         }
 
@@ -152,6 +152,19 @@ class Lesson extends Resource {
     public function children()
     {
         return $this->belongsToMany('Child');
+    }
+
+    public function users()
+    {
+        $users = [];
+
+        $children = $this->children()->get();
+
+        foreach ($children as $child) {
+            $users[] = $child->user()->first();
+        }
+
+        return $users;
     }
 
     public function restrictions()

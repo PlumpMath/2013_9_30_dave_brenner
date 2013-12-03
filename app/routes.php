@@ -74,7 +74,7 @@ Route::post('/log/in', function ()
 		'password'  => Input::get('password'),
 	];
 
-	if (Auth::attempt($user) && Auth::user()->status === 1) {
+	if (Auth::attempt($user) && Auth::user()->status == 1) {
 	/*
 		$ip = $_SERVER['REMOTE_ADDR'];
 
@@ -94,7 +94,7 @@ Route::post('/log/in', function ()
 			$error_msg = 'Email cannot be blank.';
 		} else if ($user['password'] == null){
 			$error_msg = 'Password cannot be blank.';
-		} else if (Auth::user() && Auth::user()->status === 2) {
+		} else if (Auth::user() && Auth::user()->status == 2) {
 			$error_msg = 'The email for this account has not yet been verified.';
 		} else {
 			$error_msg = 'Incorrect email or password.';
@@ -348,7 +348,7 @@ Route::get('/register/user', function ()
 			[
 				'name' => 'address_2',
 				'type' => 'text',
-				'label' => 'Address',
+				'label' => 'Address (line 2)',
 			],
 			[
 				'name' => 'city',
@@ -716,6 +716,7 @@ Route::get('/enroll', function ()
 				'Gender' => $gender,
 				'Number of Lessons' => $number,
 				'Spots' => $spots.' left',
+				'Hosted by' => $lesson->provider,
 			],
 			'link' => $link,
 			'actionable' => $actionable,
