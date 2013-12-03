@@ -19,6 +19,7 @@ class CreateLessonsTable extends Migration {
             $table->integer('section_id')->nullable;
             $table->integer('previous_id')->nullable;
             $table->integer('provider')->nullable;
+            $table->integer('session_id')->nullable;
             $table->integer('spots');
             $table->decimal('price', 5, 2);
             $table->timestamps();

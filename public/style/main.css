@@ -65,7 +65,7 @@ button {
 .bg-3 {
   background: #f86c59; }
 
-.bg-4, .hud-0, .hud-1 {
+.bg-4, .hud-1 {
   background: #73d0bb; }
 
 .img-0 {
@@ -530,24 +530,22 @@ button {
 
 .hud, .hud-0, .hud-1 {
   -border: 4px solid white;
-  position: fixed;
-  text-align: center; }
+  text-align: center;
+  display: inline-block;
+  margin: 0 1rem; }
 
 .hud-0 {
-  bottom: 1.45rem;
-  left: 3.1rem;
-  padding: 1rem;
-  -webkit-border-radius: 3rem;
-  -moz-border-radius: 3rem;
-  border-radius: 3rem; }
+  background-color: white;
+  padding: 1rem; }
+  .hud-0 .hud-icon {
+    color: #525252; }
 
 .hud-1 {
-  bottom: 4.87rem;
-  left: 1.45rem;
-  padding: 0.7rem;
-  -webkit-border-radius: 2.4rem;
-  -moz-border-radius: 2.4rem;
-  border-radius: 2.4rem; }
+  padding: 1rem; }
+
+.hud-2 {
+  display: block;
+  background-color: #66b8a5; }
 
 .hud-icon {
   display: block !important;

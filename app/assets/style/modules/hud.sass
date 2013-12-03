@@ -1,25 +1,34 @@
 .hud
 	-border: 4px solid #fff
-	position: fixed
+	//position: fixed
 	text-align: center
+	display: inline-block
+	margin: 0 $size_normal
 
 .hud-0
 	@extend .hud
-	@extend .bg-4
-	bottom: $size_base - .25rem
-	left: $size_small * 3 + $size_normal
+	background-color: #fff
+	//bottom: $size_base - .25rem
+	//left: $size_small * 3 + $size_normal
 
 	padding: $size_normal
-	@include border-radius($size_normal * 2 + 1rem)
+	//@include border-radius($size_normal * 2 + 1rem)
+
+	.hud-icon
+		color: lighten(#383838,10%)
 
 .hud-1
 	@extend .hud
 	@extend .bg-4
-	bottom: $size_base * 1.1 + $size_normal * 2 + $size_normal
-	left: $size_base - .25rem
+	//bottom: $size_base * 1.1 + $size_normal * 2 + $size_normal
+	//left: $size_base - .25rem
 
-	padding: $size_small
-	@include border-radius($size_small * 2 + 1rem)
+	padding: $size_normal
+	//@include border-radius($size_small * 2 + 1rem)
+
+.hud-2
+	display: block
+	background-color: #66b8a5
 
 .hud-icon
 	display: block !important

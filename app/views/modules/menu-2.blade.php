@@ -9,7 +9,7 @@
 		<option value="{{ $id }}"
 		@if($id == $selected)
 		selected
-		@endif>{{{ $option }}}</option>
+		@endif>{{ $option }}</option>
 		@endforeach
 	</select>
 </div>

@@ -94,7 +94,7 @@ Route::post('/log/in', function ()
 			$error_msg = 'Email cannot be blank.';
 		} else if ($user['password'] == null){
 			$error_msg = 'Password cannot be blank.';
-		} else if (Auth::user() && Auth::user()->status == 2) {
+		} else if (Auth::user() && Auth::user()->status === 2) {
 			$error_msg = 'The email for this account has not yet been verified.';
 		} else {
 			$error_msg = 'Incorrect email or password.';
@@ -302,6 +302,186 @@ Route::get('/register/child', function ()
 	return View::make('register_child', $data);
 });
 
+Route::post('/verify/child', function () {
+	$birthday = Child::getBirthday(Input::get('birthday'));
+	$age = Child::getAge(Input::get('birthday'));
+
+	$data = [
+		'first_name'        => Input::get('first_name'),
+		'last_name'         => Input::get('last_name'),
+		'school'            => Input::get('school'),
+		'birthday'          => $birthday,
+		'age'               => $age,
+		'grade'             => Child::getGrade($birthday, $age),
+		'gender'            => Input::get('gender'),
+		'returning_player'  => (Input::has('returning_player')) ? 1 : 0,
+	];
+	
+	$validator = Validator::make($data, Child::$rules);
+
+	if ( ! Auth::check())
+		return App::abort(401, 'You are not authorized.');	
+
+	if ($validator->passes()) {
+		$child = new Child;
+
+		$child->first_name          = $data['first_name'];
+		$child->last_name           = $data['last_name'];
+		$child->school              = $data['school'];
+		$child->birthday            = $data['birthday'];
+		$child->age                 = $data['age'];
+		$child->grade               = $data['grade'];
+		$child->gender              = $data['gender'];
+		$child->returning_player    = $data['returning_player'];
+
+		$child->save(); 
+
+		$user = Auth::user();
+
+		$user->children()->save($child);
+
+		$data = [
+			'child' => $child,
+			'enroll'       => URL::to('/enroll'),
+			'register_child'       => URL::to('/register/child'),
+		];
+
+		$data['user_name'] = Auth::user()->first_name.' '.Auth::user()->last_name;
+
+		return View::make('verify_child', $data);      
+	}
+	return Redirect::to('/register/child')->withInput(Input::all())->withErrors($validator);
+});
+
+Route::get('/edit/child/{id}', function ($id)
+{
+	$child = Child::find($id);
+
+	$session_old = (Session::has('_old_input')) ? Session::get('_old_input') : [];
+
+	$old = [
+		'first_name' => (isset($session_old['first_name'])) ? $session_old['first_name'] : $child->first_name,
+		'last_name' => (isset($session_old['last_name'])) ? $session_old['last_name'] : $child->last_name,
+		'school' => (isset($session_old['school'])) ? $session_old['school'] : $child->school,
+		'returning_player' => (isset($session_old['returning_player'])) ? $session_old['returning_player'] : $child->returning_player,
+		'gender' => (isset($session_old['gender'])) ? $session_old['gender'] : $child->gender,
+	];
+
+
+	$data = [
+		'verify'	=> '/edit/verify/child/'.$id,
+		'old'		=> $old,
+		'user_name' => 'John Smith',
+		'completed' => ['Your Information', 'Your Children'],
+		'fields' => [
+			[
+				'name' => 'first_name',
+				'type' => 'text',
+				'label' => 'First Name',
+			],
+			[
+				'name' => 'last_name',
+				'type' => 'text',
+				'label' => 'Last Name',
+			],
+			[
+				'name' => 'school',
+				'type' => 'text',
+				'label' => 'School District',
+			],
+		],
+		'check' => [
+			'name' => 'returning_player',
+			'label' => 'My child has participated in one of your classes previously',
+		],
+		'gender_field' => [
+			'label' => 'Gender',
+			'name' => 'gender',
+			'selected' => $old['gender'],
+			'options' => [
+				'male' => 'Male',
+				'female' => 'Female',
+			],
+		],
+	];
+
+	if (Auth::check()) {
+		$authorized = false;
+		$data['user_name'] = Auth::user()->first_name.' '.Auth::user()->last_name;
+
+		$children = Auth::user()->children()->get();
+
+		foreach ($children as $child) {
+			if ($child->id == $id) $authorized = true;
+		}
+
+		if ( ! $authorized) return App::abort(401, 'You are not authorized.');	
+	} else
+		return App::abort(401, 'You are not authorized.');		
+
+	return View::make('edit.register_child', $data);
+});
+
+Route::post('/edit/verify/child/{id}', function ($id)
+{
+	$data = [
+		'first_name'        => Input::get('first_name'),
+		'last_name'         => Input::get('last_name'),
+		'school'            => Input::get('school'),
+		'gender'            => Input::get('gender'),
+		'returning_player'  => (Input::has('returning_player')) ? 1 : 0,
+	];
+
+	$rules = Child::$rules;
+
+	unset($rules['birthday']);
+	unset($rules['age']);
+	unset($rules['grade']);
+	
+	$validator = Validator::make($data, $rules);
+
+	if (Auth::check()) {
+		$authorized = false;
+		$data['user_name'] = Auth::user()->first_name.' '.Auth::user()->last_name;
+
+		$children = Auth::user()->children()->get();
+
+		foreach ($children as $child) {
+			if ($child->id == $id) $authorized = true;
+		}
+
+		if ( ! $authorized) return App::abort(401, 'You are not authorized.');	
+	} else
+		return App::abort(401, 'You are not authorized.');	
+
+	if ($validator->passes()) {
+		$child = Child::find($id);
+
+		$child->first_name          = $data['first_name'];
+		$child->last_name           = $data['last_name'];
+		$child->school              = $data['school'];
+		$child->gender              = $data['gender'];
+		$child->returning_player    = $data['returning_player'];
+
+		$child->save(); 
+
+		$user = Auth::user();
+
+		$user->children()->save($child);
+
+		$data = [
+			'child' => $child,
+			'enroll'       => URL::to('/enroll'),
+			'register_child'       => URL::to('/register/child'),
+		];
+
+		$data['user_name'] = Auth::user()->first_name.' '.Auth::user()->last_name;
+
+		return View::make('verify_child', $data);      
+	}
+	return Redirect::to('/register/child')->withInput(Input::all())->withErrors($validator);
+});
+
 Route::get('/register/user', function ()
 {
 	$data = [
@@ -475,58 +655,6 @@ Route::get('/email/verify', function ()
 	return View::make('/verify', $data);   
 });
 
-Route::post('/verify/child', function () {
-	$birthday = Child::getBirthday(Input::get('birthday'));
-	$age = Child::getAge(Input::get('birthday'));
-
-	$data = [
-		'first_name'        => Input::get('first_name'),
-		'last_name'         => Input::get('last_name'),
-		'school'            => Input::get('school'),
-		'birthday'          => $birthday,
-		'age'               => $age,
-		'grade'             => Child::getGrade($birthday, $age),
-		'gender'            => Input::get('gender'),
-		'returning_player'  => (Input::has('returning_player')) ? 1 : 0,
-	];
-	
-	$validator = Validator::make($data, Child::$rules);
-
-	if ( ! Auth::check())
-		return App::abort(401, 'You are not authorized.');	
-
-	if ($validator->passes()) {
-		$child = new Child;
-
-		$child->first_name          = $data['first_name'];
-		$child->last_name           = $data['last_name'];
-		$child->school              = $data['school'];
-		$child->birthday            = $data['birthday'];
-		$child->age                 = $data['age'];
-		$child->grade               = $data['grade'];
-		$child->gender              = $data['gender'];
-		$child->returning_player    = $data['returning_player'];
-
-		$child->save(); 
-
-		$user = Auth::user();
-
-		$user->children()->save($child);
-
-		$data = [
-			'child' => $child,
-			'enroll'       => URL::to('/enroll'),
-			'register_child'       => URL::to('/register/child'),
-		];
-
-		$data['user_name'] = Auth::user()->first_name.' '.Auth::user()->last_name;
-
-		return View::make('verify_child', $data);      
-	}
-	dd($validator->errors());
-	return Redirect::to('/register/child')->withInput(Input::all())->withErrors($validator);
-});
-
 Route::get('/activate/{hash}', function ($hash)
 {
 	$verification = Verification::where('hash', '=', $hash)->first();
@@ -633,6 +761,7 @@ Route::get('/enroll', function ()
 	}
 	$classes = [];
 
+	$name_list['null'] = 'Any';
 	$names['null'] = 'Any';
 	$city = [];
 	$activity_names['null'] = 'Any';
@@ -640,6 +769,8 @@ Route::get('/enroll', function ()
 	foreach ($locations as $location) {
 		$names[$location->id] = $location->name;
 		$city[$location->id] = $location->city;
+
+		$name_list[$location->id] = $location->name.', '.$location->address.', '.$location->city;
 	}
 
 	foreach ($activities as $activity) {
@@ -755,7 +886,7 @@ Route::get('/enroll', function ()
 				'label' => 'Location',
 				'name' => 'locations',
 				'selected' => $requested['loc'],
-				'options' => $names,
+				'options' => $name_list,
 			],
 			[
 				'label' => 'Activity',
@@ -1266,7 +1397,7 @@ Route::get('/dashboard', function ()
 	$classes = [];
 
 	foreach ($children as $child) {
-		$child->link = '';
+		$child->link = URL::to('/edit/child/'.$child->id);
 		$lessons = $child->lessons()->get();
 
 		foreach ($lessons as $lesson) {
