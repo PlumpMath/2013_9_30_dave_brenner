@@ -13,6 +13,6 @@
 @include('modules.button-0', ['text' => 'Reset'])
 </div>
 {{ Form::close() }}
-<div class="box box-pad-0 measure"><span class="bold">I forgot my username.</span><br /><br />Call us at (555) 555-5555</div>
+<div class="box box-pad-0 measure"><span class="bold">I forgot my username.</span><br /><br />Call us at <span class="bold">631-776-8242</span></div>
 <div class="box box-pad-0 bg-0"></div>
 @stop
