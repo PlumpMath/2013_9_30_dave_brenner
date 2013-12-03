@@ -4,6 +4,10 @@
 	text-align: center
 	display: inline-block
 	margin-left: $size_small
+	span
+		margin-left: $size_small
+		font-size: $size_small
+		vertical-align: baseline
 
 .hud-0
 	@extend .hud
@@ -25,6 +29,7 @@
 
 	padding: $size_normal
 	//@include border-radius($size_small * 2 + 1rem)
+	color: #fff
 
 .hud-2
 	display: block
@@ -32,10 +37,15 @@
 
 	margin-bottom: $size_base
 
-.hud-icon
-	display: block !important
+.hud-3
+	@extend .hud
+	font-size: $size_small
+	margin: 0 $size_jumbo
 
-	width: 1rem !important
+.hud-icon
+	display: inline-block !important
+
+	//width: 1rem !important
 	height: 1rem !important
 
 	color: #fff
