@@ -14,7 +14,7 @@
 		@include('modules.section_divide', ['name' => 'Orders'])
 		@if (empty($classes))
 		<div class="box box-pad-0 border-bottom-0 bg-1 center">
-		<span class="type-1">Sorry! :(</span><br/>You either haven't added anything to your cart, or the orders you had expired.
+		<span class="type-1">Sorry! :(</span><br/>You either haven't chosen any classes, or you have, but they've expired.
 		</div>
 		@else
 		{{ Form::open(['url' => $pay]) }}

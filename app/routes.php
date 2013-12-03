@@ -1482,14 +1482,27 @@ Route::get('/account', function ()
 
 Route::get('/account/password', function ()
 {
+	$user = User::where('email', Input::get('email'))->first();
+
+	if ( ! $user) return Redirect::to('/');
+
+	$verification = new Verification;
+
+	$verification->hash = md5(mt_rand(0, 65535));
+	$verification->verified_on = null;
+
+	$verification->save();
+
+	$user->verification()->save($verification);
+
 	$mail_data = [
-		'link' => url('/activate', ['hash' => $verification->hash])
+		'link' => URL::to('/reset/password', ['hash' => $verification->hash])
 	];
 
 	$mail = new Email;
 	$mail->user_email = $user->email;
 	$mail->user_name = $user->first_name.' '.$user->last_name;
-	$mail->template = 'email.verify';
+	$mail->template = 'email.resetpassword';
 	$mail->subject = 'Password Reset';
 	$mail->data = serialize($mail_data);
 	$mail->status = 0;
@@ -1501,6 +1514,26 @@ Route::get('/account/password', function ()
 	];
 
 	return View::make('reset_password', $data);   
+});
+
+Route::get('/reset/password/{hash}', function ($hash)
+{
+	$verification = Verification::where('hash', '=', $hash)->first();
+	if (is_null($verification) || $verification->verified_on != null) App::abort('404');
+
+	Auth::loginUsingId($verification->user_id);
+
+	$user = Auth::user();
+
+	$verification->verified_on = (new DateTime)->format('Y-m-d H:i:s');
+	$verification->save();
+
+	$data = [
+		'user_name' => Auth::user()->first_name.' '.Auth::user()->last_name,
+		'home' => URL::to('/'),
+	];
+
+	return View::make('password_set', $data);
 });
 
 Route::get('/account/user', function ()
