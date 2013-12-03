@@ -7,7 +7,9 @@
 <div class="box bg-1">
 	<div class="box-2">
 		@include('modules.section_divide', ['name' => 'Progress'])
-		@include('modules.menu-0', ['items' => $completed])
+		<div class="fg-4">
+		@include('modules.menu-0', ['item' => 'Your Info'])
+		</div>
 	</div>
 	<div class="box-4 bg-0">
 		<div class="box box-pad-0 fg-1 border-0">Current</div>

@@ -40,7 +40,7 @@ class Child extends Resource {
 
     public static function getGrade($birthdate, $age)
     {
-        if ((new DateTime($birthdate))->format(m) === '12') {
+        if ((new DateTime($birthdate))->format('m') === '12') {
             $grade = $age-5;
         } else {
             $grade = $age-4;

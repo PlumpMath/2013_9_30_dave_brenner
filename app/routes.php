@@ -100,6 +100,8 @@ Route::post('/log/in', function ()
 			$error_msg = 'Incorrect email or password.';
 		}
 
+		Auth::logout();
+
 		return Redirect::to('/')->with('error_msg', $error_msg);
 	}
 });
@@ -521,7 +523,7 @@ Route::post('/verify/child', function () {
 
 		return View::make('verify_child', $data);      
 	}
-
+	dd($validator->errors());
 	return Redirect::to('/register/child')->withInput(Input::all())->withErrors($validator);
 });
 

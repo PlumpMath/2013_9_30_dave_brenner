@@ -7,7 +7,10 @@
 <div class="box bg-1">
 	<div class="box-2">
 		@include('modules.section_divide', ['name' => 'Progress'])
-		@include('modules.menu-0', ['items' => $completed])
+		@include('modules.menu-0', ['item' => 'Your Info'])
+		<div class="fg-4">
+		@include('modules.menu-0', ['item' => 'Your Children'])
+		</div>
 	</div>
 	<div class="box-4 bg-0">
 		<div class="box box-pad-0 fg-1 border-0">Current</div>
@@ -16,6 +19,7 @@
 			@foreach($fields as $field)
 				@include('modules.input-0', $field)
 			@endforeach
+			<div class="box box-pad-0">Please enter your child's birthday as mm/dd/yyyy</div>
 			@include('modules.menu-2', $gender_field)
 			@include('modules.input-1', $check)
 		</div>
