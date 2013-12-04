@@ -123,7 +123,7 @@ Route::get('/email/latesignup', function () {
 		'year' => (new DateTime)->format('Y'),
 		'description' => 'You may sign '.$student.' up for the class you\'ve discussed with us over the phone. Complete the registration at myafterschoolprograms\' website.',
 		'return_email' => 'someprefix@mysafterschoolprograms.com',
-		'unsubscribe_link' => '',
+		'unsubscribe_link' => URL::to('/unsubscribe/'.urlencode(Auth::user()->email)),
 		'profile_preferences_link' => '',
 	];
 
@@ -262,21 +262,25 @@ Route::get('/register/child', function ()
 				'name' => 'first_name',
 				'type' => 'text',
 				'label' => 'First Name',
+				'required' => true,
 			],
 			[
 				'name' => 'last_name',
 				'type' => 'text',
 				'label' => 'Last Name',
+				'required' => true,
 			],
 			[
 				'name' => 'school',
 				'type' => 'text',
 				'label' => 'School District',
+				'required' => true,
 			],
 			[
 				'name' => 'birthday',
 				'type' => 'text',
 				'label' => 'Birthday',
+				'required' => true,
 			],
 		],
 		'check' => [
@@ -284,7 +288,7 @@ Route::get('/register/child', function ()
 			'label' => 'My child has participated in one of your classes previously',
 		],
 		'gender_field' => [
-			'label' => 'Gender',
+			'label' => 'Gender <span class="fg-4">*</span>',
 			'name' => 'gender',
 			'selected' => Input::old('gender'),
 			'options' => [
@@ -348,7 +352,7 @@ Route::post('/verify/child', function () {
 
 		$data['user_name'] = Auth::user()->first_name.' '.Auth::user()->last_name;
 
-		return View::make('verify_child', $data);      
+		return View::make('verify_child', $data);
 	}
 	return Redirect::to('/register/child')->withInput(Input::all())->withErrors($validator);
 });
@@ -463,23 +467,18 @@ Route::post('/edit/verify/child/{id}', function ($id)
 		$child->gender              = $data['gender'];
 		$child->returning_player    = $data['returning_player'];
 
-		$child->save(); 
-
-		$user = Auth::user();
-
-		$user->children()->save($child);
+		$child->save();
 
 		$data = [
-			'child' => $child,
-			'enroll'       => URL::to('/enroll'),
-			'register_child'       => URL::to('/register/child'),
+			'msg' => $child->first_name.' '.$child->last_name,
+			'dashboard' => URL::to('/dashboard'),
 		];
 
 		$data['user_name'] = Auth::user()->first_name.' '.Auth::user()->last_name;
 
-		return View::make('verify_child', $data);      
+		return View::make('edit.verify', $data);      
 	}
-	return Redirect::to('/register/child')->withInput(Input::all())->withErrors($validator);
+	return Redirect::to('/edit/register/child/'.$id)->withInput(Input::all())->withErrors($validator);
 });
 
 Route::get('/register/user', function ()
@@ -494,56 +493,83 @@ Route::get('/register/user', function ()
 				'name' => 'first_name',
 				'type' => 'text',
 				'label' => 'First Name',
+				'required' => true,
 			],
 			[
 				'name' => 'last_name',
 				'type' => 'text',
 				'label' => 'Last Name',
+				'required' => true,
 			],
 			[
 				'name' => 'phone',
 				'type' => 'text',
 				'label' => 'Phone',
+				'required' => true,
+			],
+			[
+				'type' => 'form-hint',
+				'label' => 'For you phone number, omit dashes and parenthesis; i.e. (111) 222-3333 should be 1112223333',
 			],
 			[
 				'name' => 'email',
 				'type' => 'text',
 				'label' => 'Email',
+				'required' => true,
 			],
 			[
 				'name' => 'password',
 				'type' => 'password',
 				'label' => 'Password',
+				'required' => true,
 			],
 			[
 				'name' => 'password_confirm',
 				'type' => 'password',
 				'label' => 'Confirm Password',
+				'required' => true,
 			],
 			[
 				'name' => 'address',
 				'type' => 'text',
 				'label' => 'Address',
+				'required' => true,
 			],
 			[
 				'name' => 'address_2',
 				'type' => 'text',
 				'label' => 'Address (line 2)',
+				'required' => false,
 			],
 			[
 				'name' => 'city',
 				'type' => 'text',
 				'label' => 'City',
+				'required' => true,
 			],
 			[
 				'name' => 'state',
 				'type' => 'text',
 				'label' => 'State',
+				'required' => true,
+			],
+			[
+				'type' => 'form-hint',
+				'label' => 'Enter only the abbreviation of your state; i.e. New York should be NY',
 			],
 			[
 				'name' => 'zip_code',
 				'type' => 'text',
 				'label' => 'Zip Code',
+				'required' => true,
+			],
+			[
+				'type' => 'form-hint',
+				'label' => 'Enter only the first five digits of your zipcode',
+			],
+			[
+				'type' => 'form-hint',
+				'label' => 'Fields marked with <span class="fg-4">*</span> are required.',
 			],
 		]
 	];
@@ -587,6 +613,7 @@ Route::post('/verify/user', function ()
 		$user->zip_code     = $data['zip_code'];
 		$user->status       = $data['status'];
 		$user->remember     = $data['remember'];
+		$user->subscribed   = 1;
 
 		$user->save(); 
 
@@ -606,7 +633,11 @@ Route::post('/verify/user', function ()
 		];
 
 		$mail_data = [
-			'link' => url('/activate', ['hash' => $verification->hash])
+			'link' => url('/activate', ['hash' => $verification->hash]),
+
+			'return_email' => 'someprefix@mysafterschoolprograms.com',
+			'unsubscribe_link' => URL::to('/unsubscribe/'.urlencode($user->email)),
+			'profile_preferences_link' => URL::to('/preferences/subscription'),
 		];
 
 		$mail = new Email;
@@ -619,10 +650,319 @@ Route::post('/verify/user', function ()
 
 		$mail->save();
 
-		return View::make('/verify', $data);      
+		return View::make('verify', $data);      
 	}
 
 	return Redirect::to('/register/user')->withInput(Input::except(['password','password_confirm']))->withErrors($validator);
+});
+
+Route::get('/edit/register/user', function ()
+{
+	$user = Auth::user();
+
+	$session_old = (Session::has('_old_input')) ? Session::get('_old_input') : [];
+
+	$old = [
+		'first_name' => (isset($session_old['first_name'])) ? $session_old['first_name'] : $user->first_name,
+		'last_name' => (isset($session_old['last_name'])) ? $session_old['last_name'] : $user->last_name,
+		'phone' => (isset($session_old['phone'])) ? $session_old['phone'] : $user->phone,
+		'email' => (isset($session_old['email'])) ? $session_old['email'] : $user->email,
+		'address' => (isset($session_old['address'])) ? $session_old['address'] : $user->address,
+		'address_2' => (isset($session_old['address_2'])) ? $session_old['address_2'] : $user->address_2,
+		'city' => (isset($session_old['city'])) ? $session_old['city'] : $user->city,
+		'state' => (isset($session_old['state'])) ? $session_old['state'] : $user->state,
+		'zip_code' => (isset($session_old['zip_code'])) ? $session_old['zip_code'] : $user->zip_code,
+	];
+
+	$data = [
+		'verify'	=> '/edit/verify/user',
+		'old'		=> $old,
+		'user_name' => null,
+		'completed' => ['Your Information'],
+		'fields' => [
+			[
+				'name' => 'first_name',
+				'type' => 'text',
+				'label' => 'First Name',
+			],
+			[
+				'name' => 'last_name',
+				'type' => 'text',
+				'label' => 'Last Name',
+			],
+			[
+				'name' => 'phone',
+				'type' => 'text',
+				'label' => 'Phone',
+			],
+			[
+				'type' => 'form-hint',
+				'label' => 'For you phone number, omit dashes and parenthesis; i.e. (111) 222-3333 should be 1112223333',
+			],
+			[
+				'name' => 'address',
+				'type' => 'text',
+				'label' => 'Address',
+			],
+			[
+				'name' => 'address_2',
+				'type' => 'text',
+				'label' => 'Address (line 2)',
+			],
+			[
+				'name' => 'city',
+				'type' => 'text',
+				'label' => 'City',
+			],
+			[
+				'name' => 'state',
+				'type' => 'text',
+				'label' => 'State',
+			],
+			[
+				'type' => 'form-hint',
+				'label' => 'Enter only the abbreviation of your state; i.e. New York should be NY',
+			],
+			[
+				'name' => 'zip_code',
+				'type' => 'text',
+				'label' => 'Zip Code',
+			],
+			[
+				'type' => 'form-hint',
+				'label' => 'Enter only the first five digits of your zipcode',
+			],
+			[
+				'type' => 'form-hint',
+				'label' => 'For email changes, call us at <span class="bold">631-776-8242</span>',
+			],
+			[
+				'type' => 'form-hint',
+				'label' => 'If you\'re trying to change your password, visit <a href="'.URL::to('/account').'">this page</a>.',
+			],
+		]
+	];
+
+	if (Auth::check()) {
+		$data['user_name'] = Auth::user()->first_name.' '.Auth::user()->last_name;
+	} else
+		return App::abort(401, 'You are not authorized.');	
+
+	return View::make('edit.register', $data);
+});
+
+Route::post('/edit/verify/user', function ()
+{
+	$data = [
+		'first_name'        => Input::get('first_name'),
+		'last_name'         => Input::get('last_name'),
+		'phone'             => Input::get('phone'),
+		'address'           => Input::get('address'),
+		'city'              => Input::get('city'),
+		'state'             => Input::get('state'),
+		'zip_code'          => Input::get('zip_code'),
+	];
+
+	$rules = User::$rules;
+
+	unset($rules['email']);
+	unset($rules['password']);
+	unset($rules['password_confirm']);
+	unset($rules['status']);
+	unset($rules['remember']);
+
+	$validator = Validator::make($data, $rules);
+
+	if ($validator->passes()) {
+		$user = Auth::user();
+
+		$user->first_name   = $data['first_name'];
+		$user->last_name    = $data['last_name'];
+		$user->phone        = $data['phone'];
+		$user->address      = $data['address'];
+		$user->city         = $data['city'];
+		$user->state        = $data['state'];
+		$user->zip_code     = $data['zip_code'];
+
+		$user->save();
+
+		$data = [
+			'user_name' => Auth::user()->first_name.' '.Auth::user()->last_name,
+			'msg' => 'Your Information',
+			'dashboard' => URL::to('/dashboard'),
+		];
+
+		return View::make('edit.verify', $data);      
+	}
+
+	return Redirect::to('/edit/register/user')->withInput(Input::all())->withErrors($validator);
+});
+
+Route::get('/preferences/general', function ()
+{
+	if (Auth::check()) {
+		$data['user_name'] = Auth::user()->first_name.' '.Auth::user()->last_name;
+	} else
+		return App::abort(401, 'You are not authorized.');	
+
+	return View::make('remember', $data);
+});
+
+Route::get('/preferences/subscription', function ()
+{
+	if (Auth::check()) {
+		$data['user_name'] = Auth::user()->first_name.' '.Auth::user()->last_name;
+	} else
+		return App::abort(401, 'You are not authorized.');
+
+	return View::make('subscription', $data);
+});
+
+Route::get('/unsubscribe/{email}', function ($email)
+{
+	$email = urldecode($email);
+
+	$blacklist = new Donotmail;
+
+	$blacklist->email = $email;
+	$blacklist->save();
+
+	$data = [];
+
+	return View::make('unsubscribe', $data);
+});
+
+Route::get('/account', function ()
+{
+	$data = [
+		'user_name' => null,
+	];
+
+	return View::make('reset', $data);   
+});
+
+Route::get('/account/password', function ()
+{
+	$user = User::where('email', Input::get('email'))->first();
+
+	if ( ! $user) return Redirect::to('/');
+
+	$verification = new Verification;
+
+	$verification->hash = md5(mt_rand(0, 65535));
+	$verification->verified_on = null;
+
+	$verification->save();
+
+	$user->verification()->save($verification);
+
+	$mail_data = [
+		'link' => URL::to('/reset/password', ['hash' => $verification->hash]),
+
+		'return_email' => 'someprefix@mysafterschoolprograms.com',
+		'unsubscribe_link' => URL::to('/unsubscribe/'.urlencode($user->email)),
+		'profile_preferences_link' => URL::to('/preferences/subscription'),
+	];
+
+	$mail = new Email;
+	$mail->user_email = $user->email;
+	$mail->user_name = $user->first_name.' '.$user->last_name;
+	$mail->template = 'email.resetpassword';
+	$mail->subject = 'Password Reset';
+	$mail->data = serialize($mail_data);
+	$mail->status = 0;
+
+	$mail->save();
+
+	$data = [
+		'user_name' => null,
+	];
+
+	return View::make('reset_password', $data);   
+});
+
+Route::get('/reset/password/{hash}', function ($hash)
+{
+	$verification = Verification::where('hash', '=', $hash)->first();
+	if (is_null($verification) || $verification->verified_on != null) App::abort('404');
+
+	Auth::loginUsingId($verification->user_id);
+
+	$user = Auth::user();
+
+	$verification->verified_on = (new DateTime)->format('Y-m-d H:i:s');
+	$verification->save();
+
+	$data = [
+		'user_name' => Auth::user()->first_name.' '.Auth::user()->last_name,
+		'home' => URL::to('/'),
+		'verify' => URL::to('/reset/password/verify'),
+		'fields' => [
+			[
+				'name' => 'password',
+				'type' => 'password',
+				'label' => 'Password',
+			],
+			[
+				'name' => 'password_confirm',
+				'type' => 'password',
+				'label' => 'Confirm Password',
+			],
+		],
+	];
+
+	return View::make('password_set', $data);
+});
+
+Route::post('/reset/password/verify', function ()
+{
+	$data = [
+		'password' => Input::get('password'),
+		'password_confirm'  => Input::get('password_confirm'),
+	];
+
+	$rules = [
+		'password' => User::$rules['password'],
+	];
+	
+	$validator = Validator::make($data, $rules);
+
+	if ( ! Auth::check())
+		return App::abort(401, 'You are not authorized.');
+
+	if ($validator->passes()) {
+		$data = [
+			'user_name' => Auth::user()->first_name.' '.Auth::user()->last_name,
+			'msg' => 'Your password',
+			'dashboard' => URL::to('/dashboard'),
+		];
+
+		return View::make('edit.verify', $data);
+	} else {
+		$user = Auth::user();
+
+		if ( ! $user) return Redirect::to('/');
+
+		$verification = new Verification;
+
+		$verification->hash = md5(mt_rand(0, 65535));
+		$verification->verified_on = null;
+
+		$verification->save();
+
+		$user->verification()->save($verification);
+
+		return Redirect::to('/reset/password/'.$verification->hash)->withInput(Input::all())->withErrors($validator);
+	}
+});
+
+Route::get('/account/user', function ()
+{
+	$data = [
+		'user_name' => null,
+	];
+
+	return View::make('reset_user', $data);   
 });
 
 Route::get('/email/verify', function ()
@@ -634,7 +974,22 @@ Route::get('/email/verify', function ()
 
 	$user = Auth::user();
 
-	$mail_data = [];
+	$verification = new Verification;
+
+	$verification->hash = md5(mt_rand(0, 65535));
+	$verification->verified_on = null;
+
+	$verification->save();
+
+	$user->verification()->save($verification);
+
+	$mail_data = [
+		'link' => url('/activate', ['hash' => $verification->hash]),
+
+		'return_email' => 'someprefix@mysafterschoolprograms.com',
+		'unsubscribe_link' => URL::to('/unsubscribe/'.urlencode($user->email)),
+		'profile_preferences_link' => URL::to('/preferences/subscription'),
+	];
 
 	$mail = new Email;
 	$mail->user_email = $user->email;
@@ -1269,9 +1624,6 @@ Route::get('/confirmation', function () {
 		$time = '5-6PM';
 		$dates = '11/4,  11/11,  11/18,  11/25,  12/2,  12/9, 11/16, (Not 12/23) (Not 12/30) 1/6, (Make up for class cancelation - 1/13)';
 
-		$unsub = '';
-		$our_email = 'someprefix@mysafterschoolprograms.com';
-
 		//send mail
 		$mail_data = [
 			'student' => $student,
@@ -1293,9 +1645,10 @@ Route::get('/confirmation', function () {
 			'in_browser_link' => '',
 			'year' => (new DateTime)->format('Y'),
 			'description' => 'We\'ve received your order, and have signed '.$student.' up for '.$activity.' lessons. The lesson will be from '.$time.' on '.$day.' for these dates: '.$dates.'. If this information is incorrect, or you did not place this order, email us at: '.$our_email.'. On the other hand, if this email address is incorrect and you think you\'ve received this notification in error, please click our unsubscribe link: '.$unsub.'.Thank you!',
-			'return_email' => $our_email,
-			'unsubscribe_link' => $unsub,
-			'profile_preferences_link' => '',
+
+			'return_email' => 'someprefix@mysafterschoolprograms.com',
+			'unsubscribe_link' => URL::to('/unsubscribe/'.urlencode($user->email)),
+			'profile_preferences_link' => URL::to('/preferences/subscription'),
 		];
 
 		$mail = new Email;
@@ -1459,90 +1812,18 @@ Route::get('/dashboard', function ()
 	$data = [
 		'register_child' => URL::to('/register/child'),
 		'user_name' => Auth::user()->first_name.' '.Auth::user()->last_name,
-		'your_info' => '',
+		'your_info' => URL::to('/edit/register/user'),
 		'children' => $children,
 		'notifications' => Auth::user()->notifications()->get(),
 		'classes' => $classes,
 		'rsrcs' => $resources,
 		'enroll' => URL::to('/enroll'),
 		'signout' => URL::to('/log/out'),
+		'subscription_status' => URL::to('/preferences/subscription'),
+		'site_preferences' => URL::to('/preferences/general'),
 	];
 
 	return View::make('dashboard', $data);
-});
-
-Route::get('/account', function ()
-{
-	$data = [
-		'user_name' => null,
-	];
-
-	return View::make('reset', $data);   
-});
-
-Route::get('/account/password', function ()
-{
-	$user = User::where('email', Input::get('email'))->first();
-
-	if ( ! $user) return Redirect::to('/');
-
-	$verification = new Verification;
-
-	$verification->hash = md5(mt_rand(0, 65535));
-	$verification->verified_on = null;
-
-	$verification->save();
-
-	$user->verification()->save($verification);
-
-	$mail_data = [
-		'link' => URL::to('/reset/password', ['hash' => $verification->hash])
-	];
-
-	$mail = new Email;
-	$mail->user_email = $user->email;
-	$mail->user_name = $user->first_name.' '.$user->last_name;
-	$mail->template = 'email.resetpassword';
-	$mail->subject = 'Password Reset';
-	$mail->data = serialize($mail_data);
-	$mail->status = 0;
-
-	$mail->save();
-
-	$data = [
-		'user_name' => null,
-	];
-
-	return View::make('reset_password', $data);   
-});
-
-Route::get('/reset/password/{hash}', function ($hash)
-{
-	$verification = Verification::where('hash', '=', $hash)->first();
-	if (is_null($verification) || $verification->verified_on != null) App::abort('404');
-
-	Auth::loginUsingId($verification->user_id);
-
-	$user = Auth::user();
-
-	$verification->verified_on = (new DateTime)->format('Y-m-d H:i:s');
-	$verification->save();
-
-	$data = [
-		'user_name' => Auth::user()->first_name.' '.Auth::user()->last_name,
-		'home' => URL::to('/'),
-	];
-
-	return View::make('password_set', $data);
-});
-
-Route::get('/account/user', function ()
-{
-	$data = [
-		'user_name' => null,
-	];
-
-	return View::make('reset_user', $data);   
 });
 
 Route::get('/about_us', function ()

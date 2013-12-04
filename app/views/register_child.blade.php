@@ -17,11 +17,16 @@
 		{{ Form::open(['url' => $verify]) }}
 		<div class="box box-pad-0">
 			@foreach($fields as $field)
+				@if ($field['type'] === 'form-hint')
+				<div class="box box-pad-0">{{ $field['label'] }}</div>
+				@else
 				@include('modules.input-0', $field)
+				@endif
 			@endforeach
 			<div class="box box-pad-0">Please enter your child's birthday as mm/dd/yyyy</div>
 			@include('modules.menu-2', $gender_field)
 			@include('modules.input-1', $check)
+			<div class="box box-pad-0">Fields marked with <span class="fg-4">*</span> are required.</div>
 		</div>
 		@include('modules.button-0', ['text' => 'OK'])
 		{{ Form::close() }}

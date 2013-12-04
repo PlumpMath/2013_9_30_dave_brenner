@@ -23,10 +23,21 @@
 			<a href="{{ $enroll }}">Register for classes</a>
 		</div>
 		@include('modules.section_divide', ['name' => 'Account Settings'])
-		<div class="box box-pad-0">
+		<div class="box box-pad-0 border-bottom-1">
 			<a href="{{ $signout }}">Sign out</a>
 		</div>
-
+		<div class="box box-pad-0 border-bottom-1">
+			<p>You are currently @if (Auth::user()->subscribed) <span class="fg-5">receiving</span> @else <span class="fg-4">not receiving</span> @endif emails from us.</p>
+			@if ( ! Auth::user()->subscribed)
+			<br />
+			<p class="warning">We only send emails with information vital to using this website. <span class="fg-4">Remaining unsubscribed may adversly affect your ability to register your child and/or stay informed on class cancellations and changes.</span></p>
+			@endif
+			<br />
+			<p><a href="{{ $subscription_status }}">Change email subscription status</a></p>
+		</div>
+		<div class="box box-pad-0">
+			<a href="{{ $site_preferences }}">Change site preferences</a>
+		</div>
 	</div>
 	<div class="box-4 bg-0 border-left">
 		@include('modules.section_divide', ['name' => 'Notifications'])

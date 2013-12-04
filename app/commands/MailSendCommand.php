@@ -52,11 +52,16 @@ class MailSendCommand extends Command {
 			->get();
 
 		foreach ($mail as $letter) {
+
+			$user = User::where('email', $letter->user_email)->first();
+			$subscribed = ($user) ? $user->subscribed : true;
+
 			/**/
-			Mail::send($letter->template, unserialize($letter->data), function ($message) use ($letter)
-			{
-				$message->to($letter->user_email, $letter->user_name)->subject($letter->subject);
-			});
+			if ( ! Donotmail::thisAddress($letter->user_email) && $subscribed)
+				Mail::send($letter->template, unserialize($letter->data), function ($message) use ($letter)
+				{
+					$message->to($letter->user_email, $letter->user_name)->subject($letter->subject);
+				});
 			/**/
 
 			DB::table('emails')
