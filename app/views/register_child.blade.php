@@ -18,7 +18,7 @@
 		<div class="box box-pad-0">
 			@foreach($fields as $field)
 				@if ($field['type'] === 'form-hint')
-				<div class="box box-pad-0">{{ $field['label'] }}</div>
+				<div class="box box-pad-6">{{ $field['label'] }}</div>
 				@else
 				@include('modules.input-0', $field)
 				@endif

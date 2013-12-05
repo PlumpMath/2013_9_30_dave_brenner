@@ -697,7 +697,7 @@ Route::get('/edit/register/user', function ()
 			],
 			[
 				'type' => 'form-hint',
-				'label' => 'For you phone number, omit dashes and parenthesis; i.e. (111) 222-3333 should be 1112223333',
+				'label' => 'For your phone number, omit dashes and parenthesis; i.e. (111) 222-3333 should be 1112223333',
 			],
 			[
 				'name' => 'address',

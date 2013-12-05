@@ -56,7 +56,7 @@
 		@include('modules.section_divide', ['name' => 'Current Classes'])
 		@if (empty($classes))
 		<div class="box box-pad-0 border-bottom-0 bg-1 center">
-		You haven't signed up for anything yet. To register a child, go <a href="{{ $enroll }}">here</a>, select the class/classes you'd like, and then click "Select Child For Class" to choose which children will take which class.
+		<div class="measure center">You haven't signed up for anything yet. To register a child, go <a href="{{ $enroll }}">here</a>, select the class/classes you'd like, and then click "Select Child For Class" to choose which children will take which class.</div>
 		</div>
 		@else
 		@foreach ($classes as $class)
