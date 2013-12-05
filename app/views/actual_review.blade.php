@@ -21,7 +21,7 @@
 		@foreach ($classes as $class)
 		@include('modules.lesson-2', $class)
 		@endforeach
-		<div class="box box-pad-0 bg-1"><div class="float-left margin-0"><input class="input type-3" type="checkbox" name="terms_of_agreement" @if (Session::has('_old_input') && isset(Session::get('_old_input')['terms_of_agreement'])) checked@endif/></div><div class="float-left">I agree to the <a href="{{ $terms_of_service }}">Terms and Conditions</a></div></div>
+		<div class="box box-pad-1 bg-1"><div class="float-left margin-0"><input class="input type-3" type="checkbox" name="terms_of_agreement" @if (Session::has('_old_input') && isset(Session::get('_old_input')['terms_of_agreement'])) checked@endif/></div><div class="float-left">I agree to the <a href="{{ $terms_of_service }}">Terms and Conditions</a></div></div>
 		@if ($errors->first('terms_of_agreement'))
 		<div class="box box-pad-3 fg-4 bg-1 terms-of-agreement-errors visible-toggle visible">
 		@else
@@ -29,7 +29,7 @@
 		@endif
 			<p>{{ $errors->first('terms_of_agreement') }}</p>
 		</div>
-		<div class="box box-pad-0 bg-1"><div class="float-left margin-0"><input class="input type-3" type="checkbox" name="reviewed" @if (Session::has('_old_input') && isset(Session::get('_old_input')['reviewed'])) checked@endif/></div><div class="float-left">I have reviewed this dates carefull and agree to the class schedule. I understand there are no refunds/credits/make-ups for missed classes</div></div>
+		<div class="box box-pad-1 bg-1"><div class="float-left margin-0"><input class="input type-3" type="checkbox" name="reviewed" @if (Session::has('_old_input') && isset(Session::get('_old_input')['reviewed'])) checked@endif/></div><div class="float-left">I have reviewed these dates carefully and I agree to the class schedule. Also, I understand there are no refunds/credits/make-ups for missed classes.</div></div>
 		@if ($errors->first('reviewed'))
 		<div class="box box-pad-3 fg-4 bg-1 reviewed-errors visible-toggle visible">
 		@else
