@@ -68,7 +68,7 @@ button {
 .bg-4, .hud-1 {
   background: #73d0bb; }
 
-.bg-5, .class_box, .calendar.small td.make_up_lesson {
+.bg-5, .class_bbox, .calendar.small td.make_up_lesson {
   background: #f0e785 !important; }
 
 .img-0 {
@@ -169,7 +169,7 @@ button {
   padding: 0.7rem;
   font-size: 0.7rem; }
 
-.class_box {
+.class_bbox {
   display: inline-block;
   border: 1px solid #a2a2a2;
   padding: 0.7rem; }
