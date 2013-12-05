@@ -1494,7 +1494,7 @@ Route::post('/verify/select_child', function () {
 		foreach ($inputs as $key => $input) {
 			if (preg_match('/^child_/', substr($key, 0, 6))) {
 				$order->child()->detach();
-				
+
 				$order = Order::find(substr($key, 6));
 				$child = Child::find($input);
 

@@ -1,4 +1,4 @@
-<table class="calendar small">
+<table class="calendar small" id="#Calendar{{ $calendar->config['id'] }}">
     <thead>
         <tr class="navigation">
             <th class="prev-month"><a href="{{ htmlspecialchars($calendar->prev_month_url()) }}">{{ $calendar->prev_month(0, '&laquo;') }}</a></th>
@@ -31,7 +31,7 @@
                     <td class="day {{ implode(' ', $classes) }}">
                         <span class="date" title="{{ implode(' / ', $title) }}">
                             @if ( ! empty($output))
-                                <a href="#" class="view-events">{{ $number }}</a>
+                                <a href="#Calendar{{ $calendar->config['id'] }}" class="view-events">{{ $number }}</a>
                             @else
                                 {{ $number }}
                             @endif
