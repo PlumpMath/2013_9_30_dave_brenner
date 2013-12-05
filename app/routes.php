@@ -1194,7 +1194,7 @@ Route::get('/enroll', function ()
 		$classes[] = [
 			'id' => $lesson->id,
 			'name' => $activity_name_city,
-			'price' => $price,
+			'price' => number_format($price, 2),
 			'details' => [
 				$lesson->firstLesson()->format('l') => $lesson->firstLesson()->format('g:i A'),
 				$activity_names[$lesson->activity_id] => 'Grades '.$grades,
@@ -1227,7 +1227,7 @@ Route::get('/enroll', function ()
 		$orders[$order->id] = [
 			'name' => $name,
 			'values' => [
-				'Price' => '$'.$lesson->prorate(),
+				'Price' => '$'.number_format($lesson->prorate(), 2),
 				'Number of Lessons' => $lesson->number(),
 				'Activity' => $activity_names[$lesson->activity_id],
 				'Location' => $names[$lesson->location_id],
@@ -1284,7 +1284,7 @@ Route::get('/checkout', function () {
 		$orders[$order->id] = [
 			'name' => $name,
 			'values' => [
-				'Price' => '$'.$lesson->prorate(),
+				'Price' => '$'.number_format($lesson->prorate(),2),
 				'Activity' => $lesson->activity->name,
 				'Location' => $lesson->location->name,
 				'For' => $order->child->first_name.' '.$order->child->last_name,
@@ -1444,7 +1444,7 @@ Route::get('/select_child', function () {
 		$classes[$order->id] = [
 			'name' => $name,
 			'details' => [
-				'Price' => '$'.$lesson->prorate(),
+				'Price' => '$'.number_format($lesson->prorate(), 2),
 				'Number of Lessons' => $lesson->number(),
 				'Activity' => $lesson->activity->name,
 				'Location' => $lesson->location->name,
@@ -1564,7 +1564,7 @@ Route::get('/review', function ()
 		$classes[$order->id] = [
 			'name' => $name,
 			'details' => [
-				'Price' => '$'.$lesson->prorate(),
+				'Price' => '$'.number_format($lesson->prorate(),2),
 				'Number of Lessons' => $lesson->number(),
 				'Activity' => $lesson->activity->name,
 				'Location' => $lesson->location->name,
@@ -1702,7 +1702,7 @@ Route::get('/confirmation', function () {
 
 		$receipts[] = [
 			'name' => $name,
-			'price' => $price,
+			'price' => number_format($price, 2),
 			'details' => [
 
 			],
@@ -1781,7 +1781,7 @@ Route::get('/confirmation', function () {
 
 		$receipts[] = [
 			'name' => $name,
-			'price' => $price,
+			'price' => number_format($price, 2),
 			'details' => [
 
 			],
@@ -1859,13 +1859,13 @@ Route::get('/dashboard', function ()
 		foreach ($lessons as $lesson) {
 			$name = 'Class for '.$child->first_name.' '.$child->last_name;
 			$location = $lesson->location;
-			$price = 'Price';
+			$price = $lesson->price;
 			$link = '';
 			$actionable = 'Yo';
 
 			$classes[] = [
 				'name' => $name,
-				'price' => $price,
+				'price' => number_format($price, 2),
 				'details' => [
 					'Location' => $location->name,
 					'Address' => $location->address.', '.$location->city,
