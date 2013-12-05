@@ -1474,14 +1474,8 @@ Route::get('/select_child', function () {
 });
 
 Route::post('/verify/select_child', function () {
-	$data = [
-		'terms_of_agreement' => Input::get('terms_of_agreement'),
-	];
-
-	$rules = [
-		'terms_of_agreement' => 'required|accepted'
-	];
-
+	$data = [];
+	$rules = [];
 	$inputs = Input::all();
 
 	foreach ($inputs as $key => $input) {
@@ -1497,8 +1491,6 @@ Route::post('/verify/select_child', function () {
 		return App::abort(401, 'You are not authorized.');	
 
 	if ($validator->passes()) {
-		//class lock would go here
-
 		foreach ($inputs as $key => $input) {
 			if (preg_match('/^child_/', substr($key, 0, 6))) {
 				$order = Order::find(substr($key, 6));
@@ -1508,7 +1500,7 @@ Route::post('/verify/select_child', function () {
 			}
 		}
 
-		return Redirect::to('/checkout');      
+		return Redirect::to('/review');      
 	}
 
 	return Redirect::to('/select_child')->withInput(Input::all())->withErrors($validator);
@@ -1590,20 +1582,12 @@ Route::get('/review', function ()
 Route::post('/verify/review', function () {
 	$data = [
 		'terms_of_agreement' => Input::get('terms_of_agreement'),
+		'reviewed' => Input::get('reviewed'),
 	];
 
 	$rules = [
-		'terms_of_agreement' => 'required|accepted'
+		'reviewed' => 'required|accepted'
 	];
-
-	$inputs = Input::all();
-
-	foreach ($inputs as $key => $input) {
-		if (preg_match('/^child_/', substr($key, 0, 6))) {
-			$data[$key] = $input;
-			$rules[$key] = 'required|not_in:null|integer|belongs_to_user|is_eligible';
-		}
-	}
 	
 	$validator = Validator::make($data, $rules);
 
@@ -1611,21 +1595,10 @@ Route::post('/verify/review', function () {
 		return App::abort(401, 'You are not authorized.');	
 
 	if ($validator->passes()) {
-		//class lock would go here
-
-		foreach ($inputs as $key => $input) {
-			if (preg_match('/^child_/', substr($key, 0, 6))) {
-				$order = Order::find(substr($key, 6));
-				$child = Child::find($input);
-
-				$child->orders()->save($order);
-			}
-		}
-
 		return Redirect::to('/checkout');      
 	}
 
-	return Redirect::to('/select_child')->withInput(Input::all())->withErrors($validator);
+	return Redirect::to('/review')->withInput(Input::all())->withErrors($validator);
 });
 
 Validator::extend('coupon', function($attribute, $value, $parameters)
