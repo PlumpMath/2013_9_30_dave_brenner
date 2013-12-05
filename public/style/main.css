@@ -62,10 +62,10 @@ button {
 .bg-2 {
   background: #35535e; }
 
-.bg-3, .class_bbox {
+.bg-3 {
   background: #f86c59; }
 
-.bg-4, .hud-1 {
+.bg-4, .class_bbox, .hud-1 {
   background: #73d0bb; }
 
 .bg-5, .calendar.small td.make_up_lesson {
@@ -85,8 +85,7 @@ button {
 .fg-2 {
   color: white; }
 
-.fg-3, .detail_name_1,
-.detail_name_2 {
+.fg-3 {
   color: #73d0bb; }
 
 .fg-4 {
@@ -95,7 +94,8 @@ button {
 .fg-5 {
   color: #87ca35; }
 
-.fg-6 {
+.fg-6, .detail_name_1,
+.detail_name_2 {
   color: #f86c59; }
 
 .center {
