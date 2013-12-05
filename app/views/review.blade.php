@@ -21,15 +21,7 @@
 		@foreach ($classes as $class)
 		@include('modules.lesson-1', $class)
 		@endforeach
-		<div class="box box-pad-0 bg-1"><div class="float-left margin-0"><input class="input type-3" type="checkbox" name="terms_of_agreement" @if (Session::has('_old_input') && isset(Session::get('_old_input')['terms_of_agreement'])) checked@endif/></div><div class="float-left">I agree to the <a href="{{ $terms_of_service }}">Terms and Conditions</a></div></div>
-		@if ($errors->first('terms_of_agreement'))
-		<div class="box box-pad-3 fg-4 bg-1 terms-of-agreement-errors visible-toggle visible">
-		@else
-		<div class="box box-pad-3 fg-4 bg-1 terms-of-agreement-errors visible-toggle invisible">
-		@endif
-			<p>{{ $errors->first('terms_of_agreement') }}</p>
-		</div>
-		<div class="box box-pad-0 bg-1"><div class="box-pad-5 float-left"><span class="bold">Total:</span> ${{ $total_price }}</div><div class="float-right"><button type="submit" class="btn-0 bg-4 fg-2">Finish &amp; Pay</button></div></div>
+		<div class="box box-pad-0 bg-1"><div class="box-pad-5 float-left"><span class="bold">Total:</span> ${{ $total_price }}</div><div class="float-right"><button type="submit" class="btn-0 bg-4 fg-2">Review Your Order</button></div></div>
 		{{ Form::close() }}
 		@endif
 	</div>

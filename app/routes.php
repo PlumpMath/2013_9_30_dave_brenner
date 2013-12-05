@@ -1465,12 +1465,167 @@ Route::get('/select_child', function () {
 		'links' => $orders->links(),
 		'total_price' => $total_price,
 		'enroll' => URL::to('/enroll'),
-		'pay' => URL::to('/verify/review'),
+		'pay' => URL::to('/verify/select_child'),
 		'terms_of_service' => URL::to('/legal/terms_of_agreement'),
 		'old'		=> (Session::has('_old_input')) ? Session::get('_old_input') : [],
 	];
 
 	return View::make('review', $data);
+});
+
+Route::post('/verify/select_child', function () {
+	$data = [
+		'terms_of_agreement' => Input::get('terms_of_agreement'),
+	];
+
+	$rules = [
+		'terms_of_agreement' => 'required|accepted'
+	];
+
+	$inputs = Input::all();
+
+	foreach ($inputs as $key => $input) {
+		if (preg_match('/^child_/', substr($key, 0, 6))) {
+			$data[$key] = $input;
+			$rules[$key] = 'required|not_in:null|integer|belongs_to_user|is_eligible';
+		}
+	}
+	
+	$validator = Validator::make($data, $rules);
+
+	if ( ! Auth::check())
+		return App::abort(401, 'You are not authorized.');	
+
+	if ($validator->passes()) {
+		//class lock would go here
+
+		foreach ($inputs as $key => $input) {
+			if (preg_match('/^child_/', substr($key, 0, 6))) {
+				$order = Order::find(substr($key, 6));
+				$child = Child::find($input);
+
+				$child->orders()->save($order);
+			}
+		}
+
+		return Redirect::to('/checkout');      
+	}
+
+	return Redirect::to('/select_child')->withInput(Input::all())->withErrors($validator);
+});
+
+Route::get('/review', function ()
+{
+	if ( ! Auth::check())
+		return App::abort(401, 'You are not authorized.');
+
+	$orders = Auth::user()->orders()->with('lesson.location', 'lesson.activity')->paginate(5);
+	$classes = [];
+	$total_price = 0;
+
+	foreach($orders as $order) {
+		$lesson = Lesson::find($order->lesson_id);
+		$lesson->load('dates');
+
+		$dates = $lesson->dates()->get();
+		$templates = LessonDateTemplate::all();
+
+		if (is_null($lesson)) continue;
+
+		$name = $lesson->starts().' '.$lesson->day();
+		$total_price += $lesson->prorate();
+
+		$month = isset($_GET['m'.$order->id]) ? $_GET['m'.$order->id] : $lesson->firstLesson()->format('m');
+		$year  = isset($_GET['y'.$order->id]) ? $_GET['y'.$order->id] : $lesson->firstLesson()->format('y');
+
+		$calendar = Calendar::factory($month, $year, [
+
+			'id' => $order->id,
+
+		]);
+
+		$calendar->standard('today')->standard('prev-next');
+
+		foreach ($dates as $date) {
+			$class = strtolower(preg_replace('/[-\s]/', '_', $templates[$date->lesson_date_template_id-1]->name));
+
+			$event = $calendar->event()
+				->condition('timestamp', strtotime($date->starts_on))
+				->title($templates[$date->lesson_date_template_id-1]->name)
+				->output($templates[$date->lesson_date_template_id-1]->description)
+				->add_class($class);
+
+			$calendar->attach($event);
+		}
+
+		$classes[$order->id] = [
+			'name' => $name,
+			'details' => [
+				'Price' => '$'.$lesson->prorate(),
+				'Number of Lessons' => $lesson->number(),
+				'Activity' => $lesson->activity->name,
+				'Location' => $lesson->location->name,
+				'Begins' => $lesson->firstLesson()->format('M jS, Y'),
+				'Ends' => $lesson->lastLesson()->format('M jS, Y'),				
+			],
+			'remove_link' => route('remove order', ['id' => $order->id]),
+			'calendar' => $calendar,
+		];
+	}
+
+	$data = [
+		'user_name' => Auth::user()->first_name.' '.Auth::user()->last_name,
+		'classes' => $classes,
+		'links' => $orders->links(),
+		'total_price' => $total_price,
+		'enroll' => URL::to('/enroll'),
+		'pay' => URL::to('/verify/review'),
+		'terms_of_service' => URL::to('/legal/terms_of_agreement'),
+		'old' => (Session::has('_old_input')) ? Session::get('_old_input') : [],
+	];
+
+	return View::make('actual_review', $data);
+});
+
+Route::post('/verify/review', function () {
+	$data = [
+		'terms_of_agreement' => Input::get('terms_of_agreement'),
+	];
+
+	$rules = [
+		'terms_of_agreement' => 'required|accepted'
+	];
+
+	$inputs = Input::all();
+
+	foreach ($inputs as $key => $input) {
+		if (preg_match('/^child_/', substr($key, 0, 6))) {
+			$data[$key] = $input;
+			$rules[$key] = 'required|not_in:null|integer|belongs_to_user|is_eligible';
+		}
+	}
+	
+	$validator = Validator::make($data, $rules);
+
+	if ( ! Auth::check())
+		return App::abort(401, 'You are not authorized.');	
+
+	if ($validator->passes()) {
+		//class lock would go here
+
+		foreach ($inputs as $key => $input) {
+			if (preg_match('/^child_/', substr($key, 0, 6))) {
+				$order = Order::find(substr($key, 6));
+				$child = Child::find($input);
+
+				$child->orders()->save($order);
+			}
+		}
+
+		return Redirect::to('/checkout');      
+	}
+
+	return Redirect::to('/select_child')->withInput(Input::all())->withErrors($validator);
 });
 
 Validator::extend('coupon', function($attribute, $value, $parameters)
@@ -1518,47 +1673,6 @@ Validator::extend('is_eligible', function($attribute, $value, $parameters)
 	}
 
     return false;
-});
-
-Route::post('/verify/review', function () {
-	$data = [
-		'terms_of_agreement' => Input::get('terms_of_agreement'),
-	];
-
-	$rules = [
-		'terms_of_agreement' => 'required|accepted'
-	];
-
-	$inputs = Input::all();
-
-	foreach ($inputs as $key => $input) {
-		if (preg_match('/^child_/', substr($key, 0, 6))) {
-			$data[$key] = $input;
-			$rules[$key] = 'required|not_in:null|integer|belongs_to_user|is_eligible';
-		}
-	}
-	
-	$validator = Validator::make($data, $rules);
-
-	if ( ! Auth::check())
-		return App::abort(401, 'You are not authorized.');	
-
-	if ($validator->passes()) {
-		//class lock would go here
-
-		foreach ($inputs as $key => $input) {
-			if (preg_match('/^child_/', substr($key, 0, 6))) {
-				$order = Order::find(substr($key, 6));
-				$child = Child::find($input);
-
-				$child->orders()->save($order);
-			}
-		}
-
-		return Redirect::to('/checkout');      
-	}
-
-	return Redirect::to('/select_child')->withInput(Input::all())->withErrors($validator);
 });
 
 Route::get('/confirmation', function () {
