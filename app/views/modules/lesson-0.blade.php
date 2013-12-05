@@ -6,10 +6,10 @@
 	<ul class="box fg-1 clear-over">
 		{{ ''; $i = 0 }}
 		@foreach ($details as $detail_name => $detail)
-		@if ($detail_name === 'break')
+		@if ($detail === 'break')
 		<br/>
 		@elseif ($detail_name === 'start_box')
-		<ul class="warning">
+		<ul class="class_bbox">
 		@elseif ($detail_name === 'end_box')
 		</ul>
 		@else
