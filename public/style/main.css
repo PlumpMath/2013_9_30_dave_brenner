@@ -85,7 +85,8 @@ button {
 .fg-2 {
   color: white; }
 
-.fg-3 {
+.fg-3, .detail_name_1,
+.detail_name_2 {
   color: #73d0bb; }
 
 .fg-4 {
@@ -94,8 +95,7 @@ button {
 .fg-5 {
   color: #87ca35; }
 
-.fg-6, .detail_name_1,
-.detail_name_2 {
+.fg-6 {
   color: #f86c59; }
 
 .center {
