@@ -16,9 +16,9 @@ class DatabaseSeeder extends Seeder
         //$this->call('PermissionsTableSeeder');
         //$this->call('RolesTableSeeder');
         $this->call('LocationsTableSeeder');
-        //$this->call('ActivitiesTableSeeder');
-        //$this->call('LessonDateTemplatesTableSeeder');
-        //$this->call('LessonsTableSeeder');
+        $this->call('ActivitiesTableSeeder');
+        $this->call('LessonDateTemplatesTableSeeder');
+        $this->call('LessonsTableSeeder');
         //$this->call('MapsTableSeeder');
     }
 
@@ -77,28 +77,15 @@ class LessonsTableSeeder extends Seeder
             $restriction = LessonRestriction::create($data);
         }
 
-        $data = [
-            'property' => 'gender',
-            'comparison' => '=',
-            'value' => 'male',
-        ];
-
-        $restriction = LessonRestriction::create($data);
-
-        $data = [
-            'property' => 'gender',
-            'comparison' => '=',
-            'value' => 'female',
-        ];
-
-        $restriction = LessonRestriction::create($data);
-
         $now = date('Y-m-d H:i:s');
-        for ($i=0; $i < 20; $i++) { 
+        for ($i=0; $i < 40; $i++) { 
             $data = [
                 'section_id'    => mt_rand(5,10),
                 'spots'         => mt_rand(15,30),
                 'price'         => mt_rand(139,160)+.99,
+                'session_id'    => 'WINTER2013',
+                'provider'      => 'PAL',
+                'active'        => 1,
                 'created_at'    => $now,
                 'updated_at'    => $now
             ];
@@ -116,9 +103,6 @@ class LessonsTableSeeder extends Seeder
                 $restriction = LessonRestriction::find(mt_rand(1,10));
                 $lesson->restrictions()->attach($restriction);
             }
-
-            $restriction = LessonRestriction::find(mt_rand(11,12));
-            $lesson->restrictions()->attach($restriction);
 
             $lessons            = [];
             $lesson_start       = date('j') + mt_rand(-60, 60);

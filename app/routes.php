@@ -1495,10 +1495,10 @@ Route::post('/verify/select_child', function () {
 	if ($validator->passes()) {
 		foreach ($inputs as $key => $input) {
 			if (preg_match('/^child_/', substr($key, 0, 6))) {
-				$order->child()->detach();
-
 				$order = Order::find(substr($key, 6));
 				$child = Child::find($input);
+
+				if ($order->child()->first()) $order->child()->detach();
 
 				$child->orders()->save($order);
 			}
@@ -1653,7 +1653,7 @@ Validator::extend('is_eligible', function($attribute, $value, $parameters)
 		$prop = $restriction->property;
 		$value = $restriction->value;
 
-		if ($child->$prop === $value)
+		if ($child->$prop == $value)
 			return true;
 	}
 
