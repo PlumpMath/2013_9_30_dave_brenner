@@ -17,7 +17,7 @@
 .calendar ul.output li:last-child {border:0;}
  
 /* Small Calendar */
-.calendar.small {width:auto; border-collapse:separate; margin-bottom: 1.5rem;}
+.calendar.small {width:auto; border-collapse:separate; margin:auto; margin-bottom: 1.5rem;}
 .calendar.small tr.navigation th {padding-bottom:5px;}
 .calendar.small tr.navigation th a {font-size:1.5em;}
 .calendar.small th.current-month {font-size:1em;}

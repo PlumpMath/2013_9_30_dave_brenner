@@ -2,8 +2,8 @@
 
 @section('content')
 @include('modules.header')
-@include('modules.hud', ['title' => 'Lesson', 'icon' => 'edit', 'user_name' => $user_name])
-@include('modules.banner', ['title' => 'Lesson'])
+@include('modules.hud', ['title' => 'Lesson Calendar', 'icon' => 'calendar', 'user_name' => $user_name])
+@include('modules.banner', ['title' => 'Lesson Calendar'])
 <div class="box bg-1">
 	<div class="box measure bg-0 border-left border-bottom-0">
 		<div class="box box-pad-0 fg-1 border-0">Calendar</div>

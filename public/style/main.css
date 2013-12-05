@@ -698,6 +698,7 @@ button {
 .calendar.small {
   width: auto;
   border-collapse: separate;
+  margin: auto;
   margin-bottom: 1.5rem; }
 
 .calendar.small tr.navigation th {
