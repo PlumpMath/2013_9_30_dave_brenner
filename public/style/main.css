@@ -59,10 +59,10 @@ button {
 .bg-1 {
   background: #eeeeee; }
 
-.bg-2, .class_bbox {
+.bg-2 {
   background: #35535e; }
 
-.bg-3 {
+.bg-3, .class_bbox {
   background: #f86c59; }
 
 .bg-4, .hud-1 {
