@@ -1512,6 +1512,13 @@ Route::get('/review', function ()
 		return App::abort(401, 'You are not authorized.');
 
 	$orders = Auth::user()->orders()->with('lesson.location', 'lesson.activity')->paginate(5);
+
+	foreach ($orders as $order) {
+		if ( ! $order->child()->first()) {
+			return Redirect::to('/select_child');
+		}
+	}
+
 	$classes = [];
 	$total_price = 0;
 
@@ -1586,7 +1593,8 @@ Route::post('/verify/review', function () {
 	];
 
 	$rules = [
-		'reviewed' => 'required|accepted'
+		'terms_of_agreement' => 'required|accepted',
+		'reviewed' => 'required|accepted',
 	];
 	
 	$validator = Validator::make($data, $rules);
