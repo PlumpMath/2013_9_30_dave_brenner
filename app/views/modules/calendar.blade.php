@@ -1,4 +1,4 @@
-<table class="calendar small" id="#Calendar{{ $calendar->config['id'] }}">
+<table class="calendar small" id="Calendar{{ $calendar->config['id'] }}">
     <thead>
         <tr class="navigation">
             <th class="prev-month"><a href="{{ htmlspecialchars($calendar->prev_month_url()) }}#Calendar{{ $calendar->config['id'] }}">{{ $calendar->prev_month(0, '&laquo;') }}</a></th>
