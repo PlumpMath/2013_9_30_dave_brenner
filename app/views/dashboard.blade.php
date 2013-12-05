@@ -13,6 +13,9 @@
 		@include('modules.section_divide', ['name' => 'Your Children\'s Info'])
 		<div class="box border-bottom-1">
 			<ul>
+				@if ( ! empty($children))
+				<li class="box box-pad-1">Click on your child's name to edit their info</li>
+				@endif
 				@foreach ($children as $child)
 				<li class="box box-pad-1"><a href="{{ $child->link }}">{{{ $child->first_name.' '.$child->last_name }}}</a></li>
 				@endforeach
@@ -53,7 +56,7 @@
 		@include('modules.section_divide', ['name' => 'Current Classes'])
 		@if (empty($classes))
 		<div class="box box-pad-0 border-bottom-0 bg-1 center">
-		You haven't signed up for anything yet.
+		You haven't signed up for anything yet. To register a child, go <a href="{{ $enroll }}">here</a>, select the class/classes you'd like, and then click "Select Child For Class" to choose which children will take which class.
 		</div>
 		@else
 		@foreach ($classes as $class)

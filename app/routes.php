@@ -1237,7 +1237,7 @@ Route::get('/enroll', function ()
 	}
 
 	$data = [
-		'review' => URL::to('/review'),
+		'review' => URL::to('/select_child'),
 		'enroll' => URL::to('/enroll'),
 		'user_name' => Auth::user()->first_name.' '.Auth::user()->last_name,
 		'filters' => [
@@ -1269,7 +1269,7 @@ Route::get('/checkout', function () {
 	
 	$order_models = Auth::user()->orders()->with('lesson.location', 'lesson.activity')->get();
 
-	if (count($order_models) === 0) return Redirect::to('/review');
+	if (count($order_models) === 0) return Redirect::to('/select_child');
 
 	$orders = [];
 	$total_price = 0;
@@ -1390,7 +1390,7 @@ Route::get('/checkout', function () {
 	return View::make('pay', $data);
 });
 
-Route::get('/review', function () {
+Route::get('/select_child', function () {
 	if ( ! Auth::check())
 		return App::abort(401, 'You are not authorized.');
 
@@ -1558,7 +1558,7 @@ Route::post('/verify/review', function () {
 		return Redirect::to('/checkout');      
 	}
 
-	return Redirect::to('/review')->withInput(Input::all())->withErrors($validator);
+	return Redirect::to('/select_child')->withInput(Input::all())->withErrors($validator);
 });
 
 Route::get('/confirmation', function () {

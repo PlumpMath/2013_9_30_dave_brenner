@@ -2,8 +2,8 @@
 
 @section('content')
 @include('modules.header')
-@include('modules.hud', ['title' => 'Review Your Order', 'icon' => 'eye-open', 'user_name' => $user_name])
-@include('modules.banner', ['title' => 'Review Your Order'])
+@include('modules.hud', ['title' => 'Select Child For Class', 'icon' => 'eye-open', 'user_name' => $user_name])
+@include('modules.banner', ['title' => 'Select Child For Class'])
 <div class="box bg-1">
 	<div class="box-2">
 		@include('modules.section_divide', ['name' => 'Please select which child you are signing up for each lesson.'])

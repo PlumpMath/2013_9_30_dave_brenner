@@ -22,6 +22,7 @@ class CreateLessonsTable extends Migration {
             $table->integer('session_id')->nullable;
             $table->integer('spots');
             $table->decimal('price', 5, 2);
+            $table->boolean('active');
             $table->timestamps();
 		});
 	}

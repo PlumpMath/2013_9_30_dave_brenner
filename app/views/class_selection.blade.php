@@ -19,7 +19,7 @@
 		@foreach ($orders as $order)
 		@include('modules.order-0', $order)
 		@endforeach
-		<div class="box box-pad-0"><div class="box-pad-5 float-left"><span class="bold">Total:</span> ${{ $total_price }}</div><div class="float-right"><a href="{{ $review }}"><div class="btn-0 bg-4 fg-2">Review Order</div></a></div></div>
+		<div class="box box-pad-0"><div class="box-pad-5 float-left"><span class="bold">Total:</span> ${{ $total_price }}</div><div class="float-right"><a href="{{ $review }}"><div class="btn-0 bg-4 fg-2">Select Child For Class</div></a></div></div>
 	</div>
 	<div class="box-4 bg-0 border-left">
 		@include('modules.section_divide', ['name' => 'Classes'])
