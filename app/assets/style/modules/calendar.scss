@@ -27,7 +27,7 @@
 
 .calendar.small td.lesson {background-color: #fff; border: 1px solid #C0C0C0}
 .calendar.small td.make_up_lesson {
-	@extend .bg-5
-	border: 1px solid #C0C0C0
+	@extend .bg-5;
+	border: 1px solid #C0C0C0;
 }
 
