@@ -88,12 +88,15 @@ button {
 .fg-3 {
   color: #73d0bb; }
 
-.fg-4, .detail_name_1,
-.detail_name_2 {
+.fg-4 {
   color: #ef3a4f; }
 
 .fg-5 {
   color: #87ca35; }
+
+.fg-6, .detail_name_1,
+.detail_name_2 {
+  color: #f86c59; }
 
 .center {
   text-align: center; }
