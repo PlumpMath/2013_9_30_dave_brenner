@@ -29,7 +29,7 @@
 		@endif
 			<p>{{ $errors->first('terms_of_agreement') }}</p>
 		</div>
-		<div class="box box-pad-1 bg-1"><div class="float-left margin-0"><input class="input type-3" type="checkbox" name="reviewed" @if (Session::has('_old_input') && isset(Session::get('_old_input')['reviewed'])) checked@endif/></div><div class="float-left">I have reviewed these dates carefully and I agree to the class schedule. Also, I understand there are no refunds/credits/make-ups for missed classes.</div></div>
+		<div class="box box-pad-1 bg-1"><div class="float-left margin-0"><input class="input type-3" type="checkbox" name="reviewed" @if (Session::has('_old_input') && isset(Session::get('_old_input')['reviewed'])) checked@endif/></div><div class="float-left measure">I have reviewed these dates carefully and I agree to the class schedule. Also, I understand there are no refunds/credits/make-ups for missed classes.</div></div>
 		@if ($errors->first('reviewed'))
 		<div class="box box-pad-3 fg-4 bg-1 reviewed-errors visible-toggle visible">
 		@else
