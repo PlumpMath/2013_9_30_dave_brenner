@@ -1254,7 +1254,7 @@ Route::get('/enroll', function ()
 				'options' => $activity_names,
 			]
 		],
-		'total_price' => $total_price,
+		'total_price' => number_format($total_price, 2),
 		'orders' => $orders,
 		'classes' => $classes,
 		'links' => $lessons->appends(['locations' => $requested['loc'], 'activities' => $requested['act']])->links()
@@ -1292,7 +1292,7 @@ Route::get('/checkout', function () {
 	}
 
 	$data = [
-		'total_price' => $total_price,
+		'total_price' => number_format($total_price, 2),
 		'orders' => $orders,
 		'verify' => '/verify/pay',
 		'user_name' => Auth::user()->first_name.' '.Auth::user()->last_name,
@@ -1463,7 +1463,7 @@ Route::get('/select_child', function () {
 		'user_name' => Auth::user()->first_name.' '.Auth::user()->last_name,
 		'classes' => $classes,
 		'links' => $orders->links(),
-		'total_price' => $total_price,
+		'total_price' => number_format($total_price, 2),
 		'enroll' => URL::to('/enroll'),
 		'pay' => URL::to('/verify/select_child'),
 		'terms_of_service' => URL::to('/legal/terms_of_agreement'),
@@ -1578,7 +1578,7 @@ Route::get('/review', function ()
 		'user_name' => Auth::user()->first_name.' '.Auth::user()->last_name,
 		'classes' => $classes,
 		'links' => $orders->links(),
-		'total_price' => $total_price,
+		'total_price' => number_format($total_price, 2),
 		'enroll' => URL::to('/enroll'),
 		'pay' => URL::to('/verify/review'),
 		'terms_of_service' => URL::to('/legal/terms_of_agreement'),
