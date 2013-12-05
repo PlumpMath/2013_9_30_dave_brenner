@@ -72,7 +72,7 @@ return array(
 
 	"coupon"  => "Sorry, we don't recognize that coupon.",
 	"belongs_to_user"  => "The child selected must be yours.",
-	"is_eligible"  => "The child selected is not eligible for the class.",
+	"is_eligible"  => "The selected child is not in the correct grade for this class. If you feel this is in error, please contact us at <span class=\"bold\">631-776-8242</span>",
 
 	/*
 	|--------------------------------------------------------------------------
