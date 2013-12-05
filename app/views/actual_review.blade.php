@@ -19,7 +19,7 @@
 		@else
 		{{ Form::open(['url' => $pay]) }}
 		@foreach ($classes as $class)
-		@include('modules.lesson-2', $class)
+		@include('modules.lesson-3', $class)
 		@endforeach
 		<div class="box box-pad-1 bg-1"><div class="float-left margin-0"><input class="input type-3" type="checkbox" name="terms_of_agreement" @if (Session::has('_old_input') && isset(Session::get('_old_input')['terms_of_agreement'])) checked@endif/></div><div class="float-left">I agree to the <a href="{{ $terms_of_service }}">Terms and Conditions</a></div></div>
 		@if ($errors->first('terms_of_agreement'))
