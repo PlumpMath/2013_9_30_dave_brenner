@@ -1153,7 +1153,7 @@ Route::get('/enroll', function ()
 
 		$number = $lesson->number();
 		$name = $lesson->starts().' '.$lesson->day();
-		$price = round($lesson->price / $number, 0);
+		$price = $lesson->price;
 		$restrict_models = $lesson->restrictions()->get();
 		$grades = '';
 		$gender = '';
@@ -1171,8 +1171,11 @@ Route::get('/enroll', function ()
 		$grades = trim($grades, '/');
 		if ($order) {
 			$actionable = 'In Cart';
+			$incart = true;
 			$link = '';
 		} else {
+			$incart = false;
+
 			if ($spots > 0) {
 				$actionable = 'Add to Order';
 				$link = route('add to order', ['lesson_id' => $lesson->id]);
@@ -1206,6 +1209,7 @@ Route::get('/enroll', function ()
 			],
 			'link' => $link,
 			'actionable' => $actionable,
+			'incart' => $incart,
 		];
 	}
 
