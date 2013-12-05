@@ -8,12 +8,12 @@
 	<div class="box-2">
 		@include('modules.section_divide', ['name' => 'Filters'])
 			{{ Form::open(['url' => $enroll, 'method' => 'GET']) }}
-		<div class="box box-pad-0">
+		<div class="box box-pad-7">
 			@foreach ($filters as $filter)
 			@include('modules.menu-2', $filter)
 			@endforeach
 		</div>
-		@include('modules.button-0', ['text' => 'Apply'])
+		@include('modules.button-2', ['text' => 'Apply'])
 			{{ Form::close() }}
 		@include('modules.section_divide', ['name' => 'Your Order'])
 		@foreach ($orders as $order)
