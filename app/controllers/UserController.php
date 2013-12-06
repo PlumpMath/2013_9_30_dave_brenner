@@ -104,6 +104,7 @@ class UserController extends ResourceController
 
         $rules = $this->validation_rules;
         $rules['email'] = 'required';
+        unset($rules['password']);
 
         $validator = Validator::make($inputs, $rules);
 
