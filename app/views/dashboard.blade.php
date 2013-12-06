@@ -65,11 +65,20 @@
 		@endif
 
 		@if ( ! is_null($rsrcs))
+		<div class="bg-1">
+		@include('modules.section_divide', ['name' => 'Admin Functions'])
 		@foreach ($rsrcs as $name => $quals)
-			<div class="box box-pad-0 border-bottom-0 center">
-				<a href="{{ $quals['link'] }}">{{ $name }}</a>
+			@if ($quals == 'break')
+				<br/>
+			@else
+			<a href="{{ $quals['link'] }}" class="fg-2">
+			<div class="box box-pad-0 border-bottom-0 type-1 bg-4">
+				<span class="fg-0 type-3">View all</span> {{ ucfirst($name) }}
 			</div>
+			</a>
+			@endif
 		@endforeach
+		</div>
 		@endif
 	</div>
 	<div class="box box-pad-0 bg-0"></div>

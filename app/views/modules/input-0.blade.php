@@ -4,11 +4,7 @@
 <div class="box box-pad-3">
 @endif
 	<label class="label fg-1" for="{{ $name }}">{{ $label }}@if (isset($required) && $required == true) <span class="fg-4">*</span>@endif</label>
-	@if (isset($old[$name]))
-	<input class="input input-full smaller-measure type-3" type="{{ $type }}" name="{{ $name }}" value="{{{ $old[$name] }}}"/>
-	@else
-	<input class="input input-full smaller-measure type-3" type="{{ $type }}" name="{{ $name }}"/>
-	@endif
+	<input class="input input-full smaller-measure type-3 @if ($errors->first($name)) input-errors @endif" type="{{ $type }}" name="{{ $name }}" @if (isset($old[$name])) value="{{{ $old[$name] }}}" @endif/>	
 </div>
 @if ($errors->first($name))
 <div class="box box-pad-3 fg-4 {{ $name }}-errors visible-toggle visible">

@@ -76,4 +76,64 @@ class LocationController extends ResourceController
     }
 
     // }}}
+
+    public function create()
+    {
+        $data = array_merge($this->data, [
+            'fields' => [
+                [
+                    'name' => 'name',
+                    'type' => 'text',
+                    'label' => 'Name',
+                ],
+                [
+                    'name' => 'contact_name',
+                    'type' => 'text',
+                    'label' => 'Contact Name',
+                ],
+                [
+                    'name' => 'phone',
+                    'type' => 'text',
+                    'label' => 'Phone',
+                ],
+                [
+                    'name' => 'capacity',
+                    'type' => 'text',
+                    'label' => 'Capacity',
+                ],
+                [
+                    'name' => 'address',
+                    'type' => 'text',
+                    'label' => 'Address',
+                ],
+                [
+                    'name' => 'city',
+                    'type' => 'text',
+                    'label' => 'City',
+                ],
+                [
+                    'name' => 'state',
+                    'type' => 'text',
+                    'label' => 'State',
+                ],
+                [
+                    'name' => 'zip_code',
+                    'type' => 'text',
+                    'label' => 'Zip Code',
+                ],
+                [
+                    'name' => 'provider',
+                    'type' => 'text',
+                    'label' => 'Provider',
+                ],
+                [
+                    'name' => 'status',
+                    'type' => 'text',
+                    'label' => 'Status',
+                ],
+            ],
+        ]);
+
+        return View::make('create.location', $data);
+    }
 }

@@ -238,6 +238,7 @@ class ResourceController extends BaseController
             'delete' => action($this->ResourceController.'@destroy', $id),
             'edit'   => action($this->ResourceController.'@edit', $id),
             'receipts' => action('ReceiptController@index'),
+            'lessons' => action('LessonController@index'),
         ]);
 
         $data = array_merge($this->data, [

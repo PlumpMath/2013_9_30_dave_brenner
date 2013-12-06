@@ -87,6 +87,38 @@ class LessonController extends ResourceController
 
     // }}}
 
+    public function index()
+    {
+        if (Input::has('user')) {
+            $user = Input::get('user');
+            $lessons = User::find(+$user)->lessons();
+        } else if (Input::has('location')) {
+            $location = Input::get('location');
+            $lessons = Location::find($location)->lessons()->get();
+        } else if (Input::has('child')) {
+            $child = Input::get('child');
+            $lessons = Child::find($child)->lessons()->get();
+        } else if (Input::has('activity')) {
+            $activity = Input::get('activity');
+            $lessons = Activity::find($activity)->lessons()->get();
+        } else {
+            $lessons = Lesson::all();
+        }
+
+        $__output = [];
+
+        foreach ($lessons as $lesson) {
+            array_unshift($__output, $lesson);
+        }
+
+        $data = array_merge($this->data, [
+            'resources'  => ($this->format($__output)->forDisplay()),
+            'date' => 'none',
+        ]);
+
+        return View::make('resource.index', $data);
+    }
+
     public function show($id)
     {
         // special show for lessons
@@ -130,6 +162,8 @@ class LessonController extends ResourceController
             'delete' => action($this->ResourceController.'@destroy', $id),
             'edit'   => action($this->ResourceController.'@preedit', $id),
             'receipts' => action('ReceiptController@index'),
+            'children' => action('ChildController@index'),
+            'users' => action('UserController@index'),
         ]);
 
         $data = array_merge($this->data, [
@@ -160,6 +194,9 @@ class LessonController extends ResourceController
                     'label' => 'Number of Grades',
                 ],
             ],
+            'url' => [
+            	'create' => URL::action('LessonController@create'),
+            ]
         ]);
 
         return View::make('create.prelesson', $data);
@@ -343,6 +380,21 @@ class LessonController extends ResourceController
                     'type' => 'text',
                     'label' => 'Price',
                 ],
+                [
+                    'name' => 'provider',
+                    'type' => 'text',
+                    'label' => 'Provider',
+                ],
+                [
+                    'name' => 'session_id',
+                    'type' => 'text',
+                    'label' => 'Session',
+                ],
+                [
+                    'name' => 'active',
+                    'type' => 'text',
+                    'label' => 'Active',
+                ],
             ],
             'dates' => $dates,
             'lesson_dates' => count($l_dates)+Input::get('dates'),
@@ -352,6 +404,7 @@ class LessonController extends ResourceController
             'url' => [
                 'update' => URL::action('LessonController@update', $id)
             ],
+            'old' => (Session::has('_old_input')) ? Session::get('_old_input') : [],
         ]);
 
         return View::make('edit.lesson', $data);
@@ -362,54 +415,80 @@ class LessonController extends ResourceController
         $lesson_dates_number = Input::get('lesson_date_number');
         $lesson_restrictions_number = Input::get('lesson_restriction_number');
 
-        $lesson = Lesson::find($id);
-        $location = Location::find(Input::get('location_id'));
-        $activity = Activity::find(Input::get('activity_id'));
+        $data = [
+        	'section_id' => Input::get('section_id'),
+        	'session_id' => Input::get('session_id'),
+        	'spots' => Input::get('spots'),
+        	'price' => Input::get('price'),
+        	'provider' => Input::get('provider'),
+        	'active' => Input::get('active'),
+        ];
 
-        $location->lessons()->save($lesson);
-        $activity->lessons()->save($lesson);
+        $rules = [
+        	'section_id' => 'integer',
+        	'spots' => 'required|integer',
+        	'price' => 'required|numeric',
+        	'active' => 'required|integer',
+        ];
 
-        $lesson->section_id = Input::get('section_id');
-        //$lesson->previous_id = Input::get('previous_id');
-        $lesson->spots = Input::get('spots');
-        $lesson->price = Input::get('price');
+        $validator = new Validator($data, $rules);
 
-        for ($i = 0; $i < $lesson_dates_number; $i++) {
-            if (Input::has('lesson_date_'.$i.'_id')) {
-                $lesson_date = LessonDate::find(Input::get('lesson_date_'.$i.'_id'));
-            } else {
-                $lesson_date = new LessonDate;
-            }
+        if ($validator->passes()) {
+	        $lesson = Lesson::find($id);
+	        $location = Location::find(Input::get('location_id'));
+	        $activity = Activity::find(Input::get('activity_id'));
 
-            $lesson_date->lesson_date_template_id = Input::get('lesson_date_'.$i.'_lesson_date_template_id');
-            $lesson_date->name = Input::get('lesson_date_'.$i.'_name');
-            $lesson_date->description = Input::get('lesson_date_'.$i.'_description');
-            $lesson_date->starts_on = (new DateTime(Input::get('lesson_date_'.$i.'_starts_on')))->format('Y-m-d H:i:s');
-            $lesson_date->ends_on = (new DateTime(Input::get('lesson_date_'.$i.'_ends_on')))->format('Y-m-d H:i:s');
-            $lesson_date->lesson_id = $lesson->id;
+	        $location->lessons()->save($lesson);
+	        $activity->lessons()->save($lesson);
 
-            $lesson_date->save();
-        }
+	        $lesson->section_id = Input::get('section_id');
+	        $lesson->previous_id = Input::get('previous_id');
+	        $lesson->spots = Input::get('spots');
+	        $lesson->price = Input::get('price');
 
-        for ($i = 0; $i < $lesson_restrictions_number; $i++) {
-            if (Input::has('lesson_restriction_'.$i.'_id')) {
-                $lesson_restriction = LessonRestriction::find(Input::get('lesson_restriction_'.$i.'_id'));
-            } else {
-                $lesson_restriction = new LessonRestriction;
-            }
+		        $lesson->provider = Input::get('provider');
+		        $lesson->active = Input::get('active');
+		        $lesson->session_id = Input::get('session_id');
 
-            $lesson_restriction->property = 'grade';
-            $lesson_restriction->comparison = '=';
-            $lesson_restriction->value = Input::get('lesson_restriction_'.$i.'_value');
+	        for ($i = 0; $i < $lesson_dates_number; $i++) {
+	            if (Input::has('lesson_date_'.$i.'_id')) {
+	                $lesson_date = LessonDate::find(Input::get('lesson_date_'.$i.'_id'));
+	            } else {
+	                $lesson_date = new LessonDate;
+	            }
 
-            $lesson_restriction->save();
+	            $lesson_date->lesson_date_template_id = Input::get('lesson_date_'.$i.'_lesson_date_template_id');
+	            $lesson_date->name = Input::get('lesson_date_'.$i.'_name');
+	            $lesson_date->description = Input::get('lesson_date_'.$i.'_description');
+	            $lesson_date->starts_on = (new DateTime(Input::get('lesson_date_'.$i.'_starts_on')))->format('Y-m-d H:i:s');
+	            $lesson_date->ends_on = (new DateTime(Input::get('lesson_date_'.$i.'_ends_on')))->format('Y-m-d H:i:s');
+	            $lesson_date->lesson_id = $lesson->id;
 
-            $lesson_restriction->lessons()->attach($lesson->id);
-        }
+	            $lesson_date->save();
+	        }
 
-        $lesson->save();
+	        for ($i = 0; $i < $lesson_restrictions_number; $i++) {
+	            if (Input::has('lesson_restriction_'.$i.'_id')) {
+	                $lesson_restriction = LessonRestriction::find(Input::get('lesson_restriction_'.$i.'_id'));
+	            } else {
+	                $lesson_restriction = new LessonRestriction;
+	            }
 
-        return Redirect::action('LessonController@show', $lesson->id);
+	            $lesson_restriction->property = 'grade';
+	            $lesson_restriction->comparison = '=';
+	            $lesson_restriction->value = Input::get('lesson_restriction_'.$i.'_value');
+
+	            $lesson_restriction->save();
+
+	            $lesson_restriction->lessons()->attach($lesson->id);
+	        }
+
+	        $lesson->save();
+
+	        return Redirect::action('LessonController@show', $lesson->id);
+    	} else {
+    		return Redirect::action('LessonController@edit')->withInput(Input::all())->withErrors($validator);
+    	}
     }
 
     public function store()
@@ -417,46 +496,72 @@ class LessonController extends ResourceController
         $lesson_dates_number = Input::get('lesson_date_number');
         $lesson_restrictions_number = Input::get('lesson_restriction_number');
 
-        $lesson = new Lesson;
-        $location = Location::find(Input::get('location_id'));
-        $activity = Activity::find(Input::get('activity_id'));
+        $data = [
+        	'section_id' => Input::get('section_id'),
+        	'session_id' => Input::get('session_id'),
+        	'spots' => Input::get('spots'),
+        	'price' => Input::get('price'),
+        	'provider' => Input::get('provider'),
+        	'active' => Input::get('active'),
+        ];
 
-        $location->lessons()->save($lesson);
-        $activity->lessons()->save($lesson);
+        $rules = [
+        	'section_id' => 'integer',
+        	'spots' => 'required|integer',
+        	'price' => 'required|numeric',
+        	'active' => 'required|integer',
+        ];
 
-        $lesson->section_id = Input::get('section_id');
-        //$lesson->previous_id = Input::get('previous_id');
-        $lesson->spots = Input::get('spots');
-        $lesson->price = Input::get('price');
+        $validator = new Validator($data, $rules);
 
-        for ($i = 0; $i < $lesson_dates_number; $i++) {
-            $lesson_date = new LessonDate;
+        if ($validator->passes()) {
+	        $lesson = new Lesson;
+	        $location = Location::find(Input::get('location_id'));
+	        $activity = Activity::find(Input::get('activity_id'));
 
-            $lesson_date->lesson_date_template_id = Input::get('lesson_date_'.$i.'_lesson_date_template_id');
-            $lesson_date->name = Input::get('lesson_date_'.$i.'_name');
-            $lesson_date->description = Input::get('lesson_date_'.$i.'_description');
-            $lesson_date->starts_on = (new DateTime(Input::get('lesson_date_'.$i.'_starts_on')))->format('Y-m-d H:i:s');
-            $lesson_date->ends_on = (new DateTime(Input::get('lesson_date_'.$i.'_ends_on')))->format('Y-m-d H:i:s');
-            $lesson_date->lesson_id = $lesson->id;
+	        $location->lessons()->save($lesson);
+	        $activity->lessons()->save($lesson);
 
-            $lesson_date->save();
-        }
+	        $lesson->section_id = Input::get('section_id');
+	        $lesson->previous_id = Input::get('previous_id');
+	        $lesson->spots = Input::get('spots');
+	        $lesson->price = Input::get('price');
 
-        for ($i = 0; $i < $lesson_restrictions_number; $i++) {
-            $lesson_restriction = new LessonRestriction;
+	        $lesson->provider = Input::get('provider');
+	        $lesson->active = Input::get('active');
+	        $lesson->session_id = Input::get('session_id');
+ 
+	        for ($i = 0; $i < $lesson_dates_number; $i++) {
+	            $lesson_date = new LessonDate;
 
-            $lesson_restriction->property = 'grade';
-            $lesson_restriction->comparison = '=';
-            $lesson_restriction->value = Input::get('lesson_restriction_'.$i.'_value');
+	            $lesson_date->lesson_date_template_id = Input::get('lesson_date_'.$i.'_lesson_date_template_id');
+	            $lesson_date->name = Input::get('lesson_date_'.$i.'_name');
+	            $lesson_date->description = Input::get('lesson_date_'.$i.'_description');
+	            $lesson_date->starts_on = (new DateTime(Input::get('lesson_date_'.$i.'_starts_on')))->format('Y-m-d H:i:s');
+	            $lesson_date->ends_on = (new DateTime(Input::get('lesson_date_'.$i.'_ends_on')))->format('Y-m-d H:i:s');
+	            $lesson_date->lesson_id = $lesson->id;
 
-            $lesson_restriction->save();
+	            $lesson_date->save();
+	        }
 
-            $lesson_restriction->lessons()->attach($lesson->id);
-        }
+	        for ($i = 0; $i < $lesson_restrictions_number; $i++) {
+	            $lesson_restriction = new LessonRestriction;
 
-        $lesson->save();
+	            $lesson_restriction->property = 'grade';
+	            $lesson_restriction->comparison = '=';
+	            $lesson_restriction->value = Input::get('lesson_restriction_'.$i.'_value');
 
-        return Redirect::action('LessonController@show', $lesson->id);
+	            $lesson_restriction->save();
+
+	            $lesson_restriction->lessons()->attach($lesson->id);
+	        }
+
+	        $lesson->save();
+
+	        return Redirect::action('LessonController@show', $lesson->id);
+    	} else {
+    		return Redirect::action('LessonController@create')->withInput(Input::all())->withErrors($validator);
+    	}
     }
 
     public function create()
@@ -537,11 +642,27 @@ class LessonController extends ResourceController
                     'type' => 'text',
                     'label' => 'Price',
                 ],
+                [
+                    'name' => 'provider',
+                    'type' => 'text',
+                    'label' => 'Provider',
+                ],
+                [
+                    'name' => 'session_id',
+                    'type' => 'text',
+                    'label' => 'Session',
+                ],
+                [
+                    'name' => 'active',
+                    'type' => 'text',
+                    'label' => 'Active',
+                ],
             ],
             'dates' => $dates,
             'lesson_dates' => +Input::get('dates'),
             'restrictions' => $restrictions,
             'lesson_restrictions' => +Input::get('grades'),
+            'old' => (Session::has('_old_input')) ? Session::get('_old_input') : [],
         ]);
 
         return View::make('create.lesson', $data);

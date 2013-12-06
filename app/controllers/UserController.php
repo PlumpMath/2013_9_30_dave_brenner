@@ -76,4 +76,25 @@ class UserController extends ResourceController
     }
 
     // }}}
+
+    public function index()
+    {
+        if (Input::has('child')) {
+            $child = Input::get('child');
+            $user = Child::find($child)->user()->first();
+        } else {
+            $user = User::all();
+        }
+
+        $__output = [
+            $user
+        ];
+
+        $data = array_merge($this->data, [
+            'resources'  => ($this->format($__output)->forDisplay()),
+            'date' => 'none',
+        ]);
+
+        return View::make('resource.index', $data);
+    }
 }

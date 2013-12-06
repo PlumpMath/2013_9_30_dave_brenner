@@ -95,7 +95,7 @@ Route::post('/log/in', function ()
 		} else if ($user['password'] == null){
 			$error_msg = 'Password cannot be blank.';
 		} else if (Auth::user() && Auth::user()->status == 2) {
-			$error_msg = 'The email for this account has not yet been verified.';
+			$error_msg = 'The email for this account has not yet been verified. To verify,';
 		} else {
 			$error_msg = 'Incorrect email or password.';
 		}
@@ -1880,29 +1880,37 @@ Route::get('/dashboard', function ()
 
 	if (in_array(Auth::user()->id, User::$admins)) {
 		$resources = [
-			'activities' => [
-				'link' => URL::to('/activities'),
+			'latesignups' => [
+				'link' => URL::to('/latesignups'),
+			],
+			'4' => 'break',
+			'receipts' => [
+				'link' => URL::to('/receipts'),
+			],
+			'3' => 'break',
+			'users' => [
+				'link' => URL::to('/users'),
 			],
 			'children' => [
 				'link' => URL::to('/children'),
 			],
-			'coupons' => [
-				'link' => URL::to('/coupons'),
-			],
-			'latesignups' => [
-				'link' => URL::to('/latesignups'),
-			],
+			'0' => 'break',
 			'lessons' => [
 				'link' => URL::to('/lessons'),
 			],
+			'date templates' => [
+				'link' => URL::to('/lessondatetemplates'),
+			],
+			'1' => 'break',
 			'locations' => [
 				'link' => URL::to('/locations'),
 			],
-			'receipts' => [
-				'link' => URL::to('/receipts'),
+			'2' => 'break',
+			'activities' => [
+				'link' => URL::to('/activities'),
 			],
-			'users' => [
-				'link' => URL::to('/users'),
+			'coupons' => [
+				'link' => URL::to('/coupons'),
 			],
 			'waitlists' => [
 				'link' => URL::to('/waitlists'),

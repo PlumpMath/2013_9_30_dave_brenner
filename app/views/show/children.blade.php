@@ -18,13 +18,13 @@
                 <input name="{{ $input_name }}" type="hidden" value="{{ $resource_id }}">
                 <li><button class="button-3" type="submit">Retrieve attached Receipts</button></li>
                 {{ Form::close() }}
-                {{ Form::open(['url' => $url['children'], 'method' => 'GET']) }}
+                {{ Form::open(['url' => $url['lessons'], 'method' => 'GET']) }}
                 <input name="{{ $input_name }}" type="hidden" value="{{ $resource_id }}">
-                <li><button class="button-3" type="submit">Retrieve attached Children</button></li>
+                <li><button class="button-3" type="submit">Retrieve attached Lessons</button></li>
                 {{ Form::close() }}
-                {{ Form::open(['url' => $url['users'], 'method' => 'GET']) }}
+                {{ Form::open(['url' => $url['user'], 'method' => 'GET']) }}
                 <input name="{{ $input_name }}" type="hidden" value="{{ $resource_id }}">
-                <li><button class="button-3" type="submit">Retrieve attached Users</button></li>
+                <li><button class="button-3" type="submit">Go to Parent</button></li>
                 {{ Form::close() }}
             </ul>
         </div>
@@ -41,18 +41,6 @@
                 </div>
                 <div class="rsrc-inst-info">
                     <p class="rsrc-inst-info-text">{{ $value }}</p>
-                </div>
-            </li>
-            @endforeach
-        @include('modules.section_divide', ['name' => 'Dates'])
-            @foreach ($dates as $date)
-            <!-- resource elem -->
-            <li class="rsrc-elem rsrc-inst">
-                <div class="rsrc-inst-name">
-                    <p class="rsrc-inst-name-text">{{ $date['name'] }}</p>
-                </div>
-                <div class="rsrc-inst-info">
-                    <p class="rsrc-inst-info-text">{{ $date['description'].'<br/>Starts: '.$date['starts'].'<br/>Ends: '.$date['ends'] }}</p>
                 </div>
             </li>
             @endforeach
