@@ -76,10 +76,10 @@ button {
   background-size: cover;
   background-position: top center; }
 
-.fg-0, body {
+.fg-0, body, .rsrc .rsrc-elem .rsrc-inst-name {
   color: #525252; }
 
-.fg-1 {
+.fg-1, .rsrc .rsrc-elem .rsrc-inst-info {
   color: #959595; }
 
 .fg-2 {
@@ -840,6 +840,7 @@ button {
   width: 100%;
   list-style: none;
   padding-left: 0;
+  background: #eee;
   /* CHILDREN */
   /* .rsrc-header */
   /* .rsrc-elem */ }
@@ -850,6 +851,7 @@ button {
   margin-bottom: 4.236rem; }
 
 .rsrc .rsrc-elem {
+  margin-bottom: 1px;
   /* CHILDREN */
   /* .rsrc-type-name */
   /* .rsrc-type-cmds */
@@ -860,10 +862,10 @@ button {
   /* .rsrc-inst-name */ }
 
 .rsrc .rsrc-elem:nth-child(2n) {
-  background: #dce8fc; }
+  background: #fff; }
 
 .rsrc .rsrc-elem:nth-child(2n+1) {
-  background: #d3e2fa; }
+  background: #fff; }
 
 .rsrc .rsrc-elem:only-child {
   border: 8px; }
@@ -927,11 +929,8 @@ button {
   color: #2dcb70; }
 
 .rsrc .rsrc-elem .rsrc-inst-name {
-  color: #2f3854;
+  font-weight: bold;
   width: 35%; }
-
-.rsrc .rsrc-elem .rsrc-inst-info {
-  color: #9397a8; }
 
 @-webkit-keyframes squish {
   0% {

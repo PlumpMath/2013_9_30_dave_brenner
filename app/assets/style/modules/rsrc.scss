@@ -3,6 +3,7 @@
   width: 100%;
   list-style: none;
   padding-left: 0;
+  background: #eee;
 
   &.box-pad-0 {
     padding: $size_base
@@ -13,6 +14,8 @@
   .rsrc .rsrc-header {
     margin-bottom: 4.236rem; }
   .rsrc .rsrc-elem {
+    margin-bottom: 1px;
+
     /* CHILDREN */
     /* .rsrc-type-name */
     /* .rsrc-type-cmds */
@@ -22,9 +25,9 @@
     /* .rsrc-inst-name */
     /* .rsrc-inst-name */ }
     .rsrc .rsrc-elem:nth-child(2n) {
-      background: #dce8fc; }
+      background: #fff; }
     .rsrc .rsrc-elem:nth-child(2n+1) {
-      background: #d3e2fa; }
+      background: #fff; }
     .rsrc .rsrc-elem:only-child {
       border: 8px; }
     .rsrc .rsrc-elem .rsrc-type-name {
@@ -76,7 +79,8 @@
       .rsrc .rsrc-elem .rsrc-elem-checkbox .icon-ok {
         color: #2dcb70; }
     .rsrc .rsrc-elem .rsrc-inst-name {
-      color: #2f3854;
+      @extend .fg-0; 
+      font-weight: bold;
       width: 35%; }
     .rsrc .rsrc-elem .rsrc-inst-info {
-      color: #9397a8; }
+      @extend .fg-1; }

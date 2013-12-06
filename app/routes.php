@@ -2048,3 +2048,9 @@ Route::post('/waitlists/affect', 'WaitlistController@affect');
 Route::get('/waitlists/{id}/copy', 'WaitlistController@copy');
 
 Route::resource('waitlists', 'WaitlistController');
+
+// LESSONDATETEMPLATES
+
+Route::get('/lessondatetemplates/{id}/copy', 'LessonDateTemplateController@copy');
+
+Route::resource('lessondatetemplates', 'LessonDateTemplateController');

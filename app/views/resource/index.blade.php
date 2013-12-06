@@ -27,9 +27,6 @@
             @foreach ($resources as $resource)
             <!-- resource elem -->
             <li class="rsrc-elem rsrc-inst">
-                <div class="rsrc-elem-checkbox">
-                    <i class="icon icon-circle-blank"></i>
-                </div>
                 <a href="{{ $url['index'].'/'.$resource['id'] }}">
                     <div class="rsrc-inst-name">
                         <p class="rsrc-inst-name-text">{{ $resource['name'] }}</p>
