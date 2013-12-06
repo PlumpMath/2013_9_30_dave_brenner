@@ -94,7 +94,7 @@ Route::post('/log/in', function ()
 			$error_msg = 'Email cannot be blank.';
 		} else if ($user['password'] == null){
 			$error_msg = 'Password cannot be blank.';
-		} else if (Auth::user() && Auth::user()->status === 2) {
+		} else if (Auth::user() && Auth::user()->status == 2) {
 			$error_msg = 'The email for this account has not yet been verified.';
 		} else {
 			$error_msg = 'Incorrect email or password.';
