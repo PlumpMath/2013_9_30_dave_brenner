@@ -55,6 +55,7 @@ class User extends Resource implements UserInterface, RemindableInterface {
 
     public static $admins = [
         1,
+        2,
     ];
 
     // }}}

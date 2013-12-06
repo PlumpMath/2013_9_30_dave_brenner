@@ -38,9 +38,6 @@
 			<br />
 			<p><a href="{{ $subscription_status }}">Change email subscription status</a></p>
 		</div>
-		<div class="box box-pad-0">
-			<a href="{{ $site_preferences }}">Change site preferences</a>
-		</div>
 	</div>
 	<div class="box-4 bg-0 border-left">
 		@include('modules.section_divide', ['name' => 'Notifications'])

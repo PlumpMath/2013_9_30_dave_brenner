@@ -112,6 +112,8 @@ class ChildController extends ResourceController
         $ModelName = $this->Resource;
         $resource_to_show = $ModelName::find($id)->toArray();
 
+        $old = $resource_to_show;
+
         $url = array_merge($this->url, [
             'copy'   => action($this->ResourceController.'@copy', $id),
             'delete' => action($this->ResourceController.'@destroy', $id),

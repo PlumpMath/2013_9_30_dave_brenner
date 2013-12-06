@@ -318,8 +318,24 @@ class ResourceController extends BaseController
         $ModelName = $this->Resource;
         $resource_to_edit = $ModelName::find($id)->toArray();
         
+        $fields = [];
+
+        foreach ($resource_to_edit as $name => $value) {
+            if ($name != 'id' && $name != 'created_at' && $name != 'updated_at')
+            $fields[] = [
+                'name' => $name,
+                'type' => 'text',
+                'label' => ucfirst($name),
+            ];
+        }
+
         $data = array_merge($this->data, [
+            'fields' => $fields,
             'resource' => $this->format($resource_to_edit)->forDisplay(),
+            'url' => array_merge($this->url, [
+                'update' => URL::action($this->Resource.'Controller@update', $id),
+            ]),
+            'old' => (Session::has('_old_input')) ? Session::get('_old_input') : $resource_to_edit,
         ]);
         
         return View::make('resource.edit', $data);        

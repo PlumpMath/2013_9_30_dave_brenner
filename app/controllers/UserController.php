@@ -81,17 +81,15 @@ class UserController extends ResourceController
     {
         if (Input::has('child')) {
             $child = Input::get('child');
-            $user = Child::find($child)->user()->first();
+            $users = Child::find($child)->user()->get();
         } else {
-            $user = User::all();
+            $users = User::all();
         }
 
-        $__output = [
-            $user
-        ];
+        $ModelName = $this->Resource;
 
         $data = array_merge($this->data, [
-            'resources'  => ($this->format($__output)->forDisplay()),
+            'resources'  => ($this->format($users->toArray())->forDisplay()),
             'date' => 'none',
         ]);
 

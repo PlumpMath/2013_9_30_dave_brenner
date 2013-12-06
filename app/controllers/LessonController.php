@@ -400,11 +400,10 @@ class LessonController extends ResourceController
             'lesson_dates' => count($l_dates)+Input::get('dates'),
             'restrictions' => $restrictions,
             'lesson_restrictions' => count($l_restrictions)+Input::get('grades'),
-            'old' => $old,
             'url' => [
                 'update' => URL::action('LessonController@update', $id)
             ],
-            'old' => (Session::has('_old_input')) ? Session::get('_old_input') : [],
+            'old' => (Session::has('_old_input')) ? Session::get('_old_input') : $old,
         ]);
 
         return View::make('edit.lesson', $data);
