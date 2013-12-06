@@ -109,7 +109,11 @@ class UserController extends ResourceController
         $validator = Validator::make($inputs, $rules);
 
         if ($validator->passes()) {
-            $resource_to_update->update($this->format($inputs)->forSaving());
+            foreach($this->format($inputs)->forSaving() as $name => $value) {
+                $resource_to_update->$name = $value;
+            }
+
+            $resource_to_update->save();
 
             return Redirect::action($this->ResourceController.'@show', $id);
         } else {
