@@ -33,7 +33,7 @@ class UserController extends ResourceController
                         $value = '('.substr($value, 0, 3).') '.substr($value, 3, 3).'-'.substr($value, 6, 4);
                         break;
                     case 'status':
-                        $value = ($value === 1) ? 'Active' : 'Inactive';
+                        $value = ($value == 1) ? 'Active' : 'Inactive';
                         break;
                     case 'notes':
                         $value = (is_null($value)) ? 'No Notes' : $value;
