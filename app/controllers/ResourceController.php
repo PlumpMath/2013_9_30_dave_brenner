@@ -359,7 +359,7 @@ class ResourceController extends BaseController
     {
         $ModelName = $this->Resource;
         $resource_to_update = $ModelName::find($id);
-        $inputs = Input::all();
+        $inputs = Input::except('_method', '_token');
         $validator = Validator::make($inputs, $this->validation_rules);
 
         if ($validator->passes()) {

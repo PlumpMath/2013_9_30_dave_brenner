@@ -100,7 +100,7 @@ class UserController extends ResourceController
     {
         $ModelName = $this->Resource;
         $resource_to_update = $ModelName::find($id);
-        $inputs = Input::all();
+        $inputs = Input::except('_method', '_token');
 
         $rules = $this->validation_rules;
         $rules['email'] = 'required';
