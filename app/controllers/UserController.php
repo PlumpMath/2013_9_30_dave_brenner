@@ -95,4 +95,25 @@ class UserController extends ResourceController
 
         return View::make('resource.index', $data);
     }
+
+    public function update($id)
+    {
+        $ModelName = $this->Resource;
+        $resource_to_update = $ModelName::find($id);
+        $inputs = Input::all();
+
+        $rules = $this->validation_rules;
+        $rules['email'] = 'required';
+
+        $validator = Validator::make($inputs, $rules);
+
+        if ($validator->passes()) {
+            $resource_to_update->update($this->format($inputs)->forSaving());
+
+            return Redirect::action($this->ResourceController.'@show', $id);
+        } else {
+            echo "Did not pass validation. One or more of your inputs has incorrect values.\n";
+            dd($validator->errors());
+        }
+    }
 }

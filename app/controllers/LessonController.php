@@ -239,6 +239,9 @@ class LessonController extends ResourceController
             'previous_id' => $lesson->previous_id,
             'spots' => $lesson->spots,
             'price' => $lesson->price,
+            'provider' => $lesson->provider,
+            'session_id' => $lesson->session_id,
+            'active' => $lesson->active,
         ];
         $restrictions = [];
 
@@ -430,7 +433,7 @@ class LessonController extends ResourceController
         	'active' => 'required|integer',
         ];
 
-        $validator = new Validator($data, $rules);
+        $validator = Validator::make($data, $rules);
 
         if ($validator->passes()) {
 	        $lesson = Lesson::find($id);
@@ -486,7 +489,7 @@ class LessonController extends ResourceController
 
 	        return Redirect::action('LessonController@show', $lesson->id);
     	} else {
-    		return Redirect::action('LessonController@edit')->withInput(Input::all())->withErrors($validator);
+    		return Redirect::action('LessonController@edit', $id)->withInput(Input::all())->withErrors($validator);
     	}
     }
 
@@ -511,7 +514,7 @@ class LessonController extends ResourceController
         	'active' => 'required|integer',
         ];
 
-        $validator = new Validator($data, $rules);
+        $validator = Validator::make($data, $rules);
 
         if ($validator->passes()) {
 	        $lesson = new Lesson;

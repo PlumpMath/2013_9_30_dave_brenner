@@ -25,9 +25,53 @@
 .calendar.small td {width:auto; height:auto; padding:4px 8px; text-align:center; border:1px solid #EEE; background:#EEE;}
 .calendar.small span.date {display:inline; padding:0; background:none;}
 
-.calendar.small td.lesson {background-color: #fff; border: 1px solid #C0C0C0}
-.calendar.small td.make_up_lesson {
+.calendar.small td.lesson, .lesson {background-color: #fff; border: 1px solid #C0C0C0}
+.calendar.small td.make_up_lesson, .make_up_lesson {
+	@extend .bg-4;
+	a {
+		color: #fff;
+	}
+}
+
+.calendar.small td.courtesy_sign_up, .courtesy_sign_up {
 	@extend .bg-5;
 	border: 1px solid #C0C0C0;
 }
 
+.calendar.small td.open_sign_up {
+	@extend .bg-5;
+	border: 1px solid #C0C0C0;
+}
+
+.calendar.small td.late_sign_up {
+	@extend .bg-5;
+	border: 1px solid #C0C0C0;
+}
+
+.calendar.small td.snow_day {
+	background: #404040;
+	a {
+		color: #fff;
+	}
+}
+
+.calendar.small td.no_class, .no_class {
+	background: #404040;
+	a {
+		color: #fff;
+	}
+}
+
+.calendar.small td.holiday {
+	background: #404040;
+	a {
+		color: #fff;
+	}
+}
+
+.key {
+	width: $size_normal;
+	height: $size_normal;
+	display: inline-block;
+	margin-right: $size_base;
+}

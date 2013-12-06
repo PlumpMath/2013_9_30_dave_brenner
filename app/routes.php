@@ -1430,15 +1430,31 @@ Route::get('/select_child', function () {
 		$calendar->standard('today')->standard('prev-next');
 
 		foreach ($dates as $date) {
-			$class = strtolower(preg_replace('/[-\s]/', '_', $templates[$date->lesson_date_template_id-1]->name));
+			if ($date->starts_on == $date->ends_on) {
+				$class = strtolower(preg_replace('/[-\s]/', '_', $templates[$date->lesson_date_template_id-1]->name));
 
-			$event = $calendar->event()
-				->condition('timestamp', strtotime($date->starts_on))
-				->title($templates[$date->lesson_date_template_id-1]->name)
-				->output($templates[$date->lesson_date_template_id-1]->description)
-				->add_class($class);
+				$event = $calendar->event()
+					->condition('timestamp', strtotime($date->starts_on))
+					->title($templates[$date->lesson_date_template_id-1]->name)
+					->output($templates[$date->lesson_date_template_id-1]->description)
+					->add_class($class);
 
-			$calendar->attach($event);
+				$calendar->attach($event);
+			} else {
+				$class = strtolower(preg_replace('/[-\s]/', '_', $templates[$date->lesson_date_template_id-1]->name));
+
+				$days = Calendar::getDatesBetween($date->starts_on, $date->ends_on);
+
+				foreach ($days as $day) {
+					$event = $calendar->event()
+						->condition('timestamp', $day)
+						->title($templates[$date->lesson_date_template_id-1]->name)
+						->output($templates[$date->lesson_date_template_id-1]->description)
+						->add_class($class);
+
+					$calendar->attach($event);	
+				}			
+			}
 		}
 
 		$classes[$order->id] = [

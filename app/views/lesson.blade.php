@@ -10,6 +10,7 @@
 		<div class="box box-pad-0 center">
 			@include('modules.calendar', ['calendar' => $calendar])
 		</div>
+		@include('modules.calendar-key')
 	</div>
 </div>
 <div class="box box-pad-0 bg-0"></div>

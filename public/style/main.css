@@ -65,10 +65,10 @@ button {
 .bg-3 {
   background: #f86c59; }
 
-.bg-4, .class_bbox, .hud-1 {
+.bg-4, .class_bbox, .hud-1, .calendar.small td.make_up_lesson, .make_up_lesson {
   background: #73d0bb; }
 
-.bg-5, .calendar.small td.make_up_lesson {
+.bg-5, .calendar.small td.courtesy_sign_up, .courtesy_sign_up, .calendar.small td.open_sign_up, .calendar.small td.late_sign_up {
   background: #f0e785 !important; }
 
 .img-0 {
@@ -738,12 +738,42 @@ button {
   padding: 0;
   background: none; }
 
-.calendar.small td.lesson {
+.calendar.small td.lesson, .lesson {
   background-color: #fff;
   border: 1px solid #C0C0C0; }
 
-.calendar.small td.make_up_lesson {
+.calendar.small td.make_up_lesson a, .make_up_lesson a {
+  color: #fff; }
+
+.calendar.small td.courtesy_sign_up, .courtesy_sign_up {
   border: 1px solid #C0C0C0; }
+
+.calendar.small td.open_sign_up {
+  border: 1px solid #C0C0C0; }
+
+.calendar.small td.late_sign_up {
+  border: 1px solid #C0C0C0; }
+
+.calendar.small td.snow_day {
+  background: #404040; }
+  .calendar.small td.snow_day a {
+    color: #fff; }
+
+.calendar.small td.no_class, .no_class {
+  background: #404040; }
+  .calendar.small td.no_class a, .no_class a {
+    color: #fff; }
+
+.calendar.small td.holiday {
+  background: #404040; }
+  .calendar.small td.holiday a {
+    color: #fff; }
+
+.key {
+  width: 1rem;
+  height: 1rem;
+  display: inline-block;
+  margin-right: 1.7rem; }
 
 .PAL {
   background: url("./imgs/PAL.png");
