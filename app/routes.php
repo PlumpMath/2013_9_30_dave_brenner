@@ -925,7 +925,7 @@ Route::post('/reset/password/verify', function ()
 		return App::abort(401, 'You are not authorized.');
 
 	if ($validator->passes()) {
-		Auth::user()->password = Hash::make($data['password']);
+		Auth::user()->password = $data['password'];
 
 		$data = [
 			'user_name' => Auth::user()->first_name.' '.Auth::user()->last_name,
