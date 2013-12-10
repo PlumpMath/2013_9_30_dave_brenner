@@ -97,9 +97,9 @@ Route::post('/log/in', function ()
 		} else if (Auth::user() && Auth::user()->status == 2) {
 			$error_msg = 'The email for this account has not yet been verified. To verify,';
 		} else {
-			$user = User::where('email', $user['email']);
+			$attempted_user = User::where('email', $user['email']);
 
-			if ($user && Hash::check($user['password'], $user->password)) {
+			if ($attempted_user && Hash::check($user['password'], $attempted_user->password)) {
 				$error_msg = 'Something is wrong with your account, please call us at <span class="bold">631-776-8242</span>.';
 			} else {
 				$error_msg = 'Incorrect email or password.';
