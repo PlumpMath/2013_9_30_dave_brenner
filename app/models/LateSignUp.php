@@ -24,7 +24,9 @@ class LateSignUp extends Resource {
 
     public static function existsForUser($user)
     {
-    	if ( ! empty($user->latesignups()->get())) return true;
+    	$response = $user->latesignups()->get();
+
+    	if ( ! empty($response)) return true;
 
     	$latesignups = LateSignUp::all();
 
