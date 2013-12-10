@@ -24,7 +24,7 @@ class Calendar extends Event_Subject {
 	// Configuration
 	protected $config = array();
 
-	public static function createDateRangeArray($strDateFrom,$strDateTo)
+	public static function getDatesBetween($strDateFrom,$strDateTo)
 	{
 	    // takes two dates formatted as YYYY-MM-DD and creates an
 	    // inclusive array of the dates between the from and to dates.
