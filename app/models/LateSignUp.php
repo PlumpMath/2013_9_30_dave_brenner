@@ -22,6 +22,48 @@ class LateSignUp extends Resource {
         'Lesson',
     ];
 
+    public static function existsForUser($user)
+    {
+    	if ( ! empty($user->latesignups()->get())) return true;
+
+    	$latesignups = LateSignUp::all();
+
+    	foreach ($latesignups as $latesignup) {
+    		if ($latesignup->user_id == $user->id
+    			|| $latesignup->email == $user->email) return true;
+    	}
+
+    	return false;
+    }
+
+    public static function getChildrenFromUser($user)
+    {
+    	$children = $user->children()->get();
+    	$__output = [];
+
+    	if ( ! empty($user->latesignups()->get())) {
+    		$latesignups = $user->latesignups()->get();
+    	} else {
+    		$all = LateSignUp::all();
+    		$latesignups = [];
+
+	    	foreach ($all as $latesignup) {
+	    		if ($latesignup->user_id == $user->id
+	    			|| $latesignup->email == $user->email) $latesignups[] = $latesignup;
+	    	}
+    	}
+
+
+    	foreach ($children as $child) {
+    		foreach ($latesignups as $latesignup) {
+    			if ($latesignup->child_id == $child->id
+    				|| $latesignup->child_name == $child->first_name) $__output[] = $child;
+    		}
+    	}
+
+    	return $__output;
+    }
+
     public function user()
     {
         return $this->belongsTo('User');

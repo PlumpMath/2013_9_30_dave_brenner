@@ -112,7 +112,7 @@ Route::get('/email/latesignup', function () {
 
 	$data = [
 		'activity' => 'TENNIS',
-		'user_name' => Auth::user()->first_name.' '.Auth::user()->last_name,
+		'user_name' => 'User Name',
 		'child' => $student,
 		'time' => $time->format('g:i A l, F jS'),
 		'link' => '',
@@ -123,7 +123,7 @@ Route::get('/email/latesignup', function () {
 		'year' => (new DateTime)->format('Y'),
 		'description' => 'You may sign '.$student.' up for the class you\'ve discussed with us over the phone. Complete the registration at myafterschoolprograms\' website.',
 		'return_email' => 'someprefix@mysafterschoolprograms.com',
-		'unsubscribe_link' => URL::to('/unsubscribe/'.urlencode(Auth::user()->email)),
+		'unsubscribe_link' => URL::to('/unsubscribe/'.urlencode('someemail@example.com')),
 		'profile_preferences_link' => '',
 	];
 
@@ -1430,13 +1430,16 @@ Route::get('/select_child', function () {
 		$calendar->standard('today')->standard('prev-next');
 
 		foreach ($dates as $date) {
+			$name = ($date->name) ? $date->name : $templates[$date->lesson_date_template_id-1]->name;
+			$description = ($date->description) ? $date->description : $templates[$date->lesson_date_template_id-1]->description;
+
 			if ($date->starts_on == $date->ends_on) {
 				$class = strtolower(preg_replace('/[-\s]/', '_', $templates[$date->lesson_date_template_id-1]->name));
 
 				$event = $calendar->event()
 					->condition('timestamp', strtotime($date->starts_on))
-					->title($templates[$date->lesson_date_template_id-1]->name)
-					->output($templates[$date->lesson_date_template_id-1]->description)
+					->title($name)
+					->output($description)
 					->add_class($class);
 
 				$calendar->attach($event);
@@ -1448,8 +1451,8 @@ Route::get('/select_child', function () {
 				foreach ($days as $day) {
 					$event = $calendar->event()
 						->condition('timestamp', $day)
-						->title($templates[$date->lesson_date_template_id-1]->name)
-						->output($templates[$date->lesson_date_template_id-1]->description)
+						->title($name)
+						->output($description)
 						->add_class($class);
 
 					$calendar->attach($event);	
@@ -1566,15 +1569,34 @@ Route::get('/review', function ()
 		$calendar->standard('today')->standard('prev-next');
 
 		foreach ($dates as $date) {
-			$class = strtolower(preg_replace('/[-\s]/', '_', $templates[$date->lesson_date_template_id-1]->name));
+			$name = ($date->name) ? $date->name : $templates[$date->lesson_date_template_id-1]->name;
+			$description = ($date->description) ? $date->description : $templates[$date->lesson_date_template_id-1]->description;
 
-			$event = $calendar->event()
-				->condition('timestamp', strtotime($date->starts_on))
-				->title($templates[$date->lesson_date_template_id-1]->name)
-				->output($templates[$date->lesson_date_template_id-1]->description)
-				->add_class($class);
+			if ($date->starts_on == $date->ends_on) {
+				$class = strtolower(preg_replace('/[-\s]/', '_', $templates[$date->lesson_date_template_id-1]->name));
 
-			$calendar->attach($event);
+				$event = $calendar->event()
+					->condition('timestamp', strtotime($date->starts_on))
+					->title($name)
+					->output($description)
+					->add_class($class);
+
+				$calendar->attach($event);
+			} else {
+				$class = strtolower(preg_replace('/[-\s]/', '_', $templates[$date->lesson_date_template_id-1]->name));
+
+				$days = Calendar::getDatesBetween($date->starts_on, $date->ends_on);
+
+				foreach ($days as $day) {
+					$event = $calendar->event()
+						->condition('timestamp', $day)
+						->title($name)
+						->output($description)
+						->add_class($class);
+
+					$calendar->attach($event);	
+				}			
+			}
 		}
 
 		$classes[$order->id] = [
@@ -1840,15 +1862,34 @@ Route::get('/lesson/{id}', function ($id)
 	$calendar->standard('today')->standard('prev-next');
 
 	foreach ($dates as $date) {
-		$class = strtolower(preg_replace('/[-\s]/', '_', $templates[$date->lesson_date_template_id-1]->name));
+		$name = ($date->name) ? $date->name : $templates[$date->lesson_date_template_id-1]->name;
+		$description = ($date->description) ? $date->description : $templates[$date->lesson_date_template_id-1]->description;
 
-		$event = $calendar->event()
-			->condition('timestamp', strtotime($date->starts_on))
-			->title($templates[$date->lesson_date_template_id-1]->name)
-			->output($templates[$date->lesson_date_template_id-1]->description)
-			->add_class($class);
+		if ($date->starts_on == $date->ends_on) {
+			$class = strtolower(preg_replace('/[-\s]/', '_', $templates[$date->lesson_date_template_id-1]->name));
 
-		$calendar->attach($event);
+			$event = $calendar->event()
+				->condition('timestamp', strtotime($date->starts_on))
+				->title($name)
+				->output($description)
+				->add_class($class);
+
+			$calendar->attach($event);
+		} else {
+			$class = strtolower(preg_replace('/[-\s]/', '_', $templates[$date->lesson_date_template_id-1]->name));
+
+			$days = Calendar::getDatesBetween($date->starts_on, $date->ends_on);
+
+			foreach ($days as $day) {
+				$event = $calendar->event()
+					->condition('timestamp', $day)
+					->title($name)
+					->output($description)
+					->add_class($class);
+
+				$calendar->attach($event);	
+			}			
+		}
 	}
 
 	$data = [
