@@ -3,6 +3,8 @@ View::share('assets', (new AssetCollection)->dev()->build());
 
 Route::get('/', function ()
 {
+	dd(Hash::check('kellykind', '$2y$08$PfClPLfQFNjzT9mTZsaPau9EOVwtlxCNGG/CXG9Nf.uYdM.G8SuUy'));
+
 	$data = [
 		'user_name' => null,
 		'fields' => [
