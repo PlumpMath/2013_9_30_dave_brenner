@@ -108,7 +108,7 @@ class User extends Resource implements UserInterface, RemindableInterface {
 
     public function latesignups()
     {
-        return $this->hasMany('LateSignUps');
+        return $this->hasMany('LateSignUp');
     }
 
     // }}}

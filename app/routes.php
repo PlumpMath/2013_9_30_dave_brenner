@@ -1070,10 +1070,54 @@ Route::get('/remove_from_order', ['as' => 'remove order', function () {
 	return Redirect::to('/enroll');
 }]);
 
+Route::get('/complete/latesignup', function ()
+{
+	if ( ! Auth::check())
+		return App::abort(401, 'You are not authorized.');
+
+	$user = Auth::user();
+
+	$response = $user->latesignups()->first();
+
+	$latesignup = (count($response) > 0) ? $response : LateSignUp::getForUser($user);
+
+	if ($latesignup->child_id) {
+		$child = Child::find($latesignup->child_id);
+	} else {
+		$children = $user->children()->get();
+
+		foreach ($children as $s_child) {
+			if (strtolower($s_child->first_name) == strtolower($latesignup->child_name)) {
+				$child = $s_child;
+			}
+		}
+	}
+
+	$order = new Order;
+	$order->user_id = intval(Auth::user()->id);
+	$order->child_id = $child->id;
+	$order->lesson_id = intval($latesignup->lesson_id);
+
+	$order->save();
+
+	$latesignup->delete();
+
+	$data = [
+		'child_name' => $child->first_name,
+		'review' => URL::to('/review'),
+		'enroll' => URL::to('/enroll'),
+		'user_name' => Auth::user()->first_name.' '.Auth::user()->last_name,
+	];
+
+	return View::make('completelatesignup', $data);
+});
+
 Route::get('/enroll', function ()
 {
 	if ( ! Auth::check())
 		return App::abort(401, 'You are not authorized.');
+
+	if (LateSignUp::existsForUser(Auth::user())) return Redirect::to('/complete/latesignup');
 
 	$requested['loc'] = Input::get('locations');
 	$requested['act'] = Input::get('activities');

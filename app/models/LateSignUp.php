@@ -26,13 +26,29 @@ class LateSignUp extends Resource {
     {
     	$response = $user->latesignups()->get();
 
-    	if ( ! empty($response)) return true;
+    	if (count($response) > 0) return true;
 
     	$latesignups = LateSignUp::all();
 
     	foreach ($latesignups as $latesignup) {
     		if ($latesignup->user_id == $user->id
     			|| $latesignup->email == $user->email) return true;
+    	}
+
+    	return false;
+    }
+
+    public static function getForUser($user)
+    {
+    	$response = $user->latesignups()->get();
+
+    	if (count($response) > 0) return $response[0];
+
+    	$latesignups = LateSignUp::all();
+
+    	foreach ($latesignups as $latesignup) {
+    		if ($latesignup->user_id == $user->id
+    			|| $latesignup->email == $user->email) return $latesignup;
     	}
 
     	return false;
