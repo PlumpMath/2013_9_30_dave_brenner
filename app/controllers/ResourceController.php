@@ -268,7 +268,27 @@ class ResourceController extends BaseController
 
     public function create()
     {
-        return View::make('resource.create', $this->data);       
+        $ModelName = $this->Resource;
+
+        $resource_to_edit = $ModelName::$rules;
+        
+        $fields = [];
+
+        foreach ($resource_to_edit as $name => $value) {
+            if ($name != 'id' && $name != 'created_at' && $name != 'updated_at')
+            $fields[] = [
+                'name' => $name,
+                'type' => 'text',
+                'label' => ucfirst($name),
+            ];
+        }
+
+        $data = array_merge($this->data, [
+            'fields' => $fields,
+            'old' => (Session::has('_old_input')) ? Session::get('_old_input') : [],
+        ]);
+        
+        return View::make('resource.create', $data);      
     }
 
     // }}}

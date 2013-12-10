@@ -6,6 +6,8 @@ class LessonDateTemplate extends Resource {
     protected $guarded = [];
 
     public static $rules = [
+    	'name' => 'required',
+    	'description' => 'required',
     ];
 
     protected $relations_to = [
