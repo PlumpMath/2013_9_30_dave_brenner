@@ -116,7 +116,7 @@ Route::get('/email/latesignup', function () {
 		'in_browser_link' => '',
 		'year' => (new DateTime)->format('Y'),
 		'description' => 'You may sign '.$student.' up for the class you\'ve discussed with us over the phone. Complete the registration at myafterschoolprograms\' website.',
-		'return_email' => 'someprefix@mysafterschoolprograms.com',
+		'return_email' => 'help@myafterschoolprograms.com',
 		'unsubscribe_link' => URL::to('/unsubscribe/'.urlencode('someemail@example.com')),
 		'profile_preferences_link' => '',
 	];
@@ -149,7 +149,7 @@ Route::get('/email/waiting', function () {
 		'in_browser_link' => '',
 		'year' => (new DateTime)->format('Y'),
 		'description' => 'You\'ve signed '.$student.' up for classes on '.$day.' at '.$time.'.',
-		'return_email' => 'someprefix@mysafterschoolprograms.com',
+		'return_email' => 'help@myafterschoolprograms.com',
 		'unsubscribe_link' => '',
 		'profile_preferences_link' => '',
 	];
@@ -169,7 +169,7 @@ Route::get('/email/confirm', function () {
 	$dates = '11/4,  11/11,  11/18,  11/25,  12/2,  12/9, 11/16, (Not 12/23) (Not 12/30) 1/6, (Make up for class cancelation - 1/13)';
 
 	$unsub = '';
-	$our_email = 'someprefix@mysafterschoolprograms.com';
+	$our_email = 'help@myafterschoolprograms.com';
 
 	//send mail
 	$data = [
@@ -629,7 +629,7 @@ Route::post('/verify/user', function ()
 		$mail_data = [
 			'link' => url('/activate', ['hash' => $verification->hash]),
 
-			'return_email' => 'someprefix@mysafterschoolprograms.com',
+			'return_email' => 'help@myafterschoolprograms.com',
 			'unsubscribe_link' => URL::to('/unsubscribe/'.urlencode($user->email)),
 			'profile_preferences_link' => URL::to('/preferences/subscription'),
 		];
@@ -853,7 +853,7 @@ Route::get('/account/password', function ()
 	$mail_data = [
 		'link' => URL::to('/reset/password', ['hash' => $verification->hash]),
 
-		'return_email' => 'someprefix@mysafterschoolprograms.com',
+		'return_email' => 'help@myafterschoolprograms.com',
 		'unsubscribe_link' => URL::to('/unsubscribe/'.urlencode($user->email)),
 		'profile_preferences_link' => URL::to('/preferences/subscription'),
 	];
@@ -983,7 +983,7 @@ Route::get('/email/verify', function ()
 	$mail_data = [
 		'link' => url('/activate', ['hash' => $verification->hash]),
 
-		'return_email' => 'someprefix@mysafterschoolprograms.com',
+		'return_email' => 'help@myafterschoolprograms.com',
 		'unsubscribe_link' => URL::to('/unsubscribe/'.urlencode($user->email)),
 		'profile_preferences_link' => URL::to('/preferences/subscription'),
 	];
@@ -1828,7 +1828,7 @@ Route::get('/confirmation', function () {
 			'year' => (new DateTime)->format('Y'),
 			'description' => 'We\'ve received your order, and have signed '.$student.' up for '.$activity.' lessons. The lesson will be from '.$time.' on '.$day.' for these dates: '.$dates.'. If this information is incorrect, or you did not place this order, email us at: '.$our_email.'. On the other hand, if this email address is incorrect and you think you\'ve received this notification in error, please click our unsubscribe link: '.$unsub.'.Thank you!',
 
-			'return_email' => 'someprefix@mysafterschoolprograms.com',
+			'return_email' => 'help@myafterschoolprograms.com',
 			'unsubscribe_link' => URL::to('/unsubscribe/'.urlencode($user->email)),
 			'profile_preferences_link' => URL::to('/preferences/subscription'),
 		];

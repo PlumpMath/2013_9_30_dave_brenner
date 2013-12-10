@@ -4,7 +4,7 @@ return array(
 	'driver' => 'smtp',
 	'host' => 'smtp.sendgrid.net',
 	'port' => 587,
-	'from' => array('address' => 'somprefix@myafterschoolprograms.com', 'name' => 'myafterschoolprograms'),
+	'from' => array('address' => 'help@myafterschoolprograms.com', 'name' => 'myafterschoolprograms'),
 	'encryption' => 'tls',
 	'username' => 'sendgrid_username',
 	'password' => 'sendgrid_password',
