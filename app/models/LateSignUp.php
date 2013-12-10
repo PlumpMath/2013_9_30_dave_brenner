@@ -43,7 +43,9 @@ class LateSignUp extends Resource {
     	$children = $user->children()->get();
     	$__output = [];
 
-    	if ( ! empty($user->latesignups()->get())) {
+    	$response = $user->latesignups()->get();
+
+    	if ( ! empty($response)) {
     		$latesignups = $user->latesignups()->get();
     	} else {
     		$all = LateSignUp::all();
