@@ -96,10 +96,14 @@ Route::post('/log/in', function ()
 			$error_msg = 'Password cannot be blank.';
 		} else if (Auth::user() && Auth::user()->status == 2) {
 			$error_msg = 'The email for this account has not yet been verified. To verify,';
-		} else if (empty(User::whereRaw('email = ? and password = ?', [$user['email'], $user['password']])->get())) {
-			$error_msg = 'Incorrect email or password.';
 		} else {
-			$error_msg = 'Something is wrong with your account, please call us at <span class="bold">631-776-8242</span>.'
+			$user = User::where('email', $user['email']);
+
+			if ($user && Hash::check($user['password'], $user->password)) {
+				$error_msg = 'Something is wrong with your account, please call us at <span class="bold">631-776-8242</span>.'
+			} else {
+				$error_msg = 'Incorrect email or password.';
+			}
 		}
 
 		Auth::logout();
