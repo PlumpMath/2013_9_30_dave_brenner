@@ -5,7 +5,9 @@ class Activity extends Resource {
     
     protected $guarded = array();
 
-    public static $rules = array();
+    public static $rules = array(
+    	'name' => '',
+    );
 
     protected $relations_to = [
     	'Location',

@@ -4,6 +4,11 @@ class Receipt extends Resource {
     protected $guarded = [];
 
     public static $rules = [
+    	'confirmation_id' => '',
+    	'user_id' => '',
+    	'lesson_id' => '',
+    	'child_id' => '',
+    	'coupon_id' => '',
     ];
 
     protected $relations_to = [

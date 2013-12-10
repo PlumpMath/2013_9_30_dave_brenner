@@ -8,7 +8,19 @@ class Location extends Resource {
 
     protected $guarded = [];
 
-    public static $rules = [];
+    public static $rules = [
+		'name' => '',
+		'contact_name' => '',
+		'phone' => '',
+		'capacity' => '',
+		'address' => '',
+		'city' => '',
+		'state' => '',
+		'zip_code' => '',
+		'provider' => '',
+		'status' => '',
+		'notes' => '',
+    ];
 
     protected $relations_to = [
     	'Activity',
