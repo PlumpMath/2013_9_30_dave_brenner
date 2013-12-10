@@ -100,7 +100,7 @@ Route::post('/log/in', function ()
 			$user = User::where('email', $user['email']);
 
 			if ($user && Hash::check($user['password'], $user->password)) {
-				$error_msg = 'Something is wrong with your account, please call us at <span class="bold">631-776-8242</span>.'
+				$error_msg = 'Something is wrong with your account, please call us at <span class="bold">631-776-8242</span>.';
 			} else {
 				$error_msg = 'Incorrect email or password.';
 			}
