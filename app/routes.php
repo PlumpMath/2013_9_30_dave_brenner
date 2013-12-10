@@ -926,6 +926,7 @@ Route::post('/reset/password/verify', function ()
 
 	if ($validator->passes()) {
 		Auth::user()->password = $data['password'];
+		Auth::user()->save();
 
 		$data = [
 			'user_name' => Auth::user()->first_name.' '.Auth::user()->last_name,
