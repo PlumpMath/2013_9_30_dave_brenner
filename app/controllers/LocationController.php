@@ -160,7 +160,7 @@ class LocationController extends ResourceController
             'url'           => $url,
         ]);
         
-        return View::make('resource.show', $data);
+        return View::make('show.locations', $data);
         
     }
 }
