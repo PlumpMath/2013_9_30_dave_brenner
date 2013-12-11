@@ -7,5 +7,5 @@ return array(
 	'from' => array('address' => 'help@myafterschoolprograms.com', 'name' => 'myafterschoolprograms'),
 	'encryption' => 'tls',
 	'username' => 'davebrenner',
-	'password' => 'sendgrid_password',
+	'password' => 'se5/.,mKL:"',
 );
