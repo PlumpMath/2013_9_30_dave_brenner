@@ -49,7 +49,9 @@ class Custodian
 				$order->save();
 
 				//create notification object
-				$data = [];
+				$data = [
+					'not_null' => null,
+				];
 
 				$notification = new Notification;
 				$notification->user_id = $user->id;
