@@ -79,6 +79,7 @@ class UserController extends ResourceController
         if (Input::has('child')) {
             $child = Input::get('child');
             $users = Child::find($child)->user()->get();
+            $users = $users->toArray();
         } else if (Input::has('lesson')) {
             $child = Input::get('lesson');
             $users = Lesson::find($child)->users();
@@ -87,12 +88,13 @@ class UserController extends ResourceController
             $users = Location::find($child)->users();
         } else {
             $users = User::all();
+            $users = $users->toArray();
         }
 
         $ModelName = $this->Resource;
 
         $data = array_merge($this->data, [
-            'resources'  => ($this->format($users->toArray())->forDisplay()),
+            'resources'  => ($this->format($users)->forDisplay()),
             'date' => 'none',
         ]);
 
