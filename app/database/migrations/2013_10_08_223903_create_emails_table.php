@@ -18,7 +18,7 @@ class CreateEmailsTable extends Migration {
 			$table->string('user_name');
 			$table->string('subject');
 			$table->string('template');
-			$table->string('data', 511);
+			$table->string('data', 32767);
 			$table->string('status');
 			$table->timestamps();
 		});
