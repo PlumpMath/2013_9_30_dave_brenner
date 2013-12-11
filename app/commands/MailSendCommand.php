@@ -51,8 +51,6 @@ class MailSendCommand extends Command {
 			->take(100)
 			->get();
 
-		dd($mail);
-
 		foreach ($mail as $letter) {
 
 			$user = User::where('email', $letter->user_email)->first();
