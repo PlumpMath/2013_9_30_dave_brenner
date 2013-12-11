@@ -244,6 +244,52 @@ Route::get('/legal/privacy_policy', function ()
 	return View::make('privacy',$data);
 });
 
+Route::get('/legal/policies', function ()
+{
+	$data = [
+		'user_name' => (Auth::check()) ? Auth::user()->first_name.' '.Auth::user()->last_name : null,
+		'verify' => URL::to('/legal/policies/verify'),
+	];
+
+	return View::make('checkboxes',$data);
+});
+
+Route::post('/legal/policies/verify', function ()
+{
+	$data = [
+		'no_refunds' => Input::get('no_refunds'),
+		'make_up_date' => Input::get('make_up_date'),
+		'class_level' => Input::get('class_level'),
+		'courtesy_sign_up' => Input::get('courtesy_sign_up'),
+		'viewing_classes' => Input::get('viewing_classes'),
+		'program_facility' => Input::get('program_facility'),
+		'equipment' => Input::get('equipment'),
+		'class_changes' => Input::get('class_changes'),
+		'substitute_pros' => Input::get('substitute_pros'),
+	];
+
+	$rules = [
+		'no_refunds' => 'required|accepted',
+		'make_up_date' => 'required|accepted',
+		'class_level' => 'required|accepted',
+		'courtesy_sign_up' => 'required|accepted',
+		'viewing_classes' => 'required|accepted',
+		'program_facility' => 'required|accepted',
+		'equipment' => 'required|accepted',
+		'class_changes' => 'required|accepted',
+		'substitute_pros' => 'required|accepted',
+	];
+	
+	$validator = Validator::make($data, $rules);
+
+	if ($validator->passes()) {
+		return Redirect::to('/');
+	} else {
+		return Redirect::to('/legal/policies')->withInput(Input::all())->withErrors($validator);		
+	}
+
+});
+
 Route::get('/register/child', function ()
 {
 	$data = [
