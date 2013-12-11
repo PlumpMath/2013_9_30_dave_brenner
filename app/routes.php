@@ -630,6 +630,12 @@ Route::post('/verify/user', function ()
 			'user_name' => $user->first_name.' '.$user->last_name,
 			'link' => url('/activate', ['hash' => $verification->hash]),
 
+			'subject' => 'Account Verification',
+			'summary' => 'Please verify your account.',
+			'in_browser_link' => '',
+			'year' => (new DateTime)->format('Y'),
+			'description' => 'You\'ve signed up with myafterschoolprograms.com--to complete registration, follow the link contained within this email. This will verify your account. Thank you!',
+
 			'return_email' => 'help@myafterschoolprograms.com',
 			'unsubscribe_link' => URL::to('/unsubscribe/'.urlencode($user->email)),
 			'profile_preferences_link' => URL::to('/preferences/subscription'),
