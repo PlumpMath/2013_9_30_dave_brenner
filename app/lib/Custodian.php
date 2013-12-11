@@ -9,7 +9,7 @@ class Custodian
 		self::cleanFast('Order');
 
 		//clean latesignups older than 24 hours
-		self::clean('Latesignup');
+		self::clean('LateSignUp');
 
 		//clean notifications older than 24 hours
 		self::clean('Notification');
