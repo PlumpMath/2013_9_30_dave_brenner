@@ -18,7 +18,7 @@ class DatabaseSeeder extends Seeder
         $this->call('LocationsTableSeeder');
         $this->call('ActivitiesTableSeeder');
         $this->call('LessonDateTemplatesTableSeeder');
-        $this->call('LessonsTableSeeder');
+        //$this->call('LessonsTableSeeder');
         //$this->call('MapsTableSeeder');
     }
 
@@ -175,35 +175,51 @@ class LessonDateTemplatesTableSeeder extends Seeder
         $templates = [
             [
                 'name' => 'Courtesy Sign Up',
-                'description' => 'Enrolled students have a chance to re-enroll before open sign up.'
+                'description' => 'Enrolled students have a chance to re-enroll before open sign up.',
+                'stackable' => 1,
+                'has_many' => 0,
             ],
             [
                 'name' => 'Open Sign Up',
-                'description' => 'Any student may sign up.'
+                'description' => 'Any student may sign up.',
+                'stackable' => 1,
+                'has_many' => 0,
             ],
             [
                 'name' => 'Late Sign Up',
-                'description' => 'Any student may sign up, but the session has begun.'
+                'description' => 'Any student may sign up, but the session has begun.',
+                'stackable' => 1,
+                'has_many' => 0,
             ],
             [
                 'name' => 'Snow Day',
-                'description' => 'Class is cancelled due to inclement weather.'
+                'description' => 'Class is cancelled due to inclement weather.',
+                'stackable' => 0,
+                'has_many' => 1,
             ],
             [
                 'name' => 'No Class',
-                'description' => 'Class is cancelled.'
+                'description' => 'Class is cancelled.',
+                'stackable' => 0,
+                'has_many' => 1,
             ],
             [
                 'name' => 'Holiday',
-                'description' => 'Class is cancelled for the holiday.'
+                'description' => 'Class is cancelled for the holiday.',
+                'stackable' => 0,
+                'has_many' => 1,
             ],
             [
                 'name' => 'Make-up Lesson',
-                'description' => 'Make-up for a cancelled lesson.'
+                'description' => 'Make-up for a cancelled lesson.',
+                'stackable' => 0,
+                'has_many' => 1,
             ],
             [
                 'name' => 'Lesson',
-                'description' => 'Scheduled class.'
+                'description' => 'Scheduled class.',
+                'stackable' => 0,
+                'has_many' => 1,
             ]
         ];
 
