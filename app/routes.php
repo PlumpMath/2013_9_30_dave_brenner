@@ -623,10 +623,11 @@ Route::post('/verify/user', function ()
 		$data = [
 			'user_name' => null,
 			'another_email' => URL::to('/email/verify'),
-			'email' => 'm7@example.com',
+			'email' => $user->email,
 		];
 
 		$mail_data = [
+			'user_name' => $user->first_name.' '.$user->last_name,
 			'link' => url('/activate', ['hash' => $verification->hash]),
 
 			'return_email' => 'help@myafterschoolprograms.com',
