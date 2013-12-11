@@ -36,8 +36,6 @@ class Custodian
 				$mail->template = 'email.waitlist';
 				$mail->subject = 'Waiting list';
 				$mail->data = [
-					'link' => url('/activate', ['hash' => $verification->hash]),
-
 					'return_email' => 'help@myafterschoolprograms.com',
 					'unsubscribe_link' => URL::to('/unsubscribe/'.urlencode($user->email)),
 					'profile_preferences_link' => URL::to('/preferences/subscription'),
