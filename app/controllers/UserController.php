@@ -79,6 +79,12 @@ class UserController extends ResourceController
         if (Input::has('child')) {
             $child = Input::get('child');
             $users = Child::find($child)->user()->get();
+        } else if (Input::has('lesson')) {
+            $child = Input::get('lesson');
+            $users = Lesson::find($child)->users()->get();
+        } else if (Input::has('location')) {
+            $child = Input::get('location');
+            $users = Location::find($child)->users()->get();
         } else {
             $users = User::all();
         }

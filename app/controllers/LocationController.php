@@ -136,4 +136,31 @@ class LocationController extends ResourceController
 
         return View::make('create.location', $data);
     }
+
+    public function show($id)
+    {
+        $ModelName = $this->Resource;
+        $resource_to_show = $ModelName::find($id)->toArray();
+
+        $url = array_merge($this->url, [
+            'copy'   => action($this->ResourceController.'@copy', $id),
+            'delete' => action($this->ResourceController.'@destroy', $id),
+            'edit'   => action($this->ResourceController.'@edit', $id),
+            'receipts' => action('ReceiptController@index'),
+            'lessons' => action('LessonController@index'),
+            'users' => action('UserController@index'),
+        ]);
+
+        $data = array_merge($this->data, [
+            'name'          => $this->name($resource_to_show),
+            'info'          => $this->info($resource_to_show),
+            'resource'      => $this->format($resource_to_show)->forDisplay(),
+            'resource_id'   => $id,
+            'input_name'    => $this->resource,
+            'url'           => $url,
+        ]);
+        
+        return View::make('resource.show', $data);
+        
+    }
 }

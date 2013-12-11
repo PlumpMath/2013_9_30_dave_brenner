@@ -52,6 +52,19 @@ class Location extends Resource {
 
         return $receipts;
     }
+
+    public function users()
+    {
+    	$lessons = $this->lessons()->get();
+
+        $users = [];
+
+        foreach ($lessons as $lesson) {
+            $users = array_merge($lessons->users(), $users);
+        }
+
+        return $users;
+    }
 }
 
 // }}}
