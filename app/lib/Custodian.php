@@ -26,9 +26,9 @@ class Custodian
 			if ( ! $waitlist) continue;
 
 			$spots	= $lesson->spots();
-			$user 	= $waitlist->user;
+			$user 	= User::find($waitlist->user_id);
 
-			if ($spots > 0) {
+			if ($spots > 0 && $user) {
 				//alert user they have 24 hours to sign up
 				$mail = new Email;
 				$mail->user_email = $user->email;
@@ -43,8 +43,8 @@ class Custodian
 				//create order object
 				$order = new Order;
 				$order->user_id = $user->id;
-				$order->child_id = $waitlist->child->id;
-				$order->lesson_id = $lesson->id;
+				$order->child_id = $waitlist->child_id;
+				$order->lesson_id = $waitlist->lesson_id;
 
 				$order->save();
 
