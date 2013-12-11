@@ -5,8 +5,8 @@ class Custodian
 
 	public static function run()
 	{
-		//clean orders older than 24 hours
-		self::clean('Order');
+		//clean orders older than 15 minutes
+		self::cleanFast('Order');
 
 		//clean latesignups older than 24 hours
 		self::clean('Latesignup');
@@ -69,6 +69,18 @@ class Custodian
 		foreach ($models as $model) {
 			$created = new DateTime($model->created_at);
 			$clock = (new DateTime)->modify('-1 day');
+
+			if ($created < $clock) $model->delete();
+		}
+	}
+
+	public static function cleanFast($m)
+	{
+		$models = $m::all();
+
+		foreach ($models as $model) {
+			$created = new DateTime($model->created_at);
+			$clock = (new DateTime)->modify('-15 minutes');
 
 			if ($created < $clock) $model->delete();
 		}

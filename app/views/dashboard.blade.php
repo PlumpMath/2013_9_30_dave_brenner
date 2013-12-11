@@ -11,11 +11,9 @@
 			<a href="{{ $your_info }}">Your info</a>
 		</div>
 		@include('modules.section_divide', ['name' => 'Your Children\'s Info'])
+		@include('modules.section_divide', ['name' => 'This list allows you to edit your childrens\' info. If you are looking to register, choose a class before you choose which child will take it.'])
 		<div class="box border-bottom-1">
 			<ul>
-				@if ( ! empty($children))
-				<li class="box box-pad-1">Click on your child's name to edit their info</li>
-				@endif
 				@foreach ($children as $child)
 				<li class="box box-pad-1"><a href="{{ $child->link }}">{{{ $child->first_name.' '.$child->last_name }}}</a></li>
 				@endforeach
@@ -53,7 +51,7 @@
 		@include('modules.section_divide', ['name' => 'Current Classes'])
 		@if (empty($classes))
 		<div class="box box-pad-0 border-bottom-0 bg-1 center">
-		<div class="measure center">You haven't signed up for anything yet. To register a child, go <a href="{{ $enroll }}">here</a>, select the class/classes you'd like, and then click "Select Child For Class" to choose which children will take which class.</div>
+		<div class="measure center">You aren't currently signed up for any classes.<br/>Follow these steps to sign up:<br/><br/><span class="bold">Step one:</span> <a href="{{ $register_child }}">Register your kids</a> with our site.<br/><span class="bold">Step two:</span> <a href="{{ $enroll }}">Select a class</a> first, and then <a href="{{ URL::to('/select_child') }}">select a child</a> for that class.<br/><span class="bold">Step three:</span> If you have more than one child, select another class and then select your next child for this next class.<br/><span class="bold">Step four:</span> When done, <a href="{{ URL::to('/review') }}">review your order</a> and check out.</div>
 		</div>
 		@else
 		@foreach ($classes as $class)

@@ -5,12 +5,7 @@
 @include('modules.hud', ['title' => $Resources, 'icon' => 'home', 'user_name' => $user_name])
 @include('modules.banner', ['title' => $Resources])
 <div class="index box bg-1">
-    <div class="box-2">
-        @include('modules.section_divide', ['name' => 'Tasks'])
-        <div class="box box-pad-0">
-        </div>
-    </div>
-    <div class="box-4 bg-0 border-left">
+    <div class="box measure bg-0 border-left border-bottom-0">
         @include('modules.section_divide', ['name' => $Resources])
         {{ Form::open(['url' => $url['store'], 'method' => 'POST']) }}
         <ul class="box pl box-pad-0 rsrc">
