@@ -3,7 +3,7 @@
 return array(
 	'driver' => 'smtp',
 	'host' => 'smtp.sendgrid.net',
-	'port' => 587,
+	'port' => 25,
 	'from' => array('address' => 'help@myafterschoolprograms.com', 'name' => 'myafterschoolprograms'),
 	'encryption' => 'tls',
 	'username' => 'sendgrid_username',
