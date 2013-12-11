@@ -15,7 +15,9 @@ class CreateLessondatetemplatesTable extends Migration {
 		Schema::create('lesson_date_templates', function(Blueprint $table) {
 			$table->increments('id');
 			$table->string('name');
-			$table->text('description')->nullable;
+			$table->text('description')->nullable();
+			$table->integer('stackable')->nullable();
+			$table->integer('has_many')->nullable();
 		});
 	}
 

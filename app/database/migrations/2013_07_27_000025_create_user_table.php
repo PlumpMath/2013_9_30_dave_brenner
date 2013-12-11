@@ -30,7 +30,7 @@ class CreateUserTable extends Migration {
             $table->boolean('status');
             $table->boolean('subscribed');
             $table->timestamp('deleted_at')->nullable();
-            $table->timestamps();    
+            $table->timestamps();
         });
     }
 
