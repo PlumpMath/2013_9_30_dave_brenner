@@ -17,6 +17,8 @@ class Custodian
 		//clean coupons older than expiration
 		self::clean('Coupon');
 
+		self::cleanMail();
+
 		//check lesson spots & waitlist
 		foreach (Lesson::all() as $lesson) {
 			$waitlist = $lesson->firstInLine();
@@ -95,6 +97,18 @@ class Custodian
 			$expiration = new DateTime($model->expires_on);
 
 			if ($expiration < $date) $model->delete();
+		}
+	}
+
+	public static function cleanMail()
+	{
+		$mail = DB::table('emails')
+			->where('status', '=', '2')
+			->take(100)
+			->get();
+
+		foreach ($mail as $letter) {
+			Email::destroy($letter->id);
 		}
 	}
 
