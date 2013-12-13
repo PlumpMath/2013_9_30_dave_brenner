@@ -40,11 +40,13 @@ class MailSendCommand extends Command {
 		$salt = md5(mt_rand(0, 65535));
 
 		DB::table('emails')
-			->where('status', 0)
+			->where('status', '0')
 			->take(100)
 			->update([
 				'status' => $salt
 			]);
+
+		sleep(1);
 
 		$mail = DB::table('emails')
 			->where('status', $salt)
@@ -56,13 +58,20 @@ class MailSendCommand extends Command {
 			$user = User::where('email', $letter->user_email)->first();
 			$subscribed = ($user) ? $user->subscribed : true;
 
+			echo 'Sending...';
+
 			/**/
-			if ( ! Donotmail::thisAddress($letter->user_email) && $subscribed)
+			if ( ! Donotmail::thisAddress($letter->user_email) && $subscribed) {
 				Mail::send($letter->template, unserialize($letter->data), function ($message) use ($letter)
 				{
 					$message->to($letter->user_email, $letter->user_name)->subject($letter->subject);
 				});
+				echo ' Sent!';
+			} else {
+				echo ' Could not be sent.';
+			}
 			/**/
+
 
 			DB::table('emails')
 				->where('id', $letter->id)
