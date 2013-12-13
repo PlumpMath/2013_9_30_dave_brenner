@@ -39,7 +39,7 @@ class MailSendCommand extends Command {
 	{
 		$salt = md5(mt_rand(0, 65535));
 
-		echo 'Salting ...';
+		 $this->info('Salting ...');
 
 		DB::table('emails')
 			->where('status', '0')
@@ -56,9 +56,9 @@ class MailSendCommand extends Command {
 			->get();
 
 		if ($mail) {
-			echo " Salted!\n";
+			 $this->info(" Salted!\n");
 		} else {
-			echo " Salting failed.\n";
+			 $this->info(" Salting failed.\n");
 		}
 
 		foreach ($mail as $letter) {
@@ -66,7 +66,7 @@ class MailSendCommand extends Command {
 			$user = User::where('email', $letter->user_email)->first();
 			$subscribed = ($user) ? $user->subscribed : true;
 
-			echo 'Sending ...';
+			 $this->info('Sending ...');
 
 			/**/
 			if ( ! Donotmail::thisAddress($letter->user_email) && $subscribed) {
@@ -74,9 +74,9 @@ class MailSendCommand extends Command {
 				{
 					$message->to($letter->user_email, $letter->user_name)->subject($letter->subject);
 				});
-				echo ' Sent!'."\n";
+				 $this->info(' Sent!'."\n");
 			} else {
-				echo ' Could not be sent.'."\n";
+				 $this->info(' Could not be sent.'."\n");
 			}
 			/**/
 
