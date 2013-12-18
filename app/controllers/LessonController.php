@@ -198,6 +198,12 @@ class LessonController extends ResourceController
     		];
     	}
 
+    	$field[] = [
+    		'name' => 'grades',
+    		'type' => 'text',
+    		'label' => 'How many grades?',
+    	];
+
         $data = array_merge($this->data, [
             'fields' => [
                 [

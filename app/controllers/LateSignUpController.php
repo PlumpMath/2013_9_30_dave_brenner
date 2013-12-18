@@ -98,6 +98,50 @@ class LateSignUpController extends ResourceController
 
     // }}}
 
+    public function store()
+    {
+        $inputs = Input::all();
+        $validator = Validator::make($inputs, $this->validation_rules);
+
+        if ($validator->passes()) {
+
+            $user = ($inputs['user_id']) ? User::find($inputs['user_id']) : null;
+
+            $mail_data = [
+                'user_name' => ($user) ? $user->first_name.' '.$user->last_name : '',
+                'link' => url('/register/user'),
+
+                'subject' => 'Sign up for class',
+                'summary' => 'Complete late sign up via this email.',
+                'in_browser_link' => '',
+                'year' => (new DateTime)->format('Y'),
+                'description' => 'Hi! Thanks for expressing interest in one of our programs. To continue your late registration with myafterschoolprograms, follow the link within this email. Thank you!',
+
+                'return_email' => 'help@myafterschoolprograms.com',
+                'unsubscribe_link' => URL::to('/unsubscribe/'.urlencode($user->email)),
+                'profile_preferences_link' => URL::to('/preferences/subscription'),
+            ];
+
+            $mail = new Email;
+            $mail->user_email = ($user) ? $user->email : $inputs['email'];
+            $mail->user_name = ($user) ? $user->first_name.' '.$user->last_name : '';
+            $mail->template = 'email.latesignup';
+            $mail->subject = 'Complete Late Sign Up Registration';
+            $mail->data = serialize($mail_data);
+            $mail->status = 0;
+
+            $mail->save();
+
+            $ModelName = $this->Resource;
+            $resource_to_create = $ModelName::create($this->format($inputs)->forSaving());
+            $resource_to_create->save();
+            return Redirect::action($this->ResourceController.'@show', $resource_to_create->id);
+        } else {
+            echo "Did not pass validation. One or more of your inputs has incorrect values.\n";
+            dd($validator->errors());
+        }
+    }
+
     public function create()
     {
         $data = array_merge($this->data, [
