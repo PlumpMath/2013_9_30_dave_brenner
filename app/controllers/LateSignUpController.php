@@ -118,7 +118,7 @@ class LateSignUpController extends ResourceController
                 'description' => 'Hi! Thanks for expressing interest in one of our programs. To continue your late registration with myafterschoolprograms, follow the link within this email. Thank you!',
 
                 'return_email' => 'help@myafterschoolprograms.com',
-                'unsubscribe_link' => URL::to('/unsubscribe/'.urlencode($user->email)),
+                'unsubscribe_link' => URL::to('/unsubscribe/'.urlencode( ($user) ? $user->email : $inputs['email'] )),
                 'profile_preferences_link' => URL::to('/preferences/subscription'),
             ];
 
