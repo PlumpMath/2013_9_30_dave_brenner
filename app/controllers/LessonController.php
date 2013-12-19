@@ -186,7 +186,7 @@ class LessonController extends ResourceController
 
     	foreach ($templates as $template) {
     		if ($template->has_many) {
-    			$label = 'How many '.plural($template->name).'?';
+    			$label = 'How many '.str_plural($template->name).'?';
     		} else {
     			$label = 'Does this lesson have a '.$template->name.'?';
     		}
