@@ -106,9 +106,13 @@ class LateSignUpController extends ResourceController
         if ($validator->passes()) {
 
             $user = ($inputs['user_id']) ? User::find($inputs['user_id']) : null;
+            $activity = Lesson::find($inputs['lesson_id'])->activity()->first()->name;
+            $child = ($inputs['child_id']) ? Child::find($inputs['child_id'])->first_name : $inputs['child_name'];
+            $time = (new DateTime)->modify('+1 day');
 
             $mail_data = [
-                'user_name' => ($user) ? $user->first_name.' '.$user->last_name : '',
+                'user_name' => ($user) ? $user->first_name.' '.$user->last_name : $inputs['email'],
+                'activity' => $activity,
                 'link' => url('/register/user'),
 
                 'subject' => 'Sign up for class',
@@ -124,7 +128,7 @@ class LateSignUpController extends ResourceController
 
             $mail = new Email;
             $mail->user_email = ($user) ? $user->email : $inputs['email'];
-            $mail->user_name = ($user) ? $user->first_name.' '.$user->last_name : '';
+            $mail->user_name = ($user) ? $user->first_name.' '.$user->last_name : $inputs['email'];
             $mail->template = 'email.latesignup';
             $mail->subject = 'Complete Late Sign Up Registration';
             $mail->data = serialize($mail_data);

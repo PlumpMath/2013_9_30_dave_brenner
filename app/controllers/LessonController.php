@@ -259,7 +259,7 @@ class LessonController extends ResourceController
             'price' => $lesson->price,
             'provider' => $lesson->provider,
             'session_id' => $lesson->session_id,
-            'active' => $lesson->active,
+            'status' => $lesson->status,
         ];
         $restrictions = [];
 
@@ -412,9 +412,9 @@ class LessonController extends ResourceController
                     'label' => 'Session',
                 ],
                 [
-                    'name' => 'active',
+                    'name' => 'status',
                     'type' => 'text',
-                    'label' => 'Active',
+                    'label' => 'status',
                 ],
             ],
             'dates' => $dates,
@@ -441,14 +441,14 @@ class LessonController extends ResourceController
         	'spots' => Input::get('spots'),
         	'price' => Input::get('price'),
         	'provider' => Input::get('provider'),
-        	'active' => Input::get('active'),
+        	'status' => Input::get('status'),
         ];
 
         $rules = [
         	'section_id' => 'integer',
         	'spots' => 'required|integer',
         	'price' => 'required|numeric',
-        	'active' => 'required|integer',
+        	'status' => 'required|integer',
         ];
 
         $validator = Validator::make($data, $rules);
@@ -467,7 +467,7 @@ class LessonController extends ResourceController
 	        $lesson->price = Input::get('price');
 
 		        $lesson->provider = Input::get('provider');
-		        $lesson->active = Input::get('active');
+		        $lesson->status = Input::get('status');
 		        $lesson->session_id = Input::get('session_id');
 
 	        for ($i = 0; $i < $lesson_dates_number; $i++) {
@@ -522,14 +522,14 @@ class LessonController extends ResourceController
         	'spots' => Input::get('spots'),
         	'price' => Input::get('price'),
         	'provider' => Input::get('provider'),
-        	'active' => Input::get('active'),
+        	'status' => Input::get('status'),
         ];
 
         $rules = [
         	'section_id' => 'integer',
         	'spots' => 'required|integer',
         	'price' => 'required|numeric',
-        	'active' => 'required|integer',
+        	'status' => 'required|integer',
         ];
 
         $validator = Validator::make($data, $rules);
@@ -548,7 +548,7 @@ class LessonController extends ResourceController
 	        $lesson->price = Input::get('price');
 
 	        $lesson->provider = Input::get('provider');
-	        $lesson->active = Input::get('active');
+	        $lesson->status = Input::get('status');
 	        $lesson->session_id = Input::get('session_id');
  
 	        for ($i = 0; $i < $lesson_dates_number; $i++) {
@@ -673,9 +673,9 @@ class LessonController extends ResourceController
                     'label' => 'Session',
                 ],
                 [
-                    'name' => 'active',
+                    'name' => 'status',
                     'type' => 'text',
-                    'label' => 'Active',
+                    'label' => 'status',
                 ],
             ],
             'dates' => $dates,
