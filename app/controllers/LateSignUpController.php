@@ -113,6 +113,7 @@ class LateSignUpController extends ResourceController
             $mail_data = [
                 'user_name' => ($user) ? $user->first_name.' '.$user->last_name : $inputs['email'],
                 'activity' => $activity,
+                'child' => $child,
                 'link' => url('/register/user'),
 
                 'subject' => 'Sign up for class',
