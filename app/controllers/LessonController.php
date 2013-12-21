@@ -181,31 +181,13 @@ class LessonController extends ResourceController
 
     public function precreate()
     {
-    	$fields = [];
-    	$templates = LessonDateTemplate::all();
-
-    	foreach ($templates as $template) {
-    		if ($template->has_many) {
-    			$label = 'How many '.str_plural($template->name).'?';
-    		} else {
-    			$label = 'Does this lesson have a '.$template->name.'?';
-    		}
-
-    		$fields[] = [
-    			'name' => implode('_', explode(' ', strtolower($template->name))),
-    			'type' => 'text',
-    			'label' => $label,
-    		];
-    	}
-
-    	$field[] = [
-    		'name' => 'grades',
-    		'type' => 'text',
-    		'label' => 'How many grades?',
-    	];
-
         $data = array_merge($this->data, [
             'fields' => [
+                [
+                    'name' => 'dates',
+                    'type' => 'text',
+                    'label' => 'Number of Dates',
+                ],
                 [
                     'name' => 'grades',
                     'type' => 'text',
