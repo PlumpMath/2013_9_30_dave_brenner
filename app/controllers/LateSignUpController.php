@@ -115,7 +115,7 @@ class LateSignUpController extends ResourceController
                 'activity' => $activity,
                 'child' => $child,
                 'link' => url('/register/user'),
-                'time' => $time,
+                'time' => $time->format('H:i m/d/Y'),
 
                 'subject' => 'Sign up for class',
                 'summary' => 'Complete late sign up via this email.',
