@@ -37,6 +37,8 @@ class MailSendCommand extends Command {
 	 */
 	public function fire()
 	{
+		Log::info('Running @ '.(new DateTime)->format('H:i:s'));
+
 		$salt = md5(mt_rand(0, 65535));
 
 		 $this->info('Salting ...');
