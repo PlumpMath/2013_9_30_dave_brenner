@@ -528,6 +528,8 @@ Route::get('/register/user', function ()
 		'old'		=> (Session::has('_old_input')) ? Session::get('_old_input') : [],
 		'user_name' => null,
 		'completed' => ['Your Information'],
+		'toa' => URL::to('/legal/terms_of_agreement'),
+		'pp' => URL::to('/legal/privacy_policy'),
 		'fields' => [
 			[
 				'name' => 'first_name',
@@ -635,9 +637,34 @@ Route::post('/verify/user', function ()
 		'zip_code'          => Input::get('zip_code'),
 		'status'            => 2,
 		'remember'          => 0,
+		'terms_of_agreement' => Input::has("terms_of_agreement"),
+		'privacy_policy' => Input::has("privacy_policy"),
+		'no_refunds' => Input::has("no_refunds"),
+		'make_up_date' => Input::has("make_up_date"),
+		'class_level' => Input::has("class_level"),
+		'courtesy_sign_up' => Input::has("courtesy_sign_up"),
+		'viewing_classes' => Input::has("viewing_classes"),
+		'program_facility' => Input::has("program_facility"),
+		'equipment' => Input::has("equipment"),
+		'class_changes' => Input::has("class_changes"),
+		'substitute_pros' => Input::has("substitute_pros"),
 	];
+
+	$rules = array_merge(User::$rules,[
+		'terms_of_agreement' => 'required|accepted',
+		'privacy_policy' => 'required|accepted',
+		'no_refunds' => 'required|accepted',
+		'make_up_date' => 'required|accepted',
+		'class_level' => 'required|accepted',
+		'courtesy_sign_up' => 'required|accepted',
+		'viewing_classes' => 'required|accepted',
+		'program_facility' => 'required|accepted',
+		'equipment' => 'required|accepted',
+		'class_changes' => 'required|accepted',
+		'substitute_pros' => 'required|accepted',
+	]);
 	
-	$validator = Validator::make($data, User::$rules);
+	$validator = Validator::make($data, $rules);
 
 	if ($validator->passes()) {
 		$user = new User;
@@ -1554,6 +1581,20 @@ Route::get('/select_child', function () {
 			}
 		}
 
+		if (Child::find($order->child_id)) {
+			$cc_c = [
+				'label' => 'Child',
+				'name' => 'child_'.$order->id,
+				'options' => [$order->child_id => Child::find($order->child_id)->first_name],
+			];
+		} else {
+ 			$cc_c = [
+				'label' => 'Child',
+				'name' => 'child_'.$order->id,
+				'options' => $options,
+			];
+		}
+
 		$classes[$order->id] = [
 			'name' => $name,
 			'details' => [
@@ -1565,11 +1606,7 @@ Route::get('/select_child', function () {
 				'Ends' => $lesson->lastLesson()->format('M jS, Y'),				
 			],
 			'remove_link' => route('remove order', ['id' => $order->id]),
-			'children' => [
-				'label' => 'Child',
-				'name' => 'child_'.$order->id,
-				'options' => $options,
-			],
+			'children' => $cc_c,
 			'selected' => (Session::has('_old_input')) ? Session::get('_old_input')['child_'.$order->id] : null,
 			'calendar' => $calendar,
 		];
@@ -1611,9 +1648,8 @@ Route::post('/verify/select_child', function () {
 				$order = Order::find(substr($key, 6));
 				$child = Child::find($input);
 
-				if ($order->child()->first()) $order->child()->detach();
-
-				$child->orders()->save($order);
+				$order->child_id = $input;
+				$order->save();
 			}
 		}
 
@@ -1638,10 +1674,15 @@ Route::get('/review', function ()
 
 	$classes = [];
 	$total_price = 0;
+	$pal = false;
+	$neysa = false;
 
 	foreach($orders as $order) {
 		$lesson = Lesson::find($order->lesson_id);
 		$lesson->load('dates');
+
+		if ($lesson->provider == 'PAL') $pal = true;
+		if ($lesson->provider == 'NEYSA') $neysa = true;
 
 		$dates = $lesson->dates()->get();
 		$templates = LessonDateTemplate::all();
@@ -1717,6 +1758,8 @@ Route::get('/review', function ()
 		'pay' => URL::to('/verify/review'),
 		'terms_of_service' => URL::to('/legal/terms_of_agreement'),
 		'old' => (Session::has('_old_input')) ? Session::get('_old_input') : [],
+		'pal' => $pal,
+		'neysa' => $neysa,
 	];
 
 	return View::make('actual_review', $data);
@@ -1724,14 +1767,22 @@ Route::get('/review', function ()
 
 Route::post('/verify/review', function () {
 	$data = [
-		'terms_of_agreement' => Input::get('terms_of_agreement'),
 		'reviewed' => Input::get('reviewed'),
 	];
 
 	$rules = [
-		'terms_of_agreement' => 'required|accepted',
 		'reviewed' => 'required|accepted',
 	];
+
+	if (Input::has('is_pal')) {
+		$data['pal'] = Input::get('pal');
+		$rules['pal'] = 'required|accepted';
+	}
+
+	if (Input::has('is_neysa')) {
+		$data['neysa'] = Input::get('neysa');
+		$rules['neysa'] = 'required|accepted';
+	}
 	
 	$validator = Validator::make($data, $rules);
 
