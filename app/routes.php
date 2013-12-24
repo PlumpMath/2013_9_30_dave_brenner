@@ -2210,6 +2210,8 @@ Route::get('/children/{id}/PAL', function ($id) {
 		}
 	}
 
+	if ( ! $lesson) return 'Child is not enrolled in a class. No PAL form.';
+
 	$activity = $lesson->activity()->first();
 
 	$data = [
