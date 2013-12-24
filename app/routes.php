@@ -1319,7 +1319,8 @@ Route::get('/enroll', function ()
 		foreach ($restrict_models as $restriction) {
 			if ($restriction->property === 'grade') {
 				$o = ($restriction->value > 4) ? 4 : $restriction->value;
-				$grades .= $restriction->value.$ordinals[$o-1].'/';
+				if ($o > 0)
+					$grades .= $restriction->value.$ordinals[$o-1].'/';
 			} else if ($restriction->property === 'gender') {
 				$gender = ucfirst($restriction->value);
 			}
@@ -2311,7 +2312,7 @@ App::error(function($exception)
 		$code = $exception->getStatusCode();
 	else
 		$code = 500;
-	
+
 	Log::error($exception);
 
 	if (Auth::user()) {
