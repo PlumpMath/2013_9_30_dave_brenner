@@ -2,8 +2,8 @@
 
 @section('content')
 @include('modules.header')
-@include('modules.hud', ['title' => 'Register', 'icon' => 'edit', 'user_name' => $user_name])
-@include('modules.banner', ['title' => 'Register'])
+@include('modules.hud', ['title' => 'Subscription', 'icon' => 'edit', 'user_name' => $user_name])
+@include('modules.banner', ['title' => 'Subscription'])
 <div class="box bg-1">
 	<div class="box measure bg-0 border-left border-bottom-0">
 		<div class="box box-pad-0 fg-1 border-0">Current</div>
