@@ -1288,7 +1288,8 @@ Route::get('/enroll', function ()
 	}
 
 	foreach ($lessons as $lesson) {
-		if ( ! $lesson->dates()->get()) continue;
+		$ddd = $lesson->dates()->first();
+		if (! $ddd) continue;
 
 		$opensignup = $lesson->dates()->where('lesson_date_template_id', '=', '2')->first();
 		$latesignup = $lesson->dates()->where('lesson_date_template_id', '=', '3')->first();
@@ -2303,7 +2304,7 @@ Route::resource('waitlists', 'WaitlistController');
 Route::get('/lessondatetemplates/{id}/copy', 'LessonDateTemplateController@copy');
 
 Route::resource('lessondatetemplates', 'LessonDateTemplateController');
-
+/*
 App::error(function($exception)
 {
 	$code = $exception->getStatusCode();
@@ -2325,3 +2326,4 @@ App::error(function($exception)
 	else
 		return View::make('500', $data);
 });
+*/
