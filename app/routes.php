@@ -2309,6 +2309,8 @@ App::error(function($exception)
 {
 	$code = $exception->getStatusCode();
 
+	Log::error($exception);
+
 	if (Auth::user()) {
 		$data = [
 			'user_name' => Auth::user()->first_name.' '.Auth::user()->last_name,
@@ -2329,6 +2331,9 @@ App::error(function($exception)
 
 App::fatal(function($exception)
 {
+
+	Log::error($exception);
+
 	if (Auth::user()) {
 		$data = [
 			'user_name' => Auth::user()->first_name.' '.Auth::user()->last_name,
