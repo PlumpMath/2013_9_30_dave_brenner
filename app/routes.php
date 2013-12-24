@@ -2307,8 +2307,11 @@ Route::resource('lessondatetemplates', 'LessonDateTemplateController');
 
 App::error(function($exception)
 {
-	$code = $exception->getStatusCode();
-
+	if (method_exists($exception, 'getStatusCode'))
+		$code = $exception->getStatusCode();
+	else
+		$code = 500;
+	
 	Log::error($exception);
 
 	if (Auth::user()) {
