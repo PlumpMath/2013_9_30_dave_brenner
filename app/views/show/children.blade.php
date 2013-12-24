@@ -26,6 +26,7 @@
                 <input name="{{ $input_name }}" type="hidden" value="{{ $resource_id }}">
                 <li><button class="button-3" type="submit">Go to Parent</button></li>
                 {{ Form::close() }}
+                <li><a href="{{ $url['pal'] }}">View PAL form</a></li>
             </ul>
         </div>
     </div>

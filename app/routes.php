@@ -898,10 +898,32 @@ Route::get('/preferences/subscription', function ()
 {
 	if (Auth::check()) {
 		$data['user_name'] = Auth::user()->first_name.' '.Auth::user()->last_name;
+		$data['verify'] = URL::to('/preferences/subscription/verify');
+		$data['old'] = [
+			'subscribed' => Auth::user()->subscribed
+		];
 	} else
 		return App::abort(401, 'You are not authorized.');
 
 	return View::make('subscription', $data);
+});
+
+Route::post('/preferences/subscription/verify', function ()
+{
+	if (Auth::check()) {
+		$user = Auth::user();
+
+		if (Input::has('subscribed')) {
+			$user->subscribed = 1;
+		} else {
+			$user->subscribed = 0;
+		}
+
+		$user->save();
+	} else
+		return App::abort(401, 'You are not authorized.');
+
+	return Redirect::to('/dashboard');
 });
 
 Route::get('/unsubscribe/{email}', function ($email)
@@ -2178,7 +2200,16 @@ Route::get('/children/{id}/copy', 'ChildController@copy');
 Route::get('/children/{id}/PAL', function ($id) {
 	$child = Child::find($id);
 	$user = $child->user()->first();
-	$lesson = $child->lessons()->first();
+	$lessons = $child->lessons()->get();
+	$lesson = $lessons[0];
+
+	foreach ($lessons as $l) {
+		if ((new DateTime($lesson->firstLesson()->starts_on)) <
+			(new DateTime($l->firstLesson()->starts_on))) {
+			$lesson = $l;
+		}
+	}
+
 	$activity = $lesson->activity()->first();
 
 	$data = [

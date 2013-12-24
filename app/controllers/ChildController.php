@@ -121,6 +121,7 @@ class ChildController extends ResourceController
             'receipts' => action('ReceiptController@index'),
             'lessons' => action('LessonController@index'),
             'user' => action('UserController@index'),
+            'pal' => URL::to('children/'.$id.'/PAL'),
         ]);
 
         $data = array_merge($this->data, [
