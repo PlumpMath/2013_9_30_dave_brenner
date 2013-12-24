@@ -2304,7 +2304,7 @@ Route::resource('waitlists', 'WaitlistController');
 Route::get('/lessondatetemplates/{id}/copy', 'LessonDateTemplateController@copy');
 
 Route::resource('lessondatetemplates', 'LessonDateTemplateController');
-/*
+
 App::error(function($exception)
 {
 	$code = $exception->getStatusCode();
@@ -2326,4 +2326,18 @@ App::error(function($exception)
 	else
 		return View::make('500', $data);
 });
-*/
+
+App::fatal(function($exception)
+{
+	if (Auth::user()) {
+		$data = [
+			'user_name' => Auth::user()->first_name.' '.Auth::user()->last_name,
+		];
+	} else {
+		$data = [
+			'user_name' => null,
+		];
+	}
+	
+	return View::make('500', $data);
+});
