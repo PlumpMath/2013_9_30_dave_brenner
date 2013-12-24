@@ -95,7 +95,7 @@ Route::post('/log/in', function ()
 		} else if ($user['password'] == null){
 			$error_msg = 'Password cannot be blank.';
 		} else if (Auth::user() && Auth::user()->status == 2) {
-			$error_msg = 'The email for this account has not yet been verified. To verify, click <a href="'.URL::to('/email/verify/').'"this link</a>. You will receive a email from us with further instructions.';
+			$error_msg = 'The email for this account has not yet been verified. To verify, click <a href="'.URL::to('/email/verify/').'">this link</a>. You will receive a email from us with further instructions.';
 		} else {
 			$attempted_user = User::where('email', $user['email'])->first();
 
@@ -1288,6 +1288,8 @@ Route::get('/enroll', function ()
 	}
 
 	foreach ($lessons as $lesson) {
+		if ( ! $lesson->dates()->get()) continue;
+
 		$opensignup = $lesson->dates()->where('lesson_date_template_id', '=', '2')->first();
 		$latesignup = $lesson->dates()->where('lesson_date_template_id', '=', '3')->first();
 		$courtesysignup = $lesson->dates()->where('lesson_date_template_id', '=', '1')->first();
