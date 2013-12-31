@@ -44,17 +44,22 @@ class LessonController extends ResourceController
                 $time = $lesson->starts();
 
                 $restrictions = $lesson->restrictions()->get();
+                $rs = [];
+
+                foreach($restrictions as $restriction) {
+                    $rs[] = $restriction->value;
+                }
+
+                sort($rs);
 
 
                 $grades = '';
                 $ordinals = ['st', 'nd', 'rd', 'th'];
 
-                foreach ($restrictions as $restriction) {
-                    if ($restriction->property === 'grade') {
-                        $o = ($restriction->value > 4) ? 4 : $restriction->value;
-                        if ($o > 0)
-                            $grades .= $restriction->value.$ordinals[$o-1].'/';
-                    }
+                foreach ($rs as $restriction) {
+                    $o = ($restriction > 4) ? 4 : $restriction;
+                    if ($o > 0)
+                        $grades .= $restriction.$ordinals[$o-1].'/';
                 }
 
                 $grades = trim($grades, '/');
@@ -124,16 +129,22 @@ class LessonController extends ResourceController
 
         $grades = '';
         $restrictions = $lesson->restrictions()->get();
+        $rs = [];
+
+        foreach($restrictions as $restriction) {
+            $rs[] = $restriction->value;
+        }
+
+        sort($rs);
 
 
         $ordinals = ['st', 'nd', 'rd', 'th'];
 
-        foreach ($restrictions as $restriction) {
-            if ($restriction->property === 'grade') {
-                $o = ($restriction->value > 4) ? 4 : $restriction->value;
-                if ($o > 0)
-                    $grades .= $restriction->value.$ordinals[$o-1].'/';
-            }
+
+        foreach ($rs as $restriction) {
+            $o = ($restriction > 4) ? 4 : $restriction;
+            if ($o > 0)
+                $grades .= $restriction.$ordinals[$o-1].'/';
         }
 
         $grades = trim($grades, '/');
