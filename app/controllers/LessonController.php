@@ -43,9 +43,24 @@ class LessonController extends ResourceController
                 $day = $lesson->day();
                 $time = $lesson->starts();
 
+                $restrictions = $lesson->restrictions()->get();
+
+
+                $ordinals = ['st', 'nd', 'rd', 'th'];
+
+                foreach ($restrictions as $restriction) {
+                    if ($restriction->property === 'grade') {
+                        $o = ($restriction->value > 4) ? 4 : $restriction->value;
+                        if ($o > 0)
+                            $grades .= $restriction->value.$ordinals[$o-1].'/';
+                    }
+                }
+
+                $grades = trim($grades, '/');
+
                 if ( ! is_null($location) && ! is_null($activity) && ! is_null($lesson)) {
                     $name = $activity->name.', '.$location->city;
-                    $info = $session.' '.$year.', '.$day.' '.$time;
+                    $info = $session.' '.$year.', '.$day.' '.$time.'  '.$grades;
                 } else {
                     $name = 'Missing info.';
                     $info = $session;
@@ -106,8 +121,24 @@ class LessonController extends ResourceController
         $day = $lesson->day();
         $time = $lesson->starts();
 
+
+        $restrictions = $lesson->restrictions()->get();
+
+
+        $ordinals = ['st', 'nd', 'rd', 'th'];
+
+        foreach ($restrictions as $restriction) {
+            if ($restriction->property === 'grade') {
+                $o = ($restriction->value > 4) ? 4 : $restriction->value;
+                if ($o > 0)
+                    $grades .= $restriction->value.$ordinals[$o-1].'/';
+            }
+        }
+
+        $grades = trim($grades, '/');
+
         if ( ! is_null($lesson)) {
-            return $session.' '.$year.', '.$day.' '.$time;
+            return $session.' '.$year.', '.$day.' '.$time.'  '.$grades;
         } else {
             return $session;
         }
