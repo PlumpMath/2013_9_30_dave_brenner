@@ -35,11 +35,24 @@ class LessonController extends ResourceController
             //bin holds a list of all locations
             foreach ($this->bin['resource'] as $resource) {
                 $location = Location::find($resource['location_id']);
+                $activity = Activity::find($resource['activity_id']);
+                $session = $resource['session_id'];
 
-                if ( ! is_null($location)) $info = $location->address;
-                else $info = 'Location appears to be deleted.';
+                $lesson = Lesson::find($resource['id']);
+                $year = $lesson->firstLesson()->format('Y');
+                $day = $lesson->day();
+                $time = $lesson->starts();
+
+                if ( ! is_null($location) && ! is_null($activity) && ! is_null($lesson)) {
+                    $name = $activity->name.', '.$location->city;
+                    $info = $session.' '.$year.', '.$day.' '.$time;
+                } else {
+                    $name = 'Missing info.';
+                    $info = $session;
+                }
+
                 $__output[] = [
-                    'name'  => $resource['price'],
+                    'name'  => $name,
                     'id'    => $resource['id'],
                     'info'  => $info,
                 ];
@@ -65,7 +78,14 @@ class LessonController extends ResourceController
 
     public function name($resource)
     {
-        return $resource['price'];
+        $location = Location::find($resource['location_id']);
+        $activity = Activity::find($resource['activity_id']);
+
+        if ( ! is_null($location) && ! is_null($activity)) {
+            return $activity->name.', '.$location->city;
+        } else {
+            return 'Missing info.';
+        }
     }
 
     // }}}
@@ -79,10 +99,18 @@ class LessonController extends ResourceController
 
     public function info($resource)
     {
-        $location = Location::find($resource['location_id']);
+        $session = $resource['session_id'];
 
-        if ( ! is_null($location)) return $location->address;
-        else return 'Location appears to be deleted.';
+        $lesson = Lesson::find($resource['id']);
+        $year = $lesson->firstLesson()->format('Y');
+        $day = $lesson->day();
+        $time = $lesson->starts();
+
+        if ( ! is_null($lesson)) {
+            return $session.' '.$year.', '.$day.' '.$time;
+        } else {
+            return $session;
+        }
     }
 
     // }}}
