@@ -46,6 +46,7 @@ class LessonController extends ResourceController
                 $restrictions = $lesson->restrictions()->get();
 
 
+                $grades = '';
                 $ordinals = ['st', 'nd', 'rd', 'th'];
 
                 foreach ($restrictions as $restriction) {
@@ -121,7 +122,7 @@ class LessonController extends ResourceController
         $day = $lesson->day();
         $time = $lesson->starts();
 
-
+        $grades = '';
         $restrictions = $lesson->restrictions()->get();
 
 
