@@ -1313,21 +1313,26 @@ Route::get('/enroll', function ()
 		$name = $lesson->starts().' '.$lesson->day();
 		$price = $lesson->price;
 		$restrict_models = $lesson->restrictions()->get();
+        $rs = [];
+
+        foreach($restrictions as $restriction) {
+            $rs[] = $restriction->value;
+        }
+
+        sort($rs);
+
 		$grades = '';
 		$gender = '';
 
-		foreach ($restrict_models as $restriction) {
-			if ($restriction->property === 'grade') {
-				$o = ($restriction->value > 4) ? 4 : $restriction->value;
-				if ($o > 0)
-					$grades .= $restriction->value.$ordinals[$o-1].'/';
-			} else if ($restriction->property === 'gender') {
-				$gender = ucfirst($restriction->value);
-			}
+		foreach ($rs as $restriction) {
+			$o = ($restriction > 4) ? 4 : $restriction;
+			if ($o > 0)
+				$grades .= $restriction.$ordinals[$o-1].'/';
 		}
 
 		$spots = max($lesson->spots() - $waitlist, 0);
 		$grades = trim($grades, '/');
+		
 		if ($order) {
 			$actionable = 'In Cart';
 			$incart = true;
