@@ -23,7 +23,7 @@ class Child extends Resource {
 
     public static function getBirthday($str)
     {
-    	return new DateTime($str)->format('Y-m-d H:i:s');
+    	return (new DateTime($str))->format('Y-m-d H:i:s');
 	}
 
     public static function getAge($str)
