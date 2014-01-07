@@ -23,19 +23,14 @@ class Child extends Resource {
 
     public static function getBirthday($str)
     {
-        if ( ! preg_match('/\d*\/\d*\/\d*/', $str)) return $str;
-    	$birthdate = explode('/', $str);
-
-    	return date('Y-m-d H:i:s', mktime(0, 0, 0, $birthdate[0], $birthdate[1], $birthdate[2]));
+    	return new DateTime($str)->format('Y-m-d H:i:s');
 	}
 
     public static function getAge($str)
     {
-        if ( ! preg_match('/\d*\/\d*\/\d*/', $str)) return $str;
-        
-    	$birthdate = explode('/', $str);
-
-    	return ((+date("Y"))-(+$birthdate[2]));
+        $from = new DateTime($str);
+        $to   = new DateTime('today');
+        return $from->diff($to)->y;
     }
 
     public static function getGrade($birthdate, $age)
