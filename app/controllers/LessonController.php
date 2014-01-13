@@ -64,7 +64,7 @@ class LessonController extends ResourceController
 
                 $grades = trim($grades, '/');
 
-                if ( ! is_null($location) && ! is_null($activity) && ! is_null($lesson)) {
+                if ( ! is_null($location) && ! is_null($activity) && ! is_null($lesson) && ! is_null($lesson->dates()->first())) {
                     $name = $activity->name.', '.$location->city;
                     $info = $session.' '.$year.', '.$day.' '.$time.'  '.$grades;
                 } else {
@@ -123,6 +123,9 @@ class LessonController extends ResourceController
         $session = $resource['session_id'];
 
         $lesson = Lesson::find($resource['id']);
+
+        if (is_null($lesson->dates()->first())) return 'Missing info.';
+
         $year = $lesson->firstLesson()->format('Y');
         $day = $lesson->day();
         $time = $lesson->starts();
