@@ -1315,7 +1315,7 @@ Route::get('/enroll', function ()
 		$restrict_models = $lesson->restrictions()->get();
         $rs = [];
 
-        foreach($restrictions as $restriction) {
+        foreach($restrict_models as $restriction) {
             $rs[] = $restriction->value;
         }
 
