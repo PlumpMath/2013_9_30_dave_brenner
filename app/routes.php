@@ -1328,6 +1328,8 @@ Route::get('/enroll', function ()
 			$o = ($restriction > 4) ? 4 : $restriction;
 			if ($o > 0)
 				$grades .= $restriction.$ordinals[$o-1].'/';
+            else if ($o == 0)
+                $grades .= 'K/';
 		}
 
 		$spots = max($lesson->spots() - $waitlist, 0);

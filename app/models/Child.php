@@ -41,7 +41,7 @@ class Child extends Resource {
             $grade = $age-5;
         }
 
-        return min(max($grade, 1), 12);
+        return min(max($grade, 0), 12);
     }
 
     public static function young() {

@@ -65,6 +65,8 @@ class LessonController extends ResourceController
                     $o = ($restriction > 4) ? 4 : $restriction;
                     if ($o > 0)
                         $grades .= $restriction.$ordinals[$o-1].'/';
+                    else if ($o == 0)
+                        $grades .= 'K/';
                 }
 
                 $grades = trim($grades, '/');
@@ -153,6 +155,9 @@ class LessonController extends ResourceController
             $o = ($restriction > 4) ? 4 : $restriction;
             if ($o > 0)
                 $grades .= $restriction.$ordinals[$o-1].'/';
+            else if ($o == 0) {
+                $grades .= 'K/';
+            }
         }
 
         $grades = trim($grades, '/');
@@ -420,7 +425,7 @@ class LessonController extends ResourceController
             ], $old);
         }
 
-        for ($i = count($l_restrictions); $i < count($l_restrictions)+Input::get('restrictions'); $i++) {
+        for ($i = count($l_restrictions); $i < count($l_restrictions)+Input::get('grades'); $i++) {
             $restrictions = array_merge([
                 [
                     'name' => 'lesson_restriction_'.$i.'_value',
