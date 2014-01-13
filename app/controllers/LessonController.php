@@ -40,7 +40,7 @@ class LessonController extends ResourceController
 
                 $lesson = Lesson::find($resource['id']);
 
-                if (is_null($lesson->dates()->first())) {
+                if (count($lesson->dates()->get()) == 0) {
                     $session = "Missing Info.";
                 } else {
                     $year = $lesson->firstLesson()->format('Y');
@@ -129,7 +129,7 @@ class LessonController extends ResourceController
 
         $lesson = Lesson::find($resource['id']);
 
-        if (is_null($lesson->dates()->first())) return 'Missing info.';
+        if (count($lesson->dates()->get()) == 0) return 'Missing info.';
 
         $year = $lesson->firstLesson()->format('Y');
         $day = $lesson->day();
