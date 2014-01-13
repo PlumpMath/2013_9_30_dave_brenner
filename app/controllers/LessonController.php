@@ -39,9 +39,14 @@ class LessonController extends ResourceController
                 $session = $resource['session_id'];
 
                 $lesson = Lesson::find($resource['id']);
-                $year = $lesson->firstLesson()->format('Y');
-                $day = $lesson->day();
-                $time = $lesson->starts();
+
+                if (is_null($lesson->dates()->first())) {
+                    $session = "Missing Info.";
+                } else {
+                    $year = $lesson->firstLesson()->format('Y');
+                    $day = $lesson->day();
+                    $time = $lesson->starts();
+                }
 
                 $restrictions = $lesson->restrictions()->get();
                 $rs = [];
@@ -64,7 +69,7 @@ class LessonController extends ResourceController
 
                 $grades = trim($grades, '/');
 
-                if ( ! is_null($location) && ! is_null($activity) && ! is_null($lesson) && ! is_null($lesson->dates()->first())) {
+                if ( ! is_null($location) && ! is_null($activity) && ! is_null($lesson)) {
                     $name = $activity->name.', '.$location->city;
                     $info = $session.' '.$year.', '.$day.' '.$time.'  '.$grades;
                 } else {
