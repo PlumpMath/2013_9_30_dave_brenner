@@ -558,7 +558,6 @@ class LessonController extends ResourceController
 	                $lesson_restriction = LessonRestriction::find(Input::get('lesson_restriction_'.$i.'_id'));
 	            } else {
 	                $lesson_restriction = new LessonRestriction;
-                    $lesson_restriction->lessons()->attach($lesson->id);
 	            }
 
 	            $lesson_restriction->property = 'grade';
@@ -566,6 +565,10 @@ class LessonController extends ResourceController
 	            $lesson_restriction->value = Input::get('lesson_restriction_'.$i.'_value');
 
 	            $lesson_restriction->save();
+
+                if (Input::has('lesson_restriction_'.$i.'_id')) {
+                    $lesson_restriction->lessons()->attach($lesson->id);
+                }
 	        }
 
 	        $lesson->save();
