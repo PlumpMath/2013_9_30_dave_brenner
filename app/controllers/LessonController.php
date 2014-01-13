@@ -520,6 +520,7 @@ class LessonController extends ResourceController
         $validator = Validator::make($data, $rules);
 
         if ($validator->passes()) {
+            dd(Input::all())
 	        $lesson = Lesson::find($id);
 	        $location = Location::find(Input::get('location_id'));
 	        $activity = Activity::find(Input::get('activity_id'));
