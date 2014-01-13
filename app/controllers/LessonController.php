@@ -69,7 +69,7 @@ class LessonController extends ResourceController
 
                 $grades = trim($grades, '/');
 
-                if ( ! is_null($location) && ! is_null($activity) && ! is_null($lesson)) {
+                if ( ! is_null($location) && ! is_null($activity) && ! is_null($lesson) && count($lesson->dates()->get()) > 0) {
                     $name = $activity->name.', '.$location->city;
                     $info = $session.' '.$year.', '.$day.' '.$time.'  '.$grades;
                 } else {
