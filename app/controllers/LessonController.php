@@ -520,7 +520,6 @@ class LessonController extends ResourceController
         $validator = Validator::make($data, $rules);
 
         if ($validator->passes()) {
-            dd(Input::all());
 	        $lesson = Lesson::find($id);
 	        $location = Location::find(Input::get('location_id'));
 	        $activity = Activity::find(Input::get('activity_id'));
@@ -561,7 +560,7 @@ class LessonController extends ResourceController
 	                $lesson_restriction = new LessonRestriction;
 	            }
 
-                if (is_null(Input::get('lesson_restriction_'.$i.'_value'))) {
+                if (Input::get('lesson_restriction_'.$i.'_value') == '') {
                     $lesson_restriction->delete();
                 } else {
     	            $lesson_restriction->property = 'grade';
