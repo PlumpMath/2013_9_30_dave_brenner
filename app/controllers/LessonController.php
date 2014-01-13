@@ -560,14 +560,18 @@ class LessonController extends ResourceController
 	                $lesson_restriction = new LessonRestriction;
 	            }
 
-	            $lesson_restriction->property = 'grade';
-	            $lesson_restriction->comparison = '=';
-	            $lesson_restriction->value = Input::get('lesson_restriction_'.$i.'_value');
+                if (is_null(Input::get('lesson_restriction_'.$i.'_value'))) {
+                    $lesson_restriction->delete();
+                } else {
+    	            $lesson_restriction->property = 'grade';
+    	            $lesson_restriction->comparison = '=';
+    	            $lesson_restriction->value = Input::get('lesson_restriction_'.$i.'_value');
 
-	            $lesson_restriction->save();
+    	            $lesson_restriction->save();
 
-                if (Input::has('lesson_restriction_'.$i.'_id')) {
-                    $lesson_restriction->lessons()->attach($lesson->id);
+                    if ( ! Input::has('lesson_restriction_'.$i.'_id')) {
+                        $lesson_restriction->lessons()->attach($lesson->id);
+                    }
                 }
 	        }
 
