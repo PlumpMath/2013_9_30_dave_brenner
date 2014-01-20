@@ -19,6 +19,8 @@ class Custodian
 
 		self::cleanMail();
 
+		self::summonBirthdaySkeleton();
+
 		//check lesson spots & waitlist
 		foreach (Lesson::all() as $lesson) {
 			$waitlist = $lesson->firstInLine();
@@ -118,4 +120,20 @@ class Custodian
 		}
 	}
 
+	public static function summonBirthdaySkeleton()
+	{
+		//run through children,
+		foreach (Child::all() as $child) {
+			$today = new DateTime();
+			$start_of_school = new DateTime('September 1');
+
+			//update age
+			$child->age = $child->getAge($child->birthday);
+
+			//update grade
+			if ($today === $start_of_school) $child->grade = $child->getGrade($child->birthday, $child->age);
+
+			$child->save();
+		}
+	}
 }
