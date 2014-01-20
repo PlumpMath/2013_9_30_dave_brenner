@@ -1533,16 +1533,6 @@ Route::get('/checkout', function () {
 				'label' => 'Expiration year',
 			],
 			[
-				'name' => 'card_type',
-				'type' => 'text',
-				'label' => 'Card Type',
-			],
-			[
-				'name' => 'card_number',
-				'type' => 'number',
-				'label' => 'Card Number',
-			],
-			[
 				'name' => 'cvv',
 				'type' => 'number',
 				'label' => 'CVV',
