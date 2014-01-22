@@ -1460,6 +1460,7 @@ Route::get('/checkout', function () {
 	}
 
 	$data = [
+		'old'		=> (Session::has('_old_input')) ? Session::get('_old_input') : [],
 		'total_price' => number_format($total_price, 2),
 		'orders' => $orders,
 		'verify' => '/verify/pay',
