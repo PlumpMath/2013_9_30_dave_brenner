@@ -1744,7 +1744,9 @@ Route::get('/review', function ()
 
 			if ((new DateTime($date->starts_on))->format("d") == (new DateTime($date->ends_on))->format("d")) {
 				$class = strtolower(preg_replace('/[-\s]/', '_', $templates[$date->lesson_date_template_id-1]->name));
-				dd("Executing.");
+
+				echo $class;
+
 				$event = $calendar->event()
 					->condition('timestamp', strtotime($date->starts_on))
 					->title($name)
