@@ -122,7 +122,7 @@ class PaypalPaymentsController extends BaseController {
             $this->makepay($data);
         }
         else
-        	echo $verify->errors();
+        	print_r($verify->messages());
 			return Redirect::to('/checkout')->withInput(Input::all())->withErrors($verify);
 
     }
