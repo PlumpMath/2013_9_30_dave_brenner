@@ -209,9 +209,12 @@ class PaypalPaymentsController extends BaseController {
         	}
 
             //  lookup coupon value
-            $value = $theone->price;
-            $data['amount'] -= $value;
-            $data['description'] .= " with coupon: " . $in['coupon'];
+
+            if ($theone !== null) {
+	            $value = $theone->price;
+	            $data['amount'] -= $value;
+	            $data['description'] .= " with coupon: " . $in['coupon'];
+	        }
         }
         
         // ### Address
