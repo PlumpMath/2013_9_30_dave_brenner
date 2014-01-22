@@ -1742,9 +1742,9 @@ Route::get('/review', function ()
 			$name = ($date->name) ? $date->name : $templates[$date->lesson_date_template_id-1]->name;
 			$description = ($date->description) ? $date->description : $templates[$date->lesson_date_template_id-1]->description;
 
-			if ($date->starts_on == $date->ends_on) {
+			if ((new DateTime($date->starts_on))->format("d") == (new DateTime($date->ends_on))->format("d")) {
 				$class = strtolower(preg_replace('/[-\s]/', '_', $templates[$date->lesson_date_template_id-1]->name));
-
+				dd("Executing.");
 				$event = $calendar->event()
 					->condition('timestamp', strtotime($date->starts_on))
 					->title($name)
