@@ -1504,12 +1504,12 @@ Route::get('/checkout', function () {
 		],
 		'payment_fields' => [
 			[
-				'name' => 'first_name',
+				'name' => 'card_first_name',
 				'type' => 'text',
 				'label' => 'Cardholder\'s First Name',
 			],
 			[
-				'name' => 'last_name',
+				'name' => 'card_last_name',
 				'type' => 'text',
 				'label' => 'Cardholder\'s Last Name',
 			],

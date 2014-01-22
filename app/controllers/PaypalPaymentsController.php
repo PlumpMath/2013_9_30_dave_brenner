@@ -69,6 +69,7 @@ class PaypalPaymentsController extends BaseController {
 
             $data['first_name'] = $user->first_name;
             $data['last_name'] = $user->last_name;
+            $data['phone'] = $user->phone;
             $data['address'] = $user->address;
             $data['address_2'] = $user->address_2;
             $data['city'] = $user->city;
@@ -160,6 +161,8 @@ class PaypalPaymentsController extends BaseController {
 
         $data = array(
             'addr' => array(
+                'first_name' => '',
+                'last_name' => '',
                 'address' => '',
                 'address_2' => '',
                 'city' => '',
@@ -172,8 +175,8 @@ class PaypalPaymentsController extends BaseController {
                 'expire_month' => '',
                 'expire_year' => '',
                 'cvv' => '',
-                'first_name' => '',
-                'last_name' => '',
+                'card_first_name' => '',
+                'card_last_name' => '',
                 ),
             'phone' => '',
             'amount' => '',
@@ -195,8 +198,18 @@ class PaypalPaymentsController extends BaseController {
         
         // Account for coupons
         if (isset($in['coupon'])) {
+        	$coupons = Coupon::where('code', $in['coupon'])->get();
+        	$theone = null;
+        	$today = new DateTime;
+
+        	foreach ($coupons as $coupon) {
+        		$expires = new DateTime($coupon->expires_on);
+
+        		if ($coupon->user_id === Auth::user()->id && ($expires > $today)) $theone = $coupon;
+        	}
+
             //  lookup coupon value
-            $value = 100.00;
+            $value = $theone->price;
             $data['amount'] -= $value;
             $data['description'] .= " with coupon: " . $in['coupon'];
         }
@@ -222,8 +235,8 @@ class PaypalPaymentsController extends BaseController {
         $card->setExpire_month($data['card']['expire_month']);
         $card->setExpire_year($data['card']['expire_year']);
         $card->setCvv2($data['card']['cvv']);
-        $card->setFirst_name($data['card']['first_name']);
-        $card->setLast_name($data['card']['last_name']);
+        $card->setFirst_name($data['card']['card_first_name']);
+        $card->setLast_name($data['card']['card_last_name']);
         $card->setBilling_address($addr);
 
         // ### FundingInstrument
